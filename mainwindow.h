@@ -2,19 +2,21 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <qtreewidget.h>
 #include <iostream>
 #include <string>
 #include <map>
 #include <boost/gil/gil_all.hpp>
 #include <Eigen/Dense>
 
-#include "imagebundle.h"
+#include "IO/JpegManager.h"
 
-#include "SpatialFilter.h"
-#include "JpegManager.h"
-#include "CommonSpatialFilters.h"
-#include "HistogramProcessor.h"
-#include "IntensityTransformation.h"
+#include "ImageClasses/imagebundle.h"
+
+#include "SpatialFiltering/SpatialFilter.h"
+#include "SpatialFiltering/CommonSpatialFilters.h"
+#include "SpatialFiltering/HistogramProcessor.h"
+#include "SpatialFiltering/IntensityTransformation.h"
 
 namespace Ui {
 class MainWindow;

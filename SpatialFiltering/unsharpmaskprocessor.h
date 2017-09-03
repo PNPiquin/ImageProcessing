@@ -2,9 +2,9 @@
 #define UNSHARPMASKPROCESSOR_H
 
 #include <Eigen/Dense>
-#include "CommonSpatialFilters.h"
-#include "IntensityTransformation.h"
-#include "JpegManager.h"
+#include "SpatialFiltering/CommonSpatialFilters.h"
+#include "SpatialFiltering/IntensityTransformation.h"
+#include "IO/JpegManager.h"
 
 class UnsharpMaskProcessor
 {
