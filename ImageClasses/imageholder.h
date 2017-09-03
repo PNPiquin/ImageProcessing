@@ -2,13 +2,13 @@
 #define IMAGEHOLDER_H
 
 #include <Eigen/Dense>
-#include "JpegManager.h"
-#include "SpatialFilter.h"
-#include "CommonSpatialFilters.h"
-#include "HistogramProcessor.h"
-#include "IntensityTransformation.h"
-#include "statisticalspatialfilter.h"
-#include "unsharpmaskprocessor.h"
+#include "IO/JpegManager.h"
+#include "SpatialFiltering/SpatialFilter.h"
+#include "SpatialFiltering/CommonSpatialFilters.h"
+#include "SpatialFiltering/HistogramProcessor.h"
+#include "SpatialFiltering/IntensityTransformation.h"
+#include "SpatialFiltering/statisticalspatialfilter.h"
+#include "SpatialFiltering/unsharpmaskprocessor.h"
 
 class ImageHolder
 {

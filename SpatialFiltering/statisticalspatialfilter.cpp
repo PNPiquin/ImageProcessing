@@ -40,7 +40,7 @@ void StatisticalSpatialFilter::subMatrixExtraction(int i, int j, Eigen::MatrixXi
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-//                                                              Median Filter
+//                                                                      Median Filter
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 MedianFilter::MedianFilter(int filter_size) : StatisticalSpatialFilter() {
@@ -54,7 +54,7 @@ MedianFilter::MedianFilter(int filter_size) : StatisticalSpatialFilter() {
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-//                                                                Max Filter
+//                                                                      Max Filter
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 MaxFilter::MaxFilter(int filter_size) : StatisticalSpatialFilter() {
@@ -67,7 +67,7 @@ MaxFilter::MaxFilter(int filter_size) : StatisticalSpatialFilter() {
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-//                                                                Min Filter
+//                                                                       Min Filter
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 MinFilter::MinFilter(int filter_size) : StatisticalSpatialFilter() {
@@ -75,6 +75,23 @@ MinFilter::MinFilter(int filter_size) : StatisticalSpatialFilter() {
     auto min_filter = [](std::vector<int> data){
         std::sort(data.begin(), data.end());
         return data.front();
+    };
+    SetStatisticalFilter(min_filter);
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+//                                       Slow and stupid method to do a Local Mean Removal
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SlowLMRProcessor::SlowLMRProcessor(int filter_size) : StatisticalSpatialFilter() {
+    SetFilterSize(filter_size);
+    auto min_filter = [](std::vector<int> data){
+        int lmr_value(0);
+        for(auto value : data){
+            lmr_value += value;
+        }
+        lmr_value /= data.size();
+        return lmr_value;
     };
     SetStatisticalFilter(min_filter);
 }

@@ -34,4 +34,9 @@ public:
     MinFilter(int filter_size);
 };
 
+class SlowLMRProcessor : public StatisticalSpatialFilter {
+public:
+    SlowLMRProcessor(int filter_size);
+};
+
 #endif // STATISTICALSPATIALFILTER_H
