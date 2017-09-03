@@ -8,6 +8,41 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     bundle = ImageBundle();
     ui->setupUi(this);
+
+    // LMR tree section setup
+
+    ui->treeWidget->setColumnCount(2);
+
+    QTreeWidgetItem *lmr_main_item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(QString("LMR")));
+    QList<QTreeWidgetItem *> items;
+    QList<QWidget *> widgets;
+
+    QTreeWidgetItem *output_name_edit = new QTreeWidgetItem(lmr_main_item, QStringList(QString("Output name")));
+    items.append(output_name_edit);
+    widgets.append(new QLineEdit("_lmr"));
+
+    QTreeWidgetItem *use_as_suffix_checkbox = new QTreeWidgetItem(lmr_main_item, QStringList(QString("Use as suffix")));
+    items.append(use_as_suffix_checkbox);
+    widgets.append(new QCheckBox());
+
+    QTreeWidgetItem *filter_size = new QTreeWidgetItem(lmr_main_item, QStringList(QString("Filter size")));
+    items.append(filter_size);
+    widgets.append(new QSpinBox());
+
+    QTreeWidgetItem *process_button_item = new QTreeWidgetItem(lmr_main_item, QStringList(QString("Process")));
+    items.append(process_button_item);
+    QPushButton *process_button = new QPushButton("Process");
+    QObject::connect(process_button, SIGNAL(clicked()), this, SLOT(on_lmr_process_clicked()));
+    widgets.append(process_button);
+
+    //ui->treeWidget->insertTopLevelItems(0, items);
+    for(int i = 0; i < items.size(); ++i){
+        ui->treeWidget->setItemWidget(items.value(i),1,widgets.value(i));
+    }
+
+    ui->treeWidget->insertTopLevelItem(0, lmr_main_item);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -263,4 +298,9 @@ void MainWindow::on_save_push_button_clicked()
 void MainWindow::on_current_image_currentTextChanged(const QString &arg1)
 {
     DisplayImg(arg1.toStdString());
+}
+
+void MainWindow::on_lmr_process_clicked()
+{
+    std::cout << "coucou" << std::endl;
 }
