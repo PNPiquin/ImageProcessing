@@ -14,26 +14,26 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    JpegManager.cpp \
-    imageholder.cpp \
-    imagebundle.cpp \
     SpatialFiltering/CommonSpatialFilters.cpp \
     SpatialFiltering/HistogramProcessor.cpp \
     SpatialFiltering/IntensityTransformation.cpp \
     SpatialFiltering/SpatialFilter.cpp \
     SpatialFiltering/statisticalspatialfilter.cpp \
-    SpatialFiltering/unsharpmaskprocessor.cpp
+    SpatialFiltering/unsharpmaskprocessor.cpp \
+    ImageClasses/imagebundle.cpp \
+    ImageClasses/imageholder.cpp \
+    IO/JpegManager.cpp
 
 HEADERS  += mainwindow.h \
-    JpegManager.h \
-    imageholder.h \
-    imagebundle.h \
     SpatialFiltering/CommonSpatialFilters.h \
     SpatialFiltering/HistogramProcessor.h \
     SpatialFiltering/IntensityTransformation.h \
     SpatialFiltering/SpatialFilter.h \
     SpatialFiltering/statisticalspatialfilter.h \
-    SpatialFiltering/unsharpmaskprocessor.h
+    SpatialFiltering/unsharpmaskprocessor.h \
+    ImageClasses/imagebundle.h \
+    ImageClasses/imageholder.h \
+    IO/JpegManager.h
 
 FORMS    += mainwindow.ui
 
@@ -46,4 +46,7 @@ QMAKE_CXXFLAGS += -Wall \
 LIBS += -L/usr/lib -ljpeg
 LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_system
 LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_filesystem
+
+DISTFILES += \
+    LICENSE
 
