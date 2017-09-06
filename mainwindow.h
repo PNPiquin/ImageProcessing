@@ -61,6 +61,8 @@ private slots:
 
     void on_current_image_currentTextChanged(const QString &arg1);
 
+    void on_lmr_filter_push_button_clicked();
+
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;

@@ -88,3 +88,9 @@ void ImageBundle::ProcessUnsharpMask(std::string img_name, std::string output_na
     //JpegManager::SaveGrayscaleMatrixImg(sharp_img->mat_img, working_dir_path + output_name);
     Insert(output_name, sharp_img);
 }
+
+void ImageBundle::ProcessLMR(std::string img_name, std::string output_name, int filter_size){
+    std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
+    std::shared_ptr<ImageHolder> sharp_img = img->ProcessLMR(output_name, filter_size);
+    Insert(output_name, sharp_img);
+}

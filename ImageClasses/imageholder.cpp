@@ -138,3 +138,12 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessUnsharpMask(std::string output_
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
+
+std::shared_ptr<ImageHolder> ImageHolder::ProcessLMR(std::string output_name, int filter_size){
+    Eigen::MatrixXi img_out;
+
+    SlowLMRProcessor lmrp(filter_size);
+    lmrp.ProcessStatisticalFilter(mat_img, img_out);
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}

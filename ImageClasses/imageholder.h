@@ -29,6 +29,7 @@ public:
     std::shared_ptr<ImageHolder> ProcessDilatation(std::string output_name, int filter_size);
     std::shared_ptr<ImageHolder> ProcessErosionDilatation(std::string output_name, int filter_size);
     std::shared_ptr<ImageHolder> ProcessUnsharpMask(std::string output_name, double alpha, bool save_mask, int filter_size);
+    std::shared_ptr<ImageHolder> ProcessLMR(std::string output_name, int filter_size);
 
     void SetImageName(std::string name);
     void SetImageType(ImageType type);

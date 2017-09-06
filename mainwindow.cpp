@@ -264,3 +264,20 @@ void MainWindow::on_current_image_currentTextChanged(const QString &arg1)
 {
     DisplayImg(arg1.toStdString());
 }
+
+void MainWindow::on_lmr_filter_push_button_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->lmr_use_as_suffix->checkState() == Qt::Checked;
+    int filter_size = ui->lmr_filter_size->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->lmr_output_name->text().toStdString();
+    } else{
+        result_name = ui->lmr_output_name->text().toStdString();
+    }
+    bundle.ProcessLMR(img_name, result_name, filter_size);
+    ui->current_image->addItem(QString::fromStdString(result_name));
+
+    DisplayImg(result_name);
+}

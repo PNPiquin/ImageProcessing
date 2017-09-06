@@ -23,6 +23,7 @@ public:
     void ProcessDilatation(std::string img_name, std::string output_name, int filter_size);
     void ProcessErosionDilatation(std::string img_name, std::string output_name, int filter_size);
     void ProcessUnsharpMask(std::string img_name, std::string output_name, double alpha, bool save_mask, int filter_size);
+    void ProcessLMR(std::string img_name, std::string output_name, int filter_size);
 
     void SetWorkingDir(std::string path) {working_dir_path = path; }
     std::string GetWorkingDir() {return working_dir_path;}
