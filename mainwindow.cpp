@@ -18,14 +18,17 @@ MainWindow::MainWindow(QWidget *parent) :
     QList<QWidget *> widgets;
 
     QTreeWidgetItem *output_name_edit = new QTreeWidgetItem(lmr_main_item, QStringList(QString("Output name")));
+    output_name_edit->setWhatsThis(1, "lmr_output_name");
     items.append(output_name_edit);
     widgets.append(new QLineEdit("_lmr"));
 
     QTreeWidgetItem *use_as_suffix_checkbox = new QTreeWidgetItem(lmr_main_item, QStringList(QString("Use as suffix")));
+    use_as_suffix_checkbox->setWhatsThis(1, "lmr_use_as_suffix");
     items.append(use_as_suffix_checkbox);
     widgets.append(new QCheckBox());
 
     QTreeWidgetItem *filter_size = new QTreeWidgetItem(lmr_main_item, QStringList(QString("Filter size")));
+    filter_size->setWhatsThis(1, "lmr_filter_size");
     items.append(filter_size);
     widgets.append(new QSpinBox());
 
@@ -302,5 +305,26 @@ void MainWindow::on_current_image_currentTextChanged(const QString &arg1)
 
 void MainWindow::on_lmr_process_clicked()
 {
-    std::cout << "coucou" << std::endl;
+    QTreeWidgetItemIterator it(ui->treeWidget);
+    std::string output_name;
+    while(*it){
+        QTreeWidgetItem *item = *it;
+        if(item->whatsThis(1).toStdString() == "lmr_output_name"){
+            QLineEdit* line_edit = qobject_cast<QLineEdit*>(ui->treeWidget->itemWidget(item, 1));
+            output_name = line_edit->text().toStdString();
+            std::cout << "coucou" << std::endl;
+            std::cout << output_name << std::endl;
+            break;
+        }
+        ++it;
+    }
 }
+
+//------------------------------------------------------------------------------------------------------------------------------
+//                                                  Declare methods
+//------------------------------------------------------------------------------------------------------------------------------
+
+void DeclareInt(QList<QTreeWidgetItem *> items, std::string name, std::string node_name);
+void DeclareDouble(QList<QTreeWidgetItem *> items, std::string name, std::string node_name);
+void DeclareBool(QList<QTreeWidgetItem *> items, std::string name, std::string node_name);
+void DeclareString(QList<QTreeWidgetItem *> items, std::string name, std::string node_name);
