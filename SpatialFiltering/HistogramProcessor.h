@@ -3,11 +3,12 @@
 
 #include <map>
 #include <Eigen/Dense>
+#include <QProgressBar>
 
 class HistogramProcessor{
 public:
   HistogramProcessor();
-  void ProcessEqualization(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut);
+  void ProcessEqualization(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, QProgressBar *progress_bar = NULL);
   void HistogramInit(Eigen::MatrixXi &img);
 
 private:

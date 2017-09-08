@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <QProgressBar>
+
 #include "imageholder.h"
 
 class ImageBundle
@@ -14,7 +16,7 @@ public:
     void LoadImg(std::string img_name);
     void ProcessEdgeDetection(std::string img_name, std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size);
     void ProcessGaussianBlur(std::string img_name, std::string output_name, int filter_size);
-    void ProcessHistogramNormalization(std::string img_name, std::string output_name);
+    void ProcessHistogramNormalization(std::string img_name, std::string output_name, QProgressBar *progress_bar = NULL);
     void ProcessPowerLawTransformation(std::string img_name, std::string output_name, double gamma);
     void ProcessLogLawTransformation(std::string img_name, std::string output_name, double c);
     void ProcessThresholding(std::string img_name, std::string output_name, int threshold);

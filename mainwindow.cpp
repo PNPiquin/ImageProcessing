@@ -8,6 +8,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     bundle = ImageBundle();
     ui->setupUi(this);
+
+    ui->progress_bar->setMinimum(0);
+    ui->progress_bar->setMaximum(100);
+    ui->progress_bar->setValue(0);
 }
 
 MainWindow::~MainWindow()
@@ -81,7 +85,7 @@ void MainWindow::on_histogram_tab_launch_normalization_clicked()
     } else{
         result_name = ui->histogram_tab_output_name->text().toStdString();
     }
-    bundle.ProcessHistogramNormalization(img_name, result_name);
+    bundle.ProcessHistogramNormalization(img_name, result_name, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);

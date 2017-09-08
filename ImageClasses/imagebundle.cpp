@@ -26,9 +26,9 @@ void ImageBundle::ProcessGaussianBlur(std::string img_name, std::string output_n
     Insert(output_name, edge_img);
 }
 
-void ImageBundle::ProcessHistogramNormalization(std::string img_name, std::string output_name){
+void ImageBundle::ProcessHistogramNormalization(std::string img_name, std::string output_name, QProgressBar *progress_bar){
     std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
-    std::shared_ptr<ImageHolder> histogram_img = img->ProcessHistogramNormalization(output_name);
+    std::shared_ptr<ImageHolder> histogram_img = img->ProcessHistogramNormalization(output_name, progress_bar);
     //JpegManager::SaveGrayscaleMatrixImg(histogram_img->mat_img, working_dir_path + output_name);
     Insert(output_name, histogram_img);
 }

@@ -2,6 +2,8 @@
 #define IMAGEHOLDER_H
 
 #include <Eigen/Dense>
+#include <QProgressBar>
+
 #include "IO/JpegManager.h"
 #include "SpatialFiltering/SpatialFilter.h"
 #include "SpatialFiltering/CommonSpatialFilters.h"
@@ -20,7 +22,7 @@ public:
 
     std::shared_ptr<ImageHolder> ProcessEdgeDetection(std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size);
     std::shared_ptr<ImageHolder> ProcessGaussianBlur(std::string output_name, int filter_size);
-    std::shared_ptr<ImageHolder> ProcessHistogramNormalization(std::string output_name);
+    std::shared_ptr<ImageHolder> ProcessHistogramNormalization(std::string output_name,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessPowerLawTransformation(std::string output_name, double gamma);
     std::shared_ptr<ImageHolder> ProcessLogLawTransformation(std::string output_name, double c);
     std::shared_ptr<ImageHolder> ProcessThresholding(std::string output_name, int threshold);

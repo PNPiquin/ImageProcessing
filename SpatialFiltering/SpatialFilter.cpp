@@ -9,7 +9,7 @@ void SpatialFilter::SetFilter(Eigen::MatrixXf _filter){
   filter = _filter;
 }
 
-void SpatialFilter::ProcessMatrixImg(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut){
+void SpatialFilter::ProcessMatrixImg(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, QProgressBar *progress_bar){
   int rows = img.rows();
   int cols = img.cols();
   int padding = (size - 1) / 2;
@@ -18,6 +18,9 @@ void SpatialFilter::ProcessMatrixImg(Eigen::MatrixXi &img, Eigen::MatrixXi &imgO
   for(int i = padding; i < rows - padding; ++i){
     for(int j = padding; j < cols - padding; ++j){
       ProcessConvolution(i, j, img, imgOut);
+    }
+    if(progress_bar){
+        progress_bar->setValue(std::floor(((i+1)*100)/(rows-padding)));
     }
   }
   printf("%s\n", "End of SpatialFilter processing");
