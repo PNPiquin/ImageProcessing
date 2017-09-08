@@ -35,6 +35,7 @@ void IntensityTransformation::ProcessThresholding(Eigen::MatrixXi &img, Eigen::M
 
 void IntensityTransformation::ProcessNormalization(Eigen::MatrixXi &imgOut, int value_max, QProgressBar *progress_bar){
   int max = 0;
+  int rows = imgOut.rows();
   for(int i = 0; i < imgOut.rows(); ++i){
     for(int j = 0; j < imgOut.cols(); ++j){
       if(imgOut(i, j) > max){
@@ -57,6 +58,7 @@ void IntensityTransformation::ProcessNormalization(Eigen::MatrixXi &imgOut, int 
 
 void IntensityTransformation::ProcessTransformation(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, std::function<int(int)> transformation, QProgressBar *progress_bar){
   imgOut.resize(img.rows(), img.cols());
+  int rows = imgOut.rows();
   for(int i = 0; i < imgOut.rows(); ++i){
     for(int j = 0; j < imgOut.cols(); ++j){
       imgOut(i, j) = transformation(img(i, j));

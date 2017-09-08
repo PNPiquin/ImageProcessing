@@ -6,6 +6,7 @@ UnsharpMaskProcessor::UnsharpMaskProcessor()
 
 void UnsharpMaskProcessor::ProcessUnsharpMask(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out, double unsharp_coeff, bool save_unsharp_mask, int gaussian_filter_size, QProgressBar *progress_bar){
     img_out.resize(img.rows(), img.cols());
+    int rows = img_out.rows();
     Eigen::MatrixXi unsharp_mask(img.rows(), img.cols()), blur_img(img.rows(), img.cols());
 
     GaussianBlurFilter gbf(gaussian_filter_size);

@@ -14,18 +14,18 @@ public:
     ImageBundle();
 
     void LoadImg(std::string img_name);
-    void ProcessEdgeDetection(std::string img_name, std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size);
-    void ProcessGaussianBlur(std::string img_name, std::string output_name, int filter_size);
+    void ProcessEdgeDetection(std::string img_name, std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar = NULL);
+    void ProcessGaussianBlur(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar = NULL);
     void ProcessHistogramNormalization(std::string img_name, std::string output_name, QProgressBar *progress_bar = NULL);
-    void ProcessPowerLawTransformation(std::string img_name, std::string output_name, double gamma);
-    void ProcessLogLawTransformation(std::string img_name, std::string output_name, double c);
-    void ProcessThresholding(std::string img_name, std::string output_name, int threshold);
-    void ProcessMedianFilter(std::string img_name, std::string output_name, int filter_size);
-    void ProcessErosion(std::string img_name, std::string output_name, int filter_size);
-    void ProcessDilatation(std::string img_name, std::string output_name, int filter_size);
-    void ProcessErosionDilatation(std::string img_name, std::string output_name, int filter_size);
-    void ProcessUnsharpMask(std::string img_name, std::string output_name, double alpha, bool save_mask, int filter_size);
-    void ProcessLMR(std::string img_name, std::string output_name, int filter_size);
+    void ProcessPowerLawTransformation(std::string img_name, std::string output_name, double gamma, QProgressBar *progress_bar = NULL);
+    void ProcessLogLawTransformation(std::string img_name, std::string output_name, double c, QProgressBar *progress_bar = NULL);
+    void ProcessThresholding(std::string img_name, std::string output_name, int threshold, QProgressBar *progress_bar = NULL);
+    void ProcessMedianFilter(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar = NULL);
+    void ProcessErosion(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar = NULL);
+    void ProcessDilatation(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar = NULL);
+    void ProcessErosionDilatation(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar = NULL);
+    void ProcessUnsharpMask(std::string img_name, std::string output_name, double alpha, bool save_mask, int filter_size, QProgressBar *progress_bar = NULL);
+    void ProcessLMR(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar = NULL);
 
     void SetWorkingDir(std::string path) {working_dir_path = path; }
     std::string GetWorkingDir() {return working_dir_path;}
