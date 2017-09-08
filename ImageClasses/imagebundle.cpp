@@ -70,14 +70,14 @@ void ImageBundle::ProcessErosion(std::string img_name, std::string output_name, 
 
 void ImageBundle::ProcessDilatation(std::string img_name, std::string output_name, int filter_size){
     std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
-    std::shared_ptr<ImageHolder> dilatation_img = img->ProcessGaussianBlur(output_name, filter_size);
+    std::shared_ptr<ImageHolder> dilatation_img = img->ProcessDilatation(output_name, filter_size);
     //JpegManager::SaveGrayscaleMatrixImg(dilatation_img->mat_img, working_dir_path + output_name);
     Insert(output_name, dilatation_img);
 }
 
 void ImageBundle::ProcessErosionDilatation(std::string img_name, std::string output_name, int filter_size){
     std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
-    std::shared_ptr<ImageHolder> erosion_dilatation_img = img->ProcessGaussianBlur(output_name, filter_size);
+    std::shared_ptr<ImageHolder> erosion_dilatation_img = img->ProcessErosionDilatation(output_name, filter_size);
     //JpegManager::SaveGrayscaleMatrixImg(erosion_dilatation_img->mat_img, working_dir_path + output_name);
     Insert(output_name, erosion_dilatation_img);
 }
