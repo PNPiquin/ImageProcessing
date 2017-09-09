@@ -21,4 +21,11 @@ public:
   void CreateNXNFilter(int n);
 };
 
+class SobelFilter : public SpatialFilter {
+public:
+    SobelFilter();
+    void PopulateHorizontalFilter();
+    void PopulateVerticalFilter();
+};
+
 #endif

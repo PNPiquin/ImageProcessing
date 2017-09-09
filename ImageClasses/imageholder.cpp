@@ -40,11 +40,104 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessEdgeDetection(std::string outpu
         Eigen::MatrixXi gaussian_img;
         GaussianBlurFilter gaussian_filter(gaussian_filter_size);
         EdgeDetectionFilter edge_filter(filter_size);
+        progress_bar->setMaximum(200);
         gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_bar);
+        progress_bar->setMinimum(-100);
+        progress_bar->setMaximum(100);
         edge_filter.ProcessMatrixImg(gaussian_img, img_out, progress_bar);
+        progress_bar->setMinimum(0);
     } else{
         EdgeDetectionFilter edge_filter(filter_size);
         edge_filter.ProcessMatrixImg(mat_img, img_out, progress_bar);
+    }
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}
+
+std::shared_ptr<ImageHolder> ImageHolder::ProcessBothSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
+    Eigen::MatrixXi img_out1, img_out2, img_out;
+
+    if(use_gaussian_blur){
+        Eigen::MatrixXi gaussian_img;
+        GaussianBlurFilter gaussian_filter(gaussian_filter_size);
+        progress_bar->setMaximum(300);
+        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_bar);
+
+        SobelFilter sobel_filter;
+
+        sobel_filter.PopulateHorizontalFilter();
+        progress_bar->setRange(-100, 200);
+        sobel_filter.ProcessMatrixImg(gaussian_img, img_out1, progress_bar);
+
+        sobel_filter.PopulateVerticalFilter();
+        progress_bar->setRange(-200, 100);
+        sobel_filter.ProcessMatrixImg(gaussian_img, img_out2, progress_bar);
+
+        img_out.resize(mat_img.rows(), mat_img.cols());
+        img_out = (img_out1 + img_out2) / 2;
+        progress_bar->setRange(0, 100);
+    } else{
+        SobelFilter sobel_filter;
+
+        sobel_filter.PopulateHorizontalFilter();
+        progress_bar->setRange(0, 200);
+        sobel_filter.ProcessMatrixImg(mat_img, img_out1, progress_bar);
+
+        sobel_filter.PopulateVerticalFilter();
+        progress_bar->setRange(-100, 100);
+        sobel_filter.ProcessMatrixImg(mat_img, img_out2, progress_bar);
+
+        img_out.resize(mat_img.rows(), mat_img.cols());
+        img_out = (img_out1 + img_out2) / 2;
+        progress_bar->setRange(0, 100);
+    }
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}
+
+std::shared_ptr<ImageHolder> ImageHolder::ProcessVerticalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
+    Eigen::MatrixXi img_out;
+
+    if(use_gaussian_blur){
+        Eigen::MatrixXi gaussian_img;
+        GaussianBlurFilter gaussian_filter(gaussian_filter_size);
+        progress_bar->setRange(0, 200);
+        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_bar);
+
+        SobelFilter sobel_filter;
+        progress_bar->setRange(-100, 100);
+        sobel_filter.PopulateVerticalFilter();
+        sobel_filter.ProcessMatrixImg(gaussian_img, img_out, progress_bar);
+
+        progress_bar->setRange(0, 100);
+    } else{
+        SobelFilter sobel_filter;
+        sobel_filter.PopulateVerticalFilter();
+        sobel_filter.ProcessMatrixImg(mat_img, img_out, progress_bar);
+    }
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}
+
+std::shared_ptr<ImageHolder> ImageHolder::ProcessHorizontalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
+    Eigen::MatrixXi img_out;
+
+    if(use_gaussian_blur){
+        Eigen::MatrixXi gaussian_img;
+        GaussianBlurFilter gaussian_filter(gaussian_filter_size);
+        progress_bar->setRange(0, 200);
+        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_bar);
+
+        SobelFilter sobel_filter;
+        progress_bar->setRange(-100, 100);
+        sobel_filter.PopulateHorizontalFilter();
+        sobel_filter.ProcessMatrixImg(gaussian_img, img_out, progress_bar);
+
+        progress_bar->setRange(0, 100);
+    } else{
+        SobelFilter sobel_filter;
+        sobel_filter.PopulateHorizontalFilter();
+        sobel_filter.ProcessMatrixImg(mat_img, img_out, progress_bar);
     }
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
@@ -122,11 +215,15 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessErosion(std::string output_name
 std::shared_ptr<ImageHolder> ImageHolder::ProcessErosionDilatation(std::string output_name, int filter_size, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out, img_tmp;
 
+    progress_bar->setMaximum(200);
     MaxFilter max_filter(filter_size);
     max_filter.ProcessStatisticalFilter(mat_img, img_tmp, progress_bar);
 
+    progress_bar->setMinimum(-100);
+    progress_bar->setMaximum(100);
     MinFilter min_filter(filter_size);
     min_filter.ProcessStatisticalFilter(img_tmp, img_out, progress_bar);
+    progress_bar->setMinimum(0);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }

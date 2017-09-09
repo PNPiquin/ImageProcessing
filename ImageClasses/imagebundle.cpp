@@ -19,6 +19,27 @@ void ImageBundle::ProcessEdgeDetection(std::string img_name, std::string output_
     Insert(output_name, edge_img);
 }
 
+void ImageBundle::ProcessBothSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
+    std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
+    std::shared_ptr<ImageHolder> edge_img = img->ProcessBothSobel(output_name, use_gaussian_blur, gaussian_filter_size, progress_bar);
+    //JpegManager::SaveGrayscaleMatrixImg(edge_img->mat_img, working_dir_path + output_name);
+    Insert(output_name, edge_img);
+}
+
+void ImageBundle::ProcessVerticalSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
+    std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
+    std::shared_ptr<ImageHolder> edge_img = img->ProcessVerticalSobel(output_name, use_gaussian_blur, gaussian_filter_size, progress_bar);
+    //JpegManager::SaveGrayscaleMatrixImg(edge_img->mat_img, working_dir_path + output_name);
+    Insert(output_name, edge_img);
+}
+
+void ImageBundle::ProcessHorizontalSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
+    std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
+    std::shared_ptr<ImageHolder> edge_img = img->ProcessHorizontalSobel(output_name, use_gaussian_blur, gaussian_filter_size, progress_bar);
+    //JpegManager::SaveGrayscaleMatrixImg(edge_img->mat_img, working_dir_path + output_name);
+    Insert(output_name, edge_img);
+}
+
 void ImageBundle::ProcessGaussianBlur(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar){
     std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
     std::shared_ptr<ImageHolder> edge_img = img->ProcessGaussianBlur(output_name, filter_size, progress_bar);

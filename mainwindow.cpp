@@ -59,6 +59,8 @@ void MainWindow::on_pushButtonEdgeDetect_clicked()
 {
     std::string img_name = ui->current_image->currentText().toStdString();
     bool use_as_a_suffix = ui->edge_tab_use_as_suffix->checkState() == Qt::Checked;
+    bool use_vertical_sobel = ui->use_vertical_sobel->checkState() == Qt::Checked;
+    bool use_horizontal_sobel = ui->use_horizontal_sobel->checkState() == Qt::Checked;
     bool use_gaussian_blur = ui->edge_tab_use_gaussian_blur->checkState() == Qt::Checked;
     int filter_size = ui->edge_tab_filter_size->currentText().toInt();
     int gaussian_filter_size = ui->gaussian_filter_size_spinbox->value();
@@ -68,9 +70,22 @@ void MainWindow::on_pushButtonEdgeDetect_clicked()
     } else{
         result_name = ui->edge_tab_output_name->text().toStdString();
     }
-    bundle.ProcessEdgeDetection(img_name, result_name, filter_size, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
-    ui->current_image->addItem(QString::fromStdString(result_name));
-
+    if(use_vertical_sobel && use_horizontal_sobel){
+        bundle.ProcessBothSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
+        ui->current_image->addItem(QString::fromStdString(result_name));
+    }
+    else if(use_vertical_sobel){
+        bundle.ProcessVerticalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
+        ui->current_image->addItem(QString::fromStdString(result_name));
+    }
+    else if(use_horizontal_sobel){
+        bundle.ProcessHorizontalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
+        ui->current_image->addItem(QString::fromStdString(result_name));
+    }
+    else{
+        bundle.ProcessEdgeDetection(img_name, result_name, filter_size, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
+        ui->current_image->addItem(QString::fromStdString(result_name));
+    }
     DisplayImg(result_name);
 }
 
