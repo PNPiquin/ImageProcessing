@@ -3,12 +3,14 @@
 
 #include <iostream>
 #include <Eigen/Dense>
+#include <QProgressBar>
+
 
 class SpatialFilter {
 public:
   SpatialFilter();
   void SetFilter(Eigen::MatrixXf _filter);
-  void ProcessMatrixImg(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut);
+  void ProcessMatrixImg(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, QProgressBar *progress_bar = NULL);
 
 private:
   int size;

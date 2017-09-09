@@ -8,6 +8,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     bundle = ImageBundle();
     ui->setupUi(this);
+
+    ui->progress_bar->setMinimum(0);
+    ui->progress_bar->setMaximum(100);
+    ui->progress_bar->setValue(0);
 }
 
 MainWindow::~MainWindow()
@@ -64,7 +68,7 @@ void MainWindow::on_pushButtonEdgeDetect_clicked()
     } else{
         result_name = ui->edge_tab_output_name->text().toStdString();
     }
-    bundle.ProcessEdgeDetection(img_name, result_name, filter_size, use_gaussian_blur, gaussian_filter_size);
+    bundle.ProcessEdgeDetection(img_name, result_name, filter_size, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);
@@ -81,7 +85,7 @@ void MainWindow::on_histogram_tab_launch_normalization_clicked()
     } else{
         result_name = ui->histogram_tab_output_name->text().toStdString();
     }
-    bundle.ProcessHistogramNormalization(img_name, result_name);
+    bundle.ProcessHistogramNormalization(img_name, result_name, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);
@@ -98,7 +102,7 @@ void MainWindow::on_intensity_tab_process_law_power_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessPowerLawTransformation(img_name, result_name, gamma);
+    bundle.ProcessPowerLawTransformation(img_name, result_name, gamma, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);
@@ -115,7 +119,7 @@ void MainWindow::on_intensity_tab_process_log_law_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessLogLawTransformation(img_name, result_name, c);
+    bundle.ProcessLogLawTransformation(img_name, result_name, c, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);
@@ -132,7 +136,7 @@ void MainWindow::on_gaussian_blur_push_button_clicked()
     } else{
         result_name = ui->edge_tab_blur_output_name->text().toStdString();
     }
-    bundle.ProcessGaussianBlur(img_name, result_name, gaussian_filter_size);
+    bundle.ProcessGaussianBlur(img_name, result_name, gaussian_filter_size, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);
@@ -149,7 +153,7 @@ void MainWindow::on_intensity_tab_process_thresholding_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessThresholding(img_name, result_name, threshold);
+    bundle.ProcessThresholding(img_name, result_name, threshold, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);
@@ -166,7 +170,7 @@ void MainWindow::on_median_filter_push_button_clicked()
     } else{
         result_name = ui->median_output_name->text().toStdString();
     }
-    bundle.ProcessMedianFilter(img_name, result_name, filter_size);
+    bundle.ProcessMedianFilter(img_name, result_name, filter_size, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);
@@ -183,7 +187,7 @@ void MainWindow::on_erosion_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    bundle.ProcessErosion(img_name, result_name, filter_size);
+    bundle.ProcessErosion(img_name, result_name, filter_size, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);
@@ -200,7 +204,7 @@ void MainWindow::on_dilatation_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    bundle.ProcessDilatation(img_name, result_name, filter_size);
+    bundle.ProcessDilatation(img_name, result_name, filter_size, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);
@@ -217,7 +221,7 @@ void MainWindow::on_erosion_dilatation_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    bundle.ProcessErosionDilatation(img_name, result_name, filter_size);
+    bundle.ProcessErosionDilatation(img_name, result_name, filter_size, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);
@@ -236,7 +240,7 @@ void MainWindow::on_sharp_process_clicked()
     } else{
         result_name = ui->sharp_output_name->text().toStdString();
     }
-    bundle.ProcessUnsharpMask(img_name, result_name, alpha, save_mask, filter_size);
+    bundle.ProcessUnsharpMask(img_name, result_name, alpha, save_mask, filter_size, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);
@@ -276,7 +280,7 @@ void MainWindow::on_lmr_filter_push_button_clicked()
     } else{
         result_name = ui->lmr_output_name->text().toStdString();
     }
-    bundle.ProcessLMR(img_name, result_name, filter_size);
+    bundle.ProcessLMR(img_name, result_name, filter_size, ui->progress_bar);
     ui->current_image->addItem(QString::fromStdString(result_name));
 
     DisplayImg(result_name);

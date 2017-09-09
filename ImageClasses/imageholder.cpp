@@ -33,117 +33,117 @@ ImageHolder::ImageType ImageHolder::GetImageType(){
     return img_type;
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessEdgeDetection(std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessEdgeDetection(std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out;
 
     if(use_gaussian_blur){
         Eigen::MatrixXi gaussian_img;
         GaussianBlurFilter gaussian_filter(gaussian_filter_size);
         EdgeDetectionFilter edge_filter(filter_size);
-        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img);
-        edge_filter.ProcessMatrixImg(gaussian_img, img_out);
+        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_bar);
+        edge_filter.ProcessMatrixImg(gaussian_img, img_out, progress_bar);
     } else{
         EdgeDetectionFilter edge_filter(filter_size);
-        edge_filter.ProcessMatrixImg(mat_img, img_out);
+        edge_filter.ProcessMatrixImg(mat_img, img_out, progress_bar);
     }
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessGaussianBlur(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessGaussianBlur(std::string output_name, int filter_size, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out;
 
     GaussianBlurFilter blur_filter(filter_size);
-    blur_filter.ProcessMatrixImg(mat_img, img_out);
+    blur_filter.ProcessMatrixImg(mat_img, img_out, progress_bar);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessHistogramNormalization(std::string output_name){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessHistogramNormalization(std::string output_name, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out;
 
     HistogramProcessor hp;
-    hp.ProcessEqualization(mat_img, img_out);
+    hp.ProcessEqualization(mat_img, img_out, progress_bar);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessPowerLawTransformation(std::string output_name, double gamma){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessPowerLawTransformation(std::string output_name, double gamma, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out;
 
-    IntensityTransformation::ProcessPowerLaw(mat_img, img_out, gamma);
+    IntensityTransformation::ProcessPowerLaw(mat_img, img_out, gamma, 1.0, progress_bar);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessLogLawTransformation(std::string output_name, double c){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessLogLawTransformation(std::string output_name, double c, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out;
 
-    IntensityTransformation::ProcessLogLaw(mat_img, img_out, c);
+    IntensityTransformation::ProcessLogLaw(mat_img, img_out, c, progress_bar);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessThresholding(std::string output_name, int threshold){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessThresholding(std::string output_name, int threshold, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out;
 
-    IntensityTransformation::ProcessThresholding(mat_img, img_out, threshold);
+    IntensityTransformation::ProcessThresholding(mat_img, img_out, threshold, progress_bar);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessMedianFilter(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessMedianFilter(std::string output_name, int filter_size, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out;
 
     MedianFilter median_filter(filter_size);
-    median_filter.ProcessStatisticalFilter(mat_img, img_out);
+    median_filter.ProcessStatisticalFilter(mat_img, img_out, progress_bar);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessDilatation(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessDilatation(std::string output_name, int filter_size, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out;
 
     MinFilter min_filter(filter_size);
-    min_filter.ProcessStatisticalFilter(mat_img, img_out);
+    min_filter.ProcessStatisticalFilter(mat_img, img_out, progress_bar);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessErosion(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessErosion(std::string output_name, int filter_size, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out;
 
     MaxFilter max_filter(filter_size);
-    max_filter.ProcessStatisticalFilter(mat_img, img_out);
+    max_filter.ProcessStatisticalFilter(mat_img, img_out, progress_bar);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessErosionDilatation(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessErosionDilatation(std::string output_name, int filter_size, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out, img_tmp;
 
     MaxFilter max_filter(filter_size);
-    max_filter.ProcessStatisticalFilter(mat_img, img_tmp);
+    max_filter.ProcessStatisticalFilter(mat_img, img_tmp, progress_bar);
 
     MinFilter min_filter(filter_size);
-    min_filter.ProcessStatisticalFilter(img_tmp, img_out);
+    min_filter.ProcessStatisticalFilter(img_tmp, img_out, progress_bar);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessUnsharpMask(std::string output_name, double alpha, bool save_mask, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessUnsharpMask(std::string output_name, double alpha, bool save_mask, int filter_size, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out;
 
-    UnsharpMaskProcessor::ProcessUnsharpMask(mat_img, img_out, alpha, save_mask, filter_size);
+    UnsharpMaskProcessor::ProcessUnsharpMask(mat_img, img_out, alpha, save_mask, filter_size, progress_bar);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessLMR(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessLMR(std::string output_name, int filter_size, QProgressBar *progress_bar){
     Eigen::MatrixXi img_out;
 
     SlowLMRProcessor lmrp(filter_size);
-    lmrp.ProcessStatisticalFilter(mat_img, img_out);
+    lmrp.ProcessStatisticalFilter(mat_img, img_out, progress_bar);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }

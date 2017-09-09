@@ -13,7 +13,7 @@ void StatisticalSpatialFilter::SetStatisticalFilter(std::function<int(std::vecto
     statistical_filter = func;
 }
 
-void StatisticalSpatialFilter::ProcessStatisticalFilter(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out){
+void StatisticalSpatialFilter::ProcessStatisticalFilter(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out, QProgressBar *progress_bar){
     int rows = img.rows();
     int cols = img.cols();
     int padding = (filter_size - 1) / 2;
@@ -24,6 +24,9 @@ void StatisticalSpatialFilter::ProcessStatisticalFilter(Eigen::MatrixXi &img, Ei
             std::vector<int> tmp_data;
             subMatrixExtraction(i, j, img, tmp_data);
             img_out(i, j) = statistical_filter(tmp_data);
+        }
+        if(progress_bar){
+            progress_bar->setValue(std::floor(((i+1)*100)/(rows-padding)));
         }
     }
     printf("%s\n", "End of StatisticalSpatialFilter processing");

@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <Eigen/Dense>
+#include <QProgressBar>
+
 
 class StatisticalSpatialFilter
 {
@@ -10,7 +12,7 @@ public:
     StatisticalSpatialFilter();
     void SetFilterSize(int size);
     void SetStatisticalFilter(std::function<int(std::vector<int>)> func);
-    void ProcessStatisticalFilter(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out);
+    void ProcessStatisticalFilter(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out, QProgressBar *progress_bar=NULL);
 
 private:
     int filter_size;
