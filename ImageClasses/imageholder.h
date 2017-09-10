@@ -21,6 +21,9 @@ public:
     ImageHolder(Eigen::MatrixXi mat_img, std::string img_name, ImageType image_type);
 
     std::shared_ptr<ImageHolder> ProcessEdgeDetection(std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size,  QProgressBar *progress_bar = NULL);
+    std::shared_ptr<ImageHolder> ProcessBothSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size,  QProgressBar *progress_bar = NULL);
+    std::shared_ptr<ImageHolder> ProcessVerticalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size,  QProgressBar *progress_bar = NULL);
+    std::shared_ptr<ImageHolder> ProcessHorizontalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessGaussianBlur(std::string output_name, int filter_size,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessHistogramNormalization(std::string output_name,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessPowerLawTransformation(std::string output_name, double gamma,  QProgressBar *progress_bar = NULL);

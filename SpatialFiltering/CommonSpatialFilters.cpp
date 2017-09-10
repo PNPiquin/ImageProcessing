@@ -91,3 +91,24 @@ void GaussianBlurFilter::CreateNXNFilter(int n){
         printf("Warning : %i is not an odd integer.", n);
     }
 }
+
+// Sobel Filter
+
+SobelFilter::SobelFilter() : SpatialFilter(){
+}
+
+void SobelFilter::PopulateHorizontalFilter(){
+    Eigen::MatrixXf filter(3, 3);
+    filter << -1, -2, -1,
+                    0, 0, 0,
+                    1, 2, 1;
+    SetFilter(filter);
+}
+
+void SobelFilter::PopulateVerticalFilter(){
+    Eigen::MatrixXf filter(3, 3);
+    filter << -1, 0, 1,
+                    -2, 0, 2,
+                    -1, 0, 1;
+    SetFilter(filter);
+}
