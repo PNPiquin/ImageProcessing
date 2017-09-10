@@ -2,6 +2,7 @@
 #define FUZZYSETPROCESSOR_H
 
 #include <Eigen/Dense>
+#include <QProgressBar>
 
 class FuzzySetProcessor
 {
@@ -17,14 +18,15 @@ public:
         number_of_sets++;
     }
 
-    void ProcessFuzzySets(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out);
+    void ProcessFuzzySets(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out, QProgressBar *progress_bar=NULL);
+
+    static std::function<double(int)> CreateMembershipFunction(MembershipFunctionType type, std::vector<int> key_points);
+
 
 private:
     int number_of_sets;
     std::vector<std::function<double(int)>> membership_functions;
     std::vector<int> output_per_set;
-
-    std::function<double(int)> CreateMembershipFunction(MembershipFunctionType type, std::vector<int> key_points);
 };
 
 #endif // FUZZYSETPROCESSOR_H

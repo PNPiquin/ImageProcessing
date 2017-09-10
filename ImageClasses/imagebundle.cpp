@@ -115,3 +115,10 @@ void ImageBundle::ProcessLMR(std::string img_name, std::string output_name, int 
     std::shared_ptr<ImageHolder> sharp_img = img->ProcessLMR(output_name, filter_size, progress_bar);
     Insert(output_name, sharp_img);
 }
+
+void ImageBundle::ProcessFuzzySets(std::string img_name, std::string output_name, std::vector<std::pair<std::pair<std::vector<int>, FuzzySetProcessor::MembershipFunctionType>, int>> membership_functions, QProgressBar *progress_bar){
+    std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
+    std::shared_ptr<ImageHolder> fuzzy_img = img->ProcessFuzzySets(output_name, membership_functions, progress_bar);
+    Insert(output_name, fuzzy_img);
+}
+

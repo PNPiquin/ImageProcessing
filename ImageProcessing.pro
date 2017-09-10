@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     SpatialFiltering/unsharpmaskprocessor.cpp \
     ImageClasses/imagebundle.cpp \
     ImageClasses/imageholder.cpp \
-    IO/JpegManager.cpp
+    IO/JpegManager.cpp \
+    SpatialFiltering/fuzzysetprocessor.cpp
 
 HEADERS  += mainwindow.h \
     SpatialFiltering/CommonSpatialFilters.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     SpatialFiltering/unsharpmaskprocessor.h \
     ImageClasses/imagebundle.h \
     ImageClasses/imageholder.h \
-    IO/JpegManager.h
+    IO/JpegManager.h \
+    SpatialFiltering/fuzzysetprocessor.h
 
 FORMS    += mainwindow.ui
 

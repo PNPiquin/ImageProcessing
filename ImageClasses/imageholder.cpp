@@ -244,3 +244,20 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessLMR(std::string output_name, in
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
+
+std::shared_ptr<ImageHolder> ImageHolder::ProcessFuzzySets(std::string output_name, std::vector<std::pair<std::pair<std::vector<int>, FuzzySetProcessor::MembershipFunctionType>, int> > membership_functions, QProgressBar *progress_bar){
+    Eigen::MatrixXi img_out;
+
+    FuzzySetProcessor fuz;
+
+    for(int i = 0; i < membership_functions.size(); ++i){
+        fuz.PushMembershipFunction(
+                    FuzzySetProcessor::CreateMembershipFunction(membership_functions[i].first.second, membership_functions[i].first.first),
+                    membership_functions[i].second
+                    );
+    }
+
+    fuz.ProcessFuzzySets(mat_img, img_out, progress_bar);
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}

@@ -102,3 +102,28 @@ std::function<double(int)> FuzzySetProcessor::CreateMembershipFunction(Membershi
     }
     return membership_function;
 }
+
+void FuzzySetProcessor::ProcessFuzzySets(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out, QProgressBar *progress_bar){
+    int rows(img.rows()), cols(img.cols());
+    img_out.resize(rows, cols);
+    for(int i = 0; i < rows; ++i){
+        for (int j = 0; j < cols; ++j){
+            std::vector<double> memberships;
+            int current_value = img(i, j);
+            for(int k = 0; k < membership_functions.size(); ++k){
+                memberships.push_back(membership_functions[k](current_value));
+            }
+            double output_value(0.0);
+            double total_membership(0.0);
+            for(int k = 0; k < memberships.size(); ++k){
+                output_value += memberships[k] * output_per_set[k];
+                total_membership += memberships[k];
+            }
+            int output = std::floor(0.5 + output_value/total_membership);
+            img_out(i, j) = output;
+        }
+        if(progress_bar){
+            progress_bar->setValue(std::floor(((i+1)*100)/rows));
+        }
+    }
+}
