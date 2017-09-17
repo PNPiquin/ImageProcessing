@@ -244,3 +244,19 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessLMR(std::string output_name, in
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
+
+std::shared_ptr<ImageHolder> ImageHolder::ProcessCanny(std::string output_name, bool save_tmp_imgs, QProgressBar *progress_bar){
+    Eigen::MatrixXi img_out;
+
+    if(save_tmp_imgs){
+        Eigen::MatrixXi mag;
+        Eigen::MatrixXf dir;
+        CannyEdgeDetector::ProcessCannyEdgeDetector(mat_img, img_out, mag, dir, progress_bar);
+        JpegManager::SaveGrayscaleMatrixImg(mag, "/home/pierre-nicolas/Pictures/ImageProcessing/Canny/" + output_name + "_mag");
+    }
+    else{
+        CannyEdgeDetector::ProcessCannyEdgeDetector(mat_img, img_out, progress_bar);
+    }
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}

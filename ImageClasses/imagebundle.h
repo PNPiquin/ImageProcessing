@@ -29,6 +29,8 @@ public:
     void ProcessErosionDilatation(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar = NULL);
     void ProcessUnsharpMask(std::string img_name, std::string output_name, double alpha, bool save_mask, int filter_size, QProgressBar *progress_bar = NULL);
     void ProcessLMR(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar = NULL);
+    void ProcessCanny(std::string img_name, std::string output_name, bool save_tmp_imgs, QProgressBar *progress_bar = NULL);
+
 
     void SetWorkingDir(std::string path) {working_dir_path = path; }
     std::string GetWorkingDir() {return working_dir_path;}
