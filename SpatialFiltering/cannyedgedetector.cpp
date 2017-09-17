@@ -18,7 +18,7 @@ void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::Ma
     int cols = img.cols();
     int filter_size = 5;
     int padding = (filter_size - 1) / 2;
-    int threshold(50);
+    int threshold(30);
 
     // Resizing the matrix to the img size
     img_out.resize(rows, cols);

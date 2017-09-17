@@ -63,6 +63,8 @@ private slots:
 
     void on_lmr_filter_push_button_clicked();
 
+    void on_canny_push_button_clicked();
+
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;

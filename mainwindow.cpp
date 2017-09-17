@@ -300,3 +300,20 @@ void MainWindow::on_lmr_filter_push_button_clicked()
 
     DisplayImg(result_name);
 }
+
+void MainWindow::on_canny_push_button_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->edge_tab_use_as_suffix->checkState() == Qt::Checked;
+    bool save_tmp_imgs = ui->canny_tmp_imgs->checkState() == Qt::Checked;
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->edge_tab_output_name->text().toStdString();
+    } else{
+        result_name = ui->edge_tab_output_name->text().toStdString();
+    }
+    bundle.ProcessCanny(img_name, result_name, save_tmp_imgs, ui->progress_bar);
+    ui->current_image->addItem(QString::fromStdString(result_name));
+
+    DisplayImg(result_name);
+}

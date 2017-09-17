@@ -115,3 +115,9 @@ void ImageBundle::ProcessLMR(std::string img_name, std::string output_name, int 
     std::shared_ptr<ImageHolder> sharp_img = img->ProcessLMR(output_name, filter_size, progress_bar);
     Insert(output_name, sharp_img);
 }
+
+void ImageBundle::ProcessCanny(std::string img_name, std::string output_name, bool save_tmp_imgs, QProgressBar *progress_bar){
+    std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
+    std::shared_ptr<ImageHolder> canny_img = img->ProcessCanny(output_name, save_tmp_imgs, progress_bar);
+    Insert(output_name, canny_img);
+}
