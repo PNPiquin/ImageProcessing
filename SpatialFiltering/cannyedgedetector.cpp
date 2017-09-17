@@ -7,18 +7,23 @@ CannyEdgeDetector::CannyEdgeDetector()
 
 }
 
-void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out){
+void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out, QProgressBar *progress_bar){
     Eigen::MatrixXi mag;
     Eigen::MatrixXf dir;
-    CannyEdgeDetector::ProcessCannyEdgeDetector(img, img_out, mag, dir);
+    CannyEdgeDetector::ProcessCannyEdgeDetector(img, img_out, mag, dir, progress_bar);
 }
 
-void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out, Eigen::MatrixXi &mag, Eigen::MatrixXf &dir){
+void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out, Eigen::MatrixXi &mag, Eigen::MatrixXf &dir, QProgressBar *progress_bar){
     int rows = img.rows();
     int cols = img.cols();
     int filter_size = 5;
     int padding = (filter_size - 1) / 2;
     int threshold(30);
+
+    // ProgressBar resizing
+    if(progress_bar){
+        progress_bar->setRange(0, 400);
+    }
 
     // Resizing the matrix to the img size
     img_out.resize(rows, cols);
@@ -28,10 +33,10 @@ void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::Ma
     // First, we need a blurred version of img
     Eigen::MatrixXi blurred_img(rows, cols);
     GaussianBlurFilter gbf(filter_size);
-    gbf.ProcessMatrixImg(img, blurred_img);
+    gbf.ProcessMatrixImg(img, blurred_img, progress_bar);
 
     // Then, we need to populate the mag and the dir imgs
-    ComputeMagAndDirEdgeImg(blurred_img, mag, dir);
+    ComputeMagAndDirEdgeImg(blurred_img, mag, dir, progress_bar);
 
     // Need to classify all point by their "edge direction" to keep or to suppress
     double PI(3.141592653589793238462);
@@ -71,15 +76,25 @@ void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::Ma
                 }
             }
         }
+        if(progress_bar){
+            progress_bar->setValue(200 + std::floor(((i+1)*100)/rows));
+        }
     }
 
     // Last thing to do --> Threshold
     // This first version is very basic
-    IntensityTransformation::ProcessThresholding(img_out, img_out, threshold);
+    if(progress_bar){
+        progress_bar->setRange(-300, 100);
+        progress_bar->setValue(0);
+    }
+    IntensityTransformation::ProcessThresholding(img_out, img_out, threshold, progress_bar);
 
+    if(progress_bar){
+        progress_bar->setRange(0, 100);
+    }
 }
 
-void CannyEdgeDetector::ComputeMagAndDirEdgeImg(Eigen::MatrixXi &img, Eigen::MatrixXi &mag, Eigen::MatrixXf &dir){
+void CannyEdgeDetector::ComputeMagAndDirEdgeImg(Eigen::MatrixXi &img, Eigen::MatrixXi &mag, Eigen::MatrixXf &dir, QProgressBar *progress_bar){
     // For now the filter size is set to 3 to use Sobel filters
     int rows = img.rows();
     int cols = img.cols();
@@ -116,6 +131,9 @@ void CannyEdgeDetector::ComputeMagAndDirEdgeImg(Eigen::MatrixXi &img, Eigen::Mat
             convolution(i, j, gx, gy);
             mag(i, j) = std::floor(std::sqrt( std::pow(gx, 2) + std::pow(gy, 2)) + 0.5);
             dir(i, j) = std::atan( gy == 0.0 ? (gx / gy) : (1000 * gx) );
+        }
+        if(progress_bar){
+            progress_bar->setValue(100 + std::floor(((i+1)*100)/(rows-padding)));
         }
     }
 

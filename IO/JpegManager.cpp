@@ -11,6 +11,8 @@ void JpegManager::GetImage(boost::gil::rgb8_image_t &img){
         boost::gil::jpeg_read_image(path + ".jpeg", img);
     } else if (boost::filesystem::exists(path + ".jpg")){
         boost::gil::jpeg_read_image(path + ".jpg", img);
+    } else if (boost::filesystem::exists(path + ".JPG")){
+        boost::gil::jpeg_read_image(path + ".JPG", img);
     } else {
         return;
     }
