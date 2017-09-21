@@ -51,7 +51,7 @@ QPixmap MainWindow::CreatePixmap(std::string img_name){
 
 void MainWindow::timerEvent(QTimerEvent *event){
     auto itr = bundle.image_bundle.begin();
-    for(itr; itr != bundle.image_bundle.end(); ++itr){
+    for(;itr != bundle.image_bundle.end(); ++itr){
         if(ui->current_image->findText(QString::fromStdString(itr->first)) == -1){
             ui->current_image->addItem(QString::fromStdString(itr->first));
             DisplayImg(itr->first);
