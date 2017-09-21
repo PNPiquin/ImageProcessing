@@ -70,6 +70,11 @@ private:
 
     void DisplayImg(std::string img_name);
     QPixmap CreatePixmap(std::string img_name);
+
+    int timerID;
+
+protected:
+    void timerEvent(QTimerEvent *event);
 };
 
 #endif // MAINWINDOW_H
