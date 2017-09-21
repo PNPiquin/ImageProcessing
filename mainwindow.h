@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <qtreewidget.h>
 #include <iostream>
 #include <string>
 #include <map>
@@ -71,6 +70,11 @@ private:
 
     void DisplayImg(std::string img_name);
     QPixmap CreatePixmap(std::string img_name);
+
+    int timerID;
+
+protected:
+    void timerEvent(QTimerEvent *event);
 };
 
 #endif // MAINWINDOW_H

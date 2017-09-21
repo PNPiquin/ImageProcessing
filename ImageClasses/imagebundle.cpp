@@ -7,7 +7,7 @@ ImageBundle::ImageBundle()
 
 void ImageBundle::LoadImg(std::string img_name){
     std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(working_dir_path, img_name);
-    image_bundle.insert(std::pair<std::string, std::shared_ptr<ImageHolder>>(img_name, img_holder));
+    //image_bundle.insert(std::pair<std::string, std::shared_ptr<ImageHolder>>(img_name, img_holder));
     //JpegManager::SaveGrayscaleMatrixImg(img_holder->mat_img, working_dir_path + img_name + "_grayscale");
     image_bundle.insert(std::pair<std::string, std::shared_ptr<ImageHolder>>(img_name + "_grayscale", img_holder));
 }
