@@ -23,7 +23,7 @@ SOURCES += main.cpp\
     ImageClasses/imagebundle.cpp \
     ImageClasses/imageholder.cpp \
     IO/JpegManager.cpp \
-    SpatialFiltering/cannyedgedetector.cpp
+    SpatialFiltering/cannyedgedetector.cpp \
     SpatialFiltering/fuzzysetprocessor.cpp
 
 HEADERS  += mainwindow.h \
@@ -36,7 +36,7 @@ HEADERS  += mainwindow.h \
     ImageClasses/imagebundle.h \
     ImageClasses/imageholder.h \
     IO/JpegManager.h \
-    SpatialFiltering/cannyedgedetector.h
+    SpatialFiltering/cannyedgedetector.h \
     SpatialFiltering/fuzzysetprocessor.h
 
 FORMS    += mainwindow.ui
