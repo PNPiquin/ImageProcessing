@@ -266,7 +266,7 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessFuzzySets(std::string output_na
 
     FuzzySetProcessor fuz;
 
-    for(int i = 0; i < membership_functions.size(); ++i){
+    for(unsigned int i = 0; i < membership_functions.size(); ++i){
         fuz.PushMembershipFunction(
                     FuzzySetProcessor::CreateMembershipFunction(membership_functions[i].first.second, membership_functions[i].first.first),
                     membership_functions[i].second

@@ -110,12 +110,12 @@ void FuzzySetProcessor::ProcessFuzzySets(Eigen::MatrixXi &img, Eigen::MatrixXi &
         for (int j = 0; j < cols; ++j){
             std::vector<double> memberships;
             int current_value = img(i, j);
-            for(int k = 0; k < membership_functions.size(); ++k){
+            for(unsigned int k = 0; k < membership_functions.size(); ++k){
                 memberships.push_back(membership_functions[k](current_value));
             }
             double output_value(0.0);
             double total_membership(0.0);
-            for(int k = 0; k < memberships.size(); ++k){
+            for(unsigned int k = 0; k < memberships.size(); ++k){
                 output_value += memberships[k] * output_per_set[k];
                 total_membership += memberships[k];
             }
