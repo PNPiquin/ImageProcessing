@@ -11,6 +11,7 @@
 #include "SpatialFiltering/IntensityTransformation.h"
 #include "SpatialFiltering/statisticalspatialfilter.h"
 #include "SpatialFiltering/unsharpmaskprocessor.h"
+#include "SpatialFiltering/cannyedgedetector.h"
 #include "SpatialFiltering/fuzzysetprocessor.h"
 
 class ImageHolder
@@ -36,7 +37,9 @@ public:
     std::shared_ptr<ImageHolder> ProcessErosionDilatation(std::string output_name, int filter_size,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessUnsharpMask(std::string output_name, double alpha, bool save_mask, int filter_size,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessLMR(std::string output_name, int filter_size,  QProgressBar *progress_bar = NULL);
+    std::shared_ptr<ImageHolder> ProcessCanny(std::string output_name, bool save_tmp_imgs,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessFuzzySets(std::string output_name, std::vector<std::pair<std::pair<std::vector<int>, FuzzySetProcessor::MembershipFunctionType>, int>> membership_functions,  QProgressBar *progress_bar = NULL);
+
 
     void SetImageName(std::string name);
     void SetImageType(ImageType type);

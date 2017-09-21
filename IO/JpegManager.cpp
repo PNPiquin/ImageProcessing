@@ -11,6 +11,8 @@ void JpegManager::GetImage(boost::gil::rgb8_image_t &img){
         boost::gil::jpeg_read_image(path + ".jpeg", img);
     } else if (boost::filesystem::exists(path + ".jpg")){
         boost::gil::jpeg_read_image(path + ".jpg", img);
+    } else if (boost::filesystem::exists(path + ".JPG")){
+        boost::gil::jpeg_read_image(path + ".JPG", img);
     } else {
         return;
     }
@@ -39,8 +41,16 @@ void JpegManager::GetGrayscaleMatrixImg(Eigen::MatrixXi &mat_img){
 
 void JpegManager::SaveGrayscaleMatrixImg(Eigen::MatrixXi &mat_img, std::string save_path){
   boost::gil::gray8_image_t img = GrayscaleMatrixImgToGrayImg(mat_img);
-  boost::gil::jpeg_write_view( save_path + ".jpeg", boost::gil::view(img));
-  printf("%s\n", "Img saved successfully");
+  try{
+      boost::gil::jpeg_write_view( save_path + ".jpeg", boost::gil::view(img));
+      printf("%s\n", "Img saved successfully");
+  }
+  catch(std::ios_base::failure e){
+      std::cout << "Error in SaveGrayscaleMatrixImg : " << e.what() << std::endl;
+  }
+  catch(...){
+      std::cout << "ERROR !!" << std::endl;
+  }
 }
 
 boost::gil::gray8_image_t JpegManager::GrayscaleMatrixImgToGrayImg(Eigen::MatrixXi &mat_img){
