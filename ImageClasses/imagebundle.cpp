@@ -105,3 +105,9 @@ void ImageBundle::ProcessCanny(std::string img_name, std::string output_name, bo
     std::shared_ptr<ImageHolder> canny_img = img->ProcessCanny(output_name, save_tmp_imgs, progress_bar);
     Insert(output_name, canny_img);
 }
+
+void ImageBundle::ProcessOtsuSegmentation(std::string img_name, std::string output_name){
+    std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
+    std::shared_ptr<ImageHolder> otsu_img = img->ProcessOtsuSegmentation(output_name);
+    Insert(output_name, otsu_img);
+}
