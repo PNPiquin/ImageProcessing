@@ -1,17 +1,9 @@
 #ifndef IMAGEHOLDER_H
 #define IMAGEHOLDER_H
 
+#include <memory>
 #include <Eigen/Dense>
 #include <QProgressBar>
-
-#include "IO/JpegManager.h"
-#include "SpatialFiltering/SpatialFilter.h"
-#include "SpatialFiltering/CommonSpatialFilters.h"
-#include "SpatialFiltering/HistogramProcessor.h"
-#include "SpatialFiltering/IntensityTransformation.h"
-#include "SpatialFiltering/statisticalspatialfilter.h"
-#include "SpatialFiltering/unsharpmaskprocessor.h"
-#include "SpatialFiltering/cannyedgedetector.h"
 
 class ImageHolder
 {
@@ -37,6 +29,7 @@ public:
     std::shared_ptr<ImageHolder> ProcessUnsharpMask(std::string output_name, double alpha, bool save_mask, int filter_size,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessLMR(std::string output_name, int filter_size,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessCanny(std::string output_name, bool save_tmp_imgs,  QProgressBar *progress_bar = NULL);
+    std::shared_ptr<ImageHolder> ProcessOtsuSegmentation(std::string output_name);
 
 
     void SetImageName(std::string name);

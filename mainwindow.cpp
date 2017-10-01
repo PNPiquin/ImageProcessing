@@ -289,3 +289,16 @@ void MainWindow::on_canny_push_button_clicked()
     }
     bundle.ProcessCanny(img_name, result_name, save_tmp_imgs, ui->progress_bar);
 }
+
+void MainWindow::on_otsu_push_button_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->otsu_use_as_suffix->checkState() == Qt::Checked;
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->otsu_output_name->text().toStdString();
+    } else{
+        result_name = ui->otsu_output_name->text().toStdString();
+    }
+    bundle.ProcessOtsuSegmentation(img_name, result_name);
+}

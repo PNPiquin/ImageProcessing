@@ -1,5 +1,15 @@
 #include "imageholder.h"
 
+#include "IO/JpegManager.h"
+#include "SpatialFiltering/SpatialFilter.h"
+#include "SpatialFiltering/CommonSpatialFilters.h"
+#include "SpatialFiltering/HistogramProcessor.h"
+#include "SpatialFiltering/IntensityTransformation.h"
+#include "SpatialFiltering/statisticalspatialfilter.h"
+#include "SpatialFiltering/unsharpmaskprocessor.h"
+#include "SpatialFiltering/cannyedgedetector.h"
+#include "Segmentation/otsusegmentation.h"
+
 ImageHolder::ImageHolder(std::string dir_path, std::string img_name) :
     img_name(img_name)
 {
@@ -257,6 +267,14 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessCanny(std::string output_name, 
     else{
         CannyEdgeDetector::ProcessCannyEdgeDetector(mat_img, img_out, progress_bar);
     }
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}
+
+std::shared_ptr<ImageHolder> ImageHolder::ProcessOtsuSegmentation(std::string output_name){
+    Eigen::MatrixXi img_out;
+
+    OtsuSegmentation::ProcessOtsuSegmentation(mat_img, img_out);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }

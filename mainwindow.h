@@ -64,6 +64,8 @@ private slots:
 
     void on_canny_push_button_clicked();
 
+    void on_otsu_push_button_clicked();
+
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;

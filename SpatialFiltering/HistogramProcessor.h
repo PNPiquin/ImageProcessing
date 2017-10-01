@@ -9,13 +9,15 @@ class HistogramProcessor{
 public:
   HistogramProcessor();
   void ProcessEqualization(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, QProgressBar *progress_bar = NULL);
-  void HistogramInit(Eigen::MatrixXi &img);
+  static std::map<int, double> GetHistogram(Eigen::MatrixXi &img);
 
 private:
   std::map<int, double> histogram;
   std::map<int, double> inverse_histogram;
 
   static const int value_range;
+
+  void HistogramInit(Eigen::MatrixXi &img);
 };
 
 #endif
