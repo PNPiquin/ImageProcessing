@@ -9,6 +9,7 @@
 #include "SpatialFiltering/unsharpmaskprocessor.h"
 #include "SpatialFiltering/cannyedgedetector.h"
 #include "Segmentation/otsusegmentation.h"
+#include "Segmentation/kmeans.h"
 
 ImageHolder::ImageHolder(std::string dir_path, std::string img_name) :
     img_name(img_name)
@@ -275,6 +276,15 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessOtsuSegmentation(std::string ou
     Eigen::MatrixXi img_out;
 
     OtsuSegmentation::ProcessOtsuSegmentation(mat_img, img_out);
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}
+
+std::shared_ptr<ImageHolder> ImageHolder::ProcessKMeans(std::string output_name, int k){
+    Eigen::MatrixXi img_out;
+
+    KMeans km(k, KMeans::K_MEANS_DISTANCE::ED_SVD);
+    km.ProcessKMeans(mat_img, img_out);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }

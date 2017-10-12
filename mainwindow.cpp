@@ -293,12 +293,26 @@ void MainWindow::on_canny_push_button_clicked()
 void MainWindow::on_otsu_push_button_clicked()
 {
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->otsu_use_as_suffix->checkState() == Qt::Checked;
+    bool use_as_a_suffix = ui->segmentation_use_as_suffix->checkState() == Qt::Checked;
     std::string result_name;
     if(use_as_a_suffix){
-        result_name = img_name + ui->otsu_output_name->text().toStdString();
+        result_name = img_name + ui->segmentation_output_name->text().toStdString();
     } else{
-        result_name = ui->otsu_output_name->text().toStdString();
+        result_name = ui->segmentation_output_name->text().toStdString();
     }
     bundle.ProcessOtsuSegmentation(img_name, result_name);
+}
+
+void MainWindow::on_k_means_push_button_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->segmentation_use_as_suffix->checkState() == Qt::Checked;
+    int k = ui->k_means_spinbox->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->segmentation_output_name->text().toStdString();
+    } else{
+        result_name = ui->segmentation_output_name->text().toStdString();
+    }
+    bundle.ProcessKMeans(img_name, result_name, k);
 }

@@ -30,6 +30,7 @@ public:
     std::shared_ptr<ImageHolder> ProcessLMR(std::string output_name, int filter_size,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessCanny(std::string output_name, bool save_tmp_imgs,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessOtsuSegmentation(std::string output_name);
+    std::shared_ptr<ImageHolder> ProcessKMeans(std::string output_name, int k);
 
 
     void SetImageName(std::string name);

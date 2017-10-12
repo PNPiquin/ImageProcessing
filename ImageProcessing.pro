@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     ImageClasses/imageholder.cpp \
     IO/JpegManager.cpp \
     SpatialFiltering/cannyedgedetector.cpp \
-    Segmentation/otsusegmentation.cpp
+    Segmentation/otsusegmentation.cpp \
+    Segmentation/kmeans.cpp
 
 HEADERS  += mainwindow.h \
     SpatialFiltering/CommonSpatialFilters.h \
@@ -37,7 +38,8 @@ HEADERS  += mainwindow.h \
     ImageClasses/imageholder.h \
     IO/JpegManager.h \
     SpatialFiltering/cannyedgedetector.h \
-    Segmentation/otsusegmentation.h
+    Segmentation/otsusegmentation.h \
+    Segmentation/kmeans.h
 
 FORMS    += mainwindow.ui
 
