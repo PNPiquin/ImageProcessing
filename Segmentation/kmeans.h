@@ -12,7 +12,8 @@ public:
 
     enum K_MEANS_DISTANCE {
         EUCLIDIAN_DISTANCE,
-        ED_SVD // Euclidian distance + square value diff
+        ED_SVD, // Euclidian distance + square value diff
+        SVD // square value diff
     };
 
     KMeans(int k = 2, K_MEANS_DISTANCE distance_method = ED_SVD);

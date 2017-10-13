@@ -20,6 +20,11 @@ KMeans::KMeans(int k, K_MEANS_DISTANCE distance_method) :
             return std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
         };
         break;
+    case SVD:
+        distance = [](Pixel p1, Pixel p2){
+            return std::sqrt(std::pow(p1.value - p2.value, 2));
+        };
+        break;
     }
 }
 
@@ -32,7 +37,7 @@ void KMeans::ProcessKMeans(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out){
     Init(img, 0, rows - 1, 0, cols - 1);
 
     int max_iter(25), iter(0);
-    double epsilon(100.0), prev_value(0.0);
+    double epsilon(1.0), prev_value(0.0);
     double total_value = - epsilon - 1.0;
     while(std::abs(total_value - prev_value) > epsilon && iter < max_iter){
         prev_value = total_value;
@@ -92,7 +97,9 @@ double KMeans::ProcessKMeansStep(Eigen::MatrixXi &img){
             x_mean += px.x;
             y_mean += px.y;
         }
-        clusters.at(index).cluster_center.SetCoord(int(x_mean/n), int(y_mean/n));
+        int x_center = n > 0 ? int(x_mean/n) : clusters.at(index).cluster_center.x;
+        int y_center = n > 0 ? int(y_mean/n) : clusters.at(index).cluster_center.y;
+        clusters.at(index).cluster_center.SetCoord(x_center, y_center);
     }
     return total_dist;
 }

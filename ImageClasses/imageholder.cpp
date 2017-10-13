@@ -283,7 +283,7 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessOtsuSegmentation(std::string ou
 std::shared_ptr<ImageHolder> ImageHolder::ProcessKMeans(std::string output_name, int k){
     Eigen::MatrixXi img_out;
 
-    KMeans km(k, KMeans::K_MEANS_DISTANCE::ED_SVD);
+    KMeans km(k, KMeans::K_MEANS_DISTANCE::SVD);
     km.ProcessKMeans(mat_img, img_out);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
