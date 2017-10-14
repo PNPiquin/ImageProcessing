@@ -111,3 +111,9 @@ void ImageBundle::ProcessOtsuSegmentation(std::string img_name, std::string outp
     std::shared_ptr<ImageHolder> otsu_img = img->ProcessOtsuSegmentation(output_name);
     Insert(output_name, otsu_img);
 }
+
+void ImageBundle::ProcessKMeans(std::string img_name, std::string output_name, int k, KMeans::K_MEANS_DISTANCE distance_method){
+    std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
+    std::shared_ptr<ImageHolder> k_img = img->ProcessKMeans(output_name, k, distance_method);
+    Insert(output_name, k_img);
+}

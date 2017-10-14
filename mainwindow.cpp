@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "Segmentation/kmeans.h"
 
 // Constructor
 MainWindow::MainWindow(QWidget *parent) :
@@ -12,6 +13,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->progress_bar->setMinimum(0);
     ui->progress_bar->setMaximum(100);
     ui->progress_bar->setValue(0);
+
+    ui->K_means_combobox->addItem("Euclidian distance");
+    ui->K_means_combobox->addItem("ED + SVD");
+    ui->K_means_combobox->addItem("SVD");
 
     timerID = startTimer(500);
 }
@@ -293,12 +298,35 @@ void MainWindow::on_canny_push_button_clicked()
 void MainWindow::on_otsu_push_button_clicked()
 {
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->otsu_use_as_suffix->checkState() == Qt::Checked;
+    bool use_as_a_suffix = ui->segmentation_use_as_suffix->checkState() == Qt::Checked;
     std::string result_name;
     if(use_as_a_suffix){
-        result_name = img_name + ui->otsu_output_name->text().toStdString();
+        result_name = img_name + ui->segmentation_output_name->text().toStdString();
     } else{
-        result_name = ui->otsu_output_name->text().toStdString();
+        result_name = ui->segmentation_output_name->text().toStdString();
     }
     bundle.ProcessOtsuSegmentation(img_name, result_name);
+}
+
+void MainWindow::on_k_means_push_button_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->segmentation_use_as_suffix->checkState() == Qt::Checked;
+    int k = ui->k_means_spinbox->value();
+    KMeans::K_MEANS_DISTANCE distance_method = KMeans::K_MEANS_DISTANCE::SVD;
+    std::string distance_method_string = ui->K_means_combobox->currentText().toStdString();
+    if(distance_method_string == "Euclidian distance"){
+        distance_method = KMeans::K_MEANS_DISTANCE::EUCLIDIAN_DISTANCE;
+    } else if(distance_method_string == "ED + SVD"){
+        distance_method = KMeans::K_MEANS_DISTANCE::ED_SVD;
+    } else if(distance_method_string == "SVD"){
+        distance_method = KMeans::K_MEANS_DISTANCE::SVD;
+    }
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->segmentation_output_name->text().toStdString();
+    } else{
+        result_name = ui->segmentation_output_name->text().toStdString();
+    }
+    bundle.ProcessKMeans(img_name, result_name, k, distance_method);
 }

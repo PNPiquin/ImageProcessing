@@ -278,3 +278,12 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessOtsuSegmentation(std::string ou
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
+
+std::shared_ptr<ImageHolder> ImageHolder::ProcessKMeans(std::string output_name, int k, KMeans::K_MEANS_DISTANCE distance_method){
+    Eigen::MatrixXi img_out;
+
+    KMeans km(k, distance_method);
+    km.ProcessKMeans(mat_img, img_out);
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}
