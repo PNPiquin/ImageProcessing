@@ -14,9 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->progress_bar->setMaximum(100);
     ui->progress_bar->setValue(0);
 
+    ui->K_means_combobox->addItem("SVD");
     ui->K_means_combobox->addItem("Euclidian distance");
     ui->K_means_combobox->addItem("ED + SVD");
-    ui->K_means_combobox->addItem("SVD");
 
     timerID = startTimer(500);
 }
