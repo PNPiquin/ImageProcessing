@@ -55,6 +55,24 @@ void KMeans::ProcessKMeans(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out){
             img_out(px.x, px.y) = color;
         }
     }
+
+    /*
+    std::vector<Cluster*> cluster_vect;
+    for(int i = 0; i < number_of_clusters; ++i){
+        cluster_vect.push_back(&clusters.at(i));
+    }
+    std::sort(cluster_vect.begin(), cluster_vect.end(), [](Cluster *c1, Cluster *c2){
+        return c1->cluster_center.value < c2->cluster_center.value;
+    });
+
+    int color_inc = (int)(255 / (number_of_clusters - 1));
+    for(int index = 0; index < number_of_clusters; ++index){
+        int color = index * color_inc;
+        for(const auto &px : cluster_vect[index]->pixels){
+            img_out(px.x, px.y) = color;
+        }
+    }
+    */
 }
 
 void KMeans::Init(Eigen::MatrixXi &img, int x_min, int x_max, int y_min, int y_max){
@@ -99,7 +117,12 @@ double KMeans::ProcessKMeansStep(Eigen::MatrixXi &img){
         }
         int x_center = n > 0 ? int(x_mean/n) : clusters.at(index).cluster_center.x;
         int y_center = n > 0 ? int(y_mean/n) : clusters.at(index).cluster_center.y;
+        x_center = x_center >= rows ? rows - 1 : x_center;
+        x_center = x_center < 0 ? 0 : x_center;
+        y_center = y_center >= cols ? cols - 1 : y_center;
+        y_center = y_center < 0 ? 0 : y_center;
         clusters.at(index).cluster_center.SetCoord(x_center, y_center);
+        clusters.at(index).cluster_center.UpdateValue(img);
     }
     return total_dist;
 }
