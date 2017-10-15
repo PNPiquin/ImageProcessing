@@ -287,3 +287,11 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessKMeans(std::string output_name,
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
+
+std::shared_ptr<ImageHolder> ImageHolder::ProcessNegative(std::string output_name, QProgressBar *progress_bar){
+    Eigen::MatrixXi img_out;
+
+    IntensityTransformation::ProcessNegative(mat_img, img_out, progress_bar);
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}

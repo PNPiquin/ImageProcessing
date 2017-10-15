@@ -33,6 +33,7 @@ public:
     void ProcessCanny(std::string img_name, std::string output_name, bool save_tmp_imgs, QProgressBar *progress_bar = NULL);
     void ProcessOtsuSegmentation(std::string img_name, std::string output_name);
     void ProcessKMeans(std::string img_name, std::string output_name, int k, KMeans::K_MEANS_DISTANCE distance_method);
+    void ProcessNegative(std::string img_name, std::string output_name, QProgressBar *progress_bar = NULL);
 
 
     void SetWorkingDir(std::string path) {working_dir_path = path; }

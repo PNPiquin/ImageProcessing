@@ -33,6 +33,7 @@ public:
     std::shared_ptr<ImageHolder> ProcessCanny(std::string output_name, bool save_tmp_imgs,  QProgressBar *progress_bar = NULL);
     std::shared_ptr<ImageHolder> ProcessOtsuSegmentation(std::string output_name);
     std::shared_ptr<ImageHolder> ProcessKMeans(std::string output_name, int k, KMeans::K_MEANS_DISTANCE distance_method);
+    std::shared_ptr<ImageHolder> ProcessNegative(std::string output_name, QProgressBar *progress_bar = NULL);
 
 
     void SetImageName(std::string name);

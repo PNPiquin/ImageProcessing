@@ -68,3 +68,12 @@ void IntensityTransformation::ProcessTransformation(Eigen::MatrixXi &img, Eigen:
     }
   }
 }
+
+void IntensityTransformation::ProcessNegative(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, QProgressBar *progress_bar){
+    ProcessTransformation(
+    img,
+    imgOut,
+    [&](int value) {return 255 - value;},
+    progress_bar
+    );
+}

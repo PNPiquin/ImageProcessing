@@ -117,3 +117,9 @@ void ImageBundle::ProcessKMeans(std::string img_name, std::string output_name, i
     std::shared_ptr<ImageHolder> k_img = img->ProcessKMeans(output_name, k, distance_method);
     Insert(output_name, k_img);
 }
+
+void ImageBundle::ProcessNegative(std::string img_name, std::string output_name, QProgressBar *progress_bar){
+    std::shared_ptr<ImageHolder> img = image_bundle.at(img_name);
+    std::shared_ptr<ImageHolder> neg_img = img->ProcessNegative(output_name, progress_bar);
+    Insert(output_name, neg_img);
+}

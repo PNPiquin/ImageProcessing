@@ -13,6 +13,7 @@ public:
   static void ProcessThresholding(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, int threshold = 128, QProgressBar *progress_bar=NULL);
   static void ProcessNormalization(Eigen::MatrixXi &imgOut, int value_max = 255, QProgressBar *progress_bar=NULL);
   static void ProcessTransformation(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, std::function<int(int)> transformation, QProgressBar *progress_bar=NULL);
+  static void ProcessNegative(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, QProgressBar *progress_bar=NULL);
 
 };
 

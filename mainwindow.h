@@ -68,6 +68,8 @@ private slots:
 
     void on_k_means_push_button_clicked();
 
+    void on_negative_push_button_clicked();
+
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;
