@@ -1,6 +1,7 @@
 #include "cannyedgedetector.h"
 #include "CommonSpatialFilters.h"
 #include "IntensityTransformation.h"
+#include "../IO/JpegManager.h"
 
 CannyEdgeDetector::CannyEdgeDetector()
 {
@@ -18,7 +19,7 @@ void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::Ma
     int cols = img.cols();
     int filter_size = 5;
     int padding = (filter_size - 1) / 2;
-    int threshold(30);
+    int threshold(20);
 
     // ProgressBar resizing
     if(progress_bar){
@@ -82,6 +83,17 @@ void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::Ma
     }
 
     // Last thing to do --> Threshold
+
+    // Second version of thresholding for Canny
+#if 0
+    int low_threshold(10), high_threshold(40);
+    Eigen::MatrixXi low_img(rows, cols), high_img(rows, cols);
+    IntensityTransformation::ProcessThresholding(img_out, low_img, low_threshold, progress_bar);
+    IntensityTransformation::ProcessThresholding(img_out, high_img, high_threshold, progress_bar);
+    JpegManager::SaveGrayscaleMatrixImg(low_img, "/home/pierre-nicolas/Pictures/ImageProcessing/Canny/low_mag");
+    JpegManager::SaveGrayscaleMatrixImg(high_img, "/home/pierre-nicolas/Pictures/ImageProcessing/Canny/high_mag");
+#endif
+
     // This first version is very basic
     if(progress_bar){
         progress_bar->setRange(-300, 100);
@@ -92,6 +104,7 @@ void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::Ma
     if(progress_bar){
         progress_bar->setRange(0, 100);
     }
+
 }
 
 void CannyEdgeDetector::ComputeMagAndDirEdgeImg(Eigen::MatrixXi &img, Eigen::MatrixXi &mag, Eigen::MatrixXf &dir, QProgressBar *progress_bar){
