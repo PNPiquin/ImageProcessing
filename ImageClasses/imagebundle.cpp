@@ -5,11 +5,32 @@ ImageBundle::ImageBundle()
     working_dir_path = "/home/pierre-nicolas/Pictures/ImageProcessing/";
 }
 
+// -----------------------------------------------------------------------------------
+//                                      Utils
+// -----------------------------------------------------------------------------------
 void ImageBundle::LoadImg(std::string img_name){
     std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(working_dir_path, img_name);
     Insert(img_name + "_grayscale", img_holder);
 }
 
+void ImageBundle::Insert(std::string img_name, std::shared_ptr<ImageHolder> img){
+    std::vector<std::shared_ptr<ImageHolder>> img_vector;
+    img_vector.push_back(img);
+    image_bundle.insert(std::pair<std::string,  std::vector<std::shared_ptr<ImageHolder>>>(img_name, img_vector));
+}
+
+std::shared_ptr<ImageHolder> ImageBundle::find_image(std::string img_name){
+    std::vector<std::shared_ptr<ImageHolder>> img_vector = image_bundle.at(img_name);
+    return img_vector.front();
+}
+
+std::vector<std::shared_ptr<ImageHolder>> ImageBundle::find_image_vector(std::string img_name){
+    return image_bundle.at(img_name);
+}
+
+// -----------------------------------------------------------------------------------
+//                            Image processing
+// -----------------------------------------------------------------------------------
 void ImageBundle::ProcessEdgeDetection(std::string img_name, std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
     std::shared_ptr<ImageHolder> img = find_image(img_name);
     std::shared_ptr<ImageHolder> edge_img = img->ProcessEdgeDetection(output_name, filter_size, use_gaussian_blur, gaussian_filter_size, progress_bar);

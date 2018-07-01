@@ -14,7 +14,11 @@ class ImageBundle
 public:
     ImageBundle();
 
+    // Utils
     void LoadImg(std::string img_name);
+    std::shared_ptr<ImageHolder> find_image(std::string img_name);
+
+    // Image processing pipelines
     void ProcessEdgeDetection(std::string img_name, std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar = NULL);
     void ProcessBothSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar = NULL);
     void ProcessVerticalSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar = NULL);
@@ -35,24 +39,16 @@ public:
     void ProcessKMeans(std::string img_name, std::string output_name, int k, KMeans::K_MEANS_DISTANCE distance_method);
     void ProcessNegative(std::string img_name, std::string output_name, QProgressBar *progress_bar = NULL);
 
-
     void SetWorkingDir(std::string path) {working_dir_path = path; }
     std::string GetWorkingDir() {return working_dir_path;}
-
-    void Insert(std::string img_name, std::shared_ptr<ImageHolder> img){
-        std::vector<std::shared_ptr<ImageHolder>> img_vector;
-        img_vector.push_back(img);
-        image_bundle.insert(std::pair<std::string,  std::vector<std::shared_ptr<ImageHolder>>>(img_name, img_vector));
-    }
-
-    std::shared_ptr<ImageHolder> find_image(std::string img_name){
-        std::vector<std::shared_ptr<ImageHolder>> img_vector = image_bundle.at(img_name);
-        return img_vector.front();
-    }
 
     std::map<std::string, std::vector<std::shared_ptr<ImageHolder>>> image_bundle;
 
 private:
+    // Utils
+    void Insert(std::string img_name, std::shared_ptr<ImageHolder> img);
+    std::vector<std::shared_ptr<ImageHolder>> find_image_vector(std::string img_name);
+
     std::string working_dir_path;
 };
 
