@@ -40,10 +40,17 @@ public:
     std::string GetWorkingDir() {return working_dir_path;}
 
     void Insert(std::string img_name, std::shared_ptr<ImageHolder> img){
-        image_bundle.insert(std::pair<std::string, std::shared_ptr<ImageHolder>>(img_name, img));
+        std::vector<std::shared_ptr<ImageHolder>> img_vector;
+        img_vector.push_back(img);
+        image_bundle.insert(std::pair<std::string,  std::vector<std::shared_ptr<ImageHolder>>>(img_name, img_vector));
     }
 
-    std::map<std::string, std::shared_ptr<ImageHolder>> image_bundle;
+    std::shared_ptr<ImageHolder> find_image(std::string img_name){
+        std::vector<std::shared_ptr<ImageHolder>> img_vector = image_bundle.at(img_name);
+        return img_vector.front();
+    }
+
+    std::map<std::string, std::vector<std::shared_ptr<ImageHolder>>> image_bundle;
 
 private:
     std::string working_dir_path;

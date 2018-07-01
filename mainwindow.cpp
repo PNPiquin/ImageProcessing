@@ -35,7 +35,7 @@ void MainWindow::DisplayImg(std::string img_name){
 
 QPixmap MainWindow::CreatePixmap(std::string img_name){
     try{
-        std::shared_ptr<ImageHolder> img_holder = bundle.image_bundle.at(img_name);
+        std::shared_ptr<ImageHolder> img_holder = bundle.find_image(img_name);
         QImage img(img_holder->GetRows(), img_holder->GetCols(), QImage::Format_Grayscale8);
         for(int i = 0; i < img_holder->GetRows(); ++i){
             for(int j = 0; j < img_holder->GetCols(); ++j){
@@ -254,7 +254,7 @@ void MainWindow::on_save_push_button_clicked()
 {
     std::string img_name = ui->current_image->currentText().toStdString();
     std::string save_name = ui->save_name_line->text().toStdString();
-    JpegManager::SaveGrayscaleMatrixImg(bundle.image_bundle.at(img_name)->mat_img, bundle.GetWorkingDir() + save_name);
+    JpegManager::SaveGrayscaleMatrixImg(bundle.find_image(img_name)->mat_img, bundle.GetWorkingDir() + save_name);
     try {
 
     } catch (std::exception e){
