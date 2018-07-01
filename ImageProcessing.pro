@@ -50,6 +50,7 @@ QMAKE_CXXFLAGS += -Wall \
                 -lboost_filesystem
 
 LIBS += -L/usr/lib -ljpeg
+LIBS += -L/usr/lib -lpng
 LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_system
 LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_filesystem
 

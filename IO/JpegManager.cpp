@@ -6,13 +6,35 @@ JpegManager::JpegManager(std::string file_path) : path(file_path){
 
 void JpegManager::GetImage(boost::gil::rgb8_image_t &img){
     if(boost::filesystem::exists(path)){
-        boost::gil::jpeg_read_image(path, img);
+        // Here, the path exists but me must check the extension of the file
+        // to use the right method
+        std::vector<std::string> tokens;
+        boost::split(tokens, path, [](char c){
+            return c == '.';
+        });
+        const std::string extension = tokens.back();
+        const std::string png_extension = "png";
+        const std::string jpeg_extension = "jpeg";
+        const std::string jpg_extension = "jpg";
+
+        if(extension == png_extension){
+            boost::gil::png_read_image(path, img);
+        } else if(extension == jpeg_extension || extension == jpg_extension){
+            boost::gil::jpeg_read_image(path, img);
+        } else {
+            // Here, we have an unrecognised extension --> return
+            return;
+        }
     } else if (boost::filesystem::exists(path + ".jpeg")){
         boost::gil::jpeg_read_image(path + ".jpeg", img);
     } else if (boost::filesystem::exists(path + ".jpg")){
         boost::gil::jpeg_read_image(path + ".jpg", img);
     } else if (boost::filesystem::exists(path + ".JPG")){
         boost::gil::jpeg_read_image(path + ".JPG", img);
+    } else if (boost::filesystem::exists(path + ".png")){
+        boost::gil::png_read_image(path + ".png", img);
+    } else if (boost::filesystem::exists(path + ".PNG")){
+        boost::gil::png_read_image(path + ".PNG", img);
     } else {
         return;
     }
