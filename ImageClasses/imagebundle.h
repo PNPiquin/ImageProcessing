@@ -4,7 +4,9 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <iostream>
 #include <QProgressBar>
+#include <boost/filesystem.hpp>
 
 #include "imageholder.h"
 #include "Segmentation/kmeans.h"
@@ -16,6 +18,7 @@ public:
 
     // Utils
     void LoadImg(std::string img_name);
+    void LoadImgFolder(std::string folder_name);
     std::shared_ptr<ImageHolder> find_image(std::string img_name);
 
     // Image processing pipelines
@@ -47,6 +50,7 @@ public:
 private:
     // Utils
     void Insert(std::string img_name, std::shared_ptr<ImageHolder> img);
+    void Insert(std::string img_name, std::vector<std::shared_ptr<ImageHolder>>);
     std::vector<std::shared_ptr<ImageHolder>> find_image_vector(std::string img_name);
 
     std::string working_dir_path;

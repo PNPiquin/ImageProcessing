@@ -70,6 +70,8 @@ private slots:
 
     void on_negative_push_button_clicked();
 
+    void on_load_folder_img_button_clicked();
+
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;

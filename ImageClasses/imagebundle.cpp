@@ -12,11 +12,24 @@ void ImageBundle::LoadImg(std::string img_name){
     std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(working_dir_path, img_name);
     Insert(img_name + "_grayscale", img_holder);
 }
+void ImageBundle::LoadImgFolder(std::string folder_name){
+    std::vector<std::shared_ptr<ImageHolder>> img_vect;
+    for (auto & p : boost::filesystem::directory_iterator(working_dir_path + folder_name)){
+        std::cout << p.path().string() << std::endl;
+        std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>("", p.path().string());
+        img_vect.push_back(img_holder);
+    }
+    Insert(folder_name, img_vect);
+}
 
 void ImageBundle::Insert(std::string img_name, std::shared_ptr<ImageHolder> img){
     std::vector<std::shared_ptr<ImageHolder>> img_vector;
     img_vector.push_back(img);
     image_bundle.insert(std::pair<std::string,  std::vector<std::shared_ptr<ImageHolder>>>(img_name, img_vector));
+}
+
+void ImageBundle::Insert(std::string img_name, std::vector<std::shared_ptr<ImageHolder>> img_vect){
+    image_bundle.insert(std::pair<std::string,  std::vector<std::shared_ptr<ImageHolder>>>(img_name, img_vect));
 }
 
 std::shared_ptr<ImageHolder> ImageBundle::find_image(std::string img_name){
@@ -32,9 +45,17 @@ std::vector<std::shared_ptr<ImageHolder>> ImageBundle::find_image_vector(std::st
 //                            Image processing
 // -----------------------------------------------------------------------------------
 void ImageBundle::ProcessEdgeDetection(std::string img_name, std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
-    std::shared_ptr<ImageHolder> img = find_image(img_name);
-    std::shared_ptr<ImageHolder> edge_img = img->ProcessEdgeDetection(output_name, filter_size, use_gaussian_blur, gaussian_filter_size, progress_bar);
-    Insert(output_name, edge_img);
+    std::vector<std::shared_ptr<ImageHolder>> img_vector = find_image_vector(img_name);
+    std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+    for(auto img : img_vector){
+        std::shared_ptr<ImageHolder> edge_img = img->ProcessEdgeDetection(output_name, filter_size, use_gaussian_blur, gaussian_filter_size, progress_bar);
+        out_img_vector.push_back(edge_img);
+    }
+    Insert(output_name, out_img_vector);
+
+    //std::shared_ptr<ImageHolder> img = find_image(img_name);
+    //std::shared_ptr<ImageHolder> edge_img = img->ProcessEdgeDetection(output_name, filter_size, use_gaussian_blur, gaussian_filter_size, progress_bar);
+    //Insert(output_name, edge_img);
 }
 
 void ImageBundle::ProcessBothSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){

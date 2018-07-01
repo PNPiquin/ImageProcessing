@@ -73,6 +73,12 @@ void MainWindow::on_pushButtonLoadImage_clicked()
     bundle.LoadImg(filename.toStdString());
 }
 
+void MainWindow::on_load_folder_img_button_clicked()
+{
+    QString folder_path = ui->lineEditInputFolderPath->text();
+    bundle.LoadImgFolder(folder_path.toStdString());
+}
+
 void MainWindow::on_pushButtonEdgeDetect_clicked()
 {
     std::string img_name = ui->current_image->currentText().toStdString();
