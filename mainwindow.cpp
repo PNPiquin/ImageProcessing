@@ -35,7 +35,7 @@ void MainWindow::DisplayImg(std::string img_name){
 
 QPixmap MainWindow::CreatePixmap(std::string img_name){
     try{
-        std::shared_ptr<ImageHolder> img_holder = bundle.find_image(img_name);
+        std::shared_ptr<ImageHolder> img_holder = bundle.FindImage(img_name);
         QImage img(img_holder->GetRows(), img_holder->GetCols(), QImage::Format_Grayscale8);
         for(int i = 0; i < img_holder->GetRows(); ++i){
             for(int j = 0; j < img_holder->GetCols(); ++j){
@@ -77,6 +77,13 @@ void MainWindow::on_load_folder_img_button_clicked()
 {
     QString folder_path = ui->lineEditInputFolderPath->text();
     bundle.LoadImgFolder(folder_path.toStdString());
+}
+
+void MainWindow::on_save_folder_push_button_clicked()
+{
+    //QString save_path = ui->save_folder_name_line->text();
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bundle.SaveImgGroup(img_name);
 }
 
 void MainWindow::on_pushButtonEdgeDetect_clicked()
@@ -260,7 +267,7 @@ void MainWindow::on_save_push_button_clicked()
 {
     std::string img_name = ui->current_image->currentText().toStdString();
     std::string save_name = ui->save_name_line->text().toStdString();
-    JpegManager::SaveGrayscaleMatrixImg(bundle.find_image(img_name)->mat_img, bundle.GetWorkingDir() + save_name);
+    JpegManager::SaveGrayscaleMatrixImg(bundle.FindImage(img_name)->mat_img, bundle.GetWorkingDir() + save_name);
     try {
 
     } catch (std::exception e){

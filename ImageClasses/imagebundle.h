@@ -19,7 +19,8 @@ public:
     // Utils
     void LoadImg(std::string img_name);
     void LoadImgFolder(std::string folder_name);
-    std::shared_ptr<ImageHolder> find_image(std::string img_name);
+    std::shared_ptr<ImageHolder> FindImage(std::string img_name);
+    void SaveImgGroup(std::string group_name);
 
     // Image processing pipelines
     void ProcessEdgeDetection(std::string img_name, std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar = NULL);
@@ -51,7 +52,7 @@ private:
     // Utils
     void Insert(std::string img_name, std::shared_ptr<ImageHolder> img);
     void Insert(std::string img_name, std::vector<std::shared_ptr<ImageHolder>>);
-    std::vector<std::shared_ptr<ImageHolder>> find_image_vector(std::string img_name);
+    std::vector<std::shared_ptr<ImageHolder>> FindImageVector(std::string img_name);
 
     std::string working_dir_path;
 };
