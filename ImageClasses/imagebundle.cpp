@@ -29,7 +29,6 @@ void ImageBundle::Insert(std::string img_name, std::shared_ptr<ImageHolder> img)
 }
 
 void ImageBundle::Insert(std::string img_name, std::vector<std::shared_ptr<ImageHolder>> img_vect){
-    std::cout << "TEST: " << img_vect.size() << std::endl;
     image_bundle.insert(std::pair<std::string,  std::vector<std::shared_ptr<ImageHolder>>>(img_name, img_vect));
 }
 
@@ -46,7 +45,6 @@ void ImageBundle::SaveImgGroup(std::string group_name){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(group_name);
     boost::filesystem::create_directory(boost::filesystem::path(working_dir_path + group_name));
     for(auto img : img_vector){
-        std::cout << "Coucou" << std::endl;
         JpegManager::SaveGrayscaleMatrixImg(img->mat_img, working_dir_path + group_name + "/" + img->GetImageName());
     }
 }
@@ -59,7 +57,6 @@ void ImageBundle::ProcessEdgeDetection(std::string img_name, std::string output_
     std::cout << "Process edge detection: " << img_vector.size() << std::endl;
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
     for(auto img : img_vector){
-        std::cout << "Coucou" << img_vector.size() << std::endl;
         std::shared_ptr<ImageHolder> edge_img = img->ProcessEdgeDetection(img->GetImageName() + output_name,
                                                                           filter_size, use_gaussian_blur, gaussian_filter_size, progress_bar);
         out_img_vector.push_back(edge_img);
