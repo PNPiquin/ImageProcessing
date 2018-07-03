@@ -17,8 +17,13 @@ void ImageBundle::LoadImg(std::string img_name){
 }
 void ImageBundle::LoadImgFolder(std::string folder_name){
     std::vector<std::shared_ptr<ImageHolder>> img_vect;
-    if(boost::filesystem::is_directory(working_dir_path + folder_name)){
-        for (auto & p : boost::filesystem::directory_iterator(working_dir_path + folder_name)){
+
+    // path creation
+    boost::filesystem::path working_dir(working_dir_path), folder(folder_name);
+    boost::filesystem::path folder_path = working_dir / folder;
+
+    if(boost::filesystem::is_directory(folder_path.string())){
+        for (auto & p : boost::filesystem::directory_iterator(folder_path.string())){
             std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(p.path().parent_path().string() + "/", p.path().stem().string());
             img_vect.push_back(img_holder);
         }

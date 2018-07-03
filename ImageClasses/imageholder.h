@@ -2,6 +2,7 @@
 #define IMAGEHOLDER_H
 
 #include <memory>
+#include <boost/filesystem.hpp>
 #include <Eigen/Dense>
 #include <QProgressBar>
 
