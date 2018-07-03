@@ -54,7 +54,6 @@ void ImageBundle::SaveImgGroup(std::string group_name){
 // -----------------------------------------------------------------------------------
 void ImageBundle::ProcessEdgeDetection(std::string img_name, std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
-    std::cout << "Process edge detection: " << img_vector.size() << std::endl;
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> edge_img = img->ProcessEdgeDetection(img->GetImageName() + output_name,
