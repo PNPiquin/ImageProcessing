@@ -45,6 +45,8 @@ public:
     int GetRows() {return mat_img.rows();}
     int GetCols() {return mat_img.cols();}
 
+    bool GetIsLoaded(){return is_loaded;}
+
     static bool Compare(const ImageHolder img1, const ImageHolder img2){
         return img1.img_name.compare(img2.img_name) < 0;
     }
@@ -54,6 +56,7 @@ public:
 private:
     std::string img_name;
     ImageType img_type;
+    bool is_loaded;
 };
 
 

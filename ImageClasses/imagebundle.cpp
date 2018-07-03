@@ -11,7 +11,9 @@ ImageBundle::ImageBundle()
 // -----------------------------------------------------------------------------------
 void ImageBundle::LoadImg(std::string img_name){
     std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(working_dir_path, img_name);
-    Insert(img_name + "_grayscale", img_holder);
+    if(img_holder->GetIsLoaded()){
+      Insert(img_name + "_grayscale", img_holder);
+    }
 }
 void ImageBundle::LoadImgFolder(std::string folder_name){
     std::vector<std::shared_ptr<ImageHolder>> img_vect;
