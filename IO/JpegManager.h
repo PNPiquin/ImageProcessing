@@ -4,8 +4,10 @@
 #include <iostream>
 #include <string>
 #include <Eigen/Dense>
+#include <boost/algorithm/string/split.hpp>
 #include <boost/gil/gil_all.hpp>
 #include <boost/gil/extension/io/jpeg_io.hpp>
+#include <boost/gil/extension/io/png_io.hpp>
 #include <boost/filesystem.hpp>
 
 
