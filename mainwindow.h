@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 #include <iostream>
 #include <string>
 #include <map>
@@ -74,14 +75,20 @@ private slots:
 
     void on_save_folder_push_button_clicked();
 
+    void ui_auto_update();
+
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;
 
     void DisplayImg(std::string img_name);
     QPixmap CreatePixmap(std::string img_name);
+    QPixmap CreatePixmapFromImg(std::shared_ptr<ImageHolder> img_holder);
 
     int timerID;
+    QTimer *auto_update_timer;
+
+    int displayed_img_index;
 
 protected:
     void timerEvent(QTimerEvent *event);

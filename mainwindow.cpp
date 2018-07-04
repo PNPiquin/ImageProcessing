@@ -19,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->K_means_combobox->addItem("ED + SVD");
 
     timerID = startTimer(500);
+
+    displayed_img_index = 0;
+    auto_update_timer = new QTimer(this);
+    connect(auto_update_timer, SIGNAL(timeout()), this, SLOT(ui_auto_update()));
+    auto_update_timer->start(40);
 }
 
 MainWindow::~MainWindow()
@@ -47,6 +52,54 @@ QPixmap MainWindow::CreatePixmap(std::string img_name){
     } catch(std::exception){
         printf("Image not found");
         return QPixmap();
+    }
+}
+
+QPixmap MainWindow::CreatePixmapFromImg(std::shared_ptr<ImageHolder> img_holder){
+    try{
+        QImage img(img_holder->GetRows(), img_holder->GetCols(), QImage::Format_Grayscale8);
+        for(int i = 0; i < img_holder->GetRows(); ++i){
+            for(int j = 0; j < img_holder->GetCols(); ++j){
+                int value = img_holder->mat_img(i, j);
+                img.setPixel(QPoint(i, j), qRgb(value, value, value));
+            }
+        }
+        return QPixmap::fromImage(img, Qt::NoFormatConversion);
+    } catch(std::exception){
+        printf("Image not found");
+        return QPixmap();
+    }
+}
+
+void MainWindow::ui_auto_update(){
+    try{
+        std::string img_group = ui->current_image->currentText().toStdString();
+        if(img_group.size() == 0){
+            return;
+        }
+
+        std::vector<std::shared_ptr<ImageHolder>> image_vect = bundle.FindImageVector(img_group);
+        if(image_vect.size() == 0){
+            return;
+        }
+
+        const int current_index = displayed_img_index;
+        if(displayed_img_index >= (image_vect.size() - 1)){
+            displayed_img_index = 0;
+        } else {
+            displayed_img_index++;
+        }
+
+        // To avoid useless processing
+        if(current_index == displayed_img_index){
+            return;
+        }
+
+        std::shared_ptr<ImageHolder> img_holder = image_vect[displayed_img_index];
+        ui->image->setPixmap(CreatePixmapFromImg(img_holder).scaled(ui->image->size(), Qt::KeepAspectRatio));
+        ui->image->show();
+    } catch(...) {
+        std::cout << "An error ocurred while updating the displayed image" << std::endl;
     }
 }
 

@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <iostream>
+#include <algorithm>
 #include <QProgressBar>
 #include <boost/filesystem.hpp>
 
@@ -46,13 +47,14 @@ public:
     void SetWorkingDir(std::string path) {working_dir_path = path; }
     std::string GetWorkingDir() {return working_dir_path;}
 
+    std::vector<std::shared_ptr<ImageHolder>> FindImageVector(std::string img_name);
+
     std::map<std::string, std::vector<std::shared_ptr<ImageHolder>>> image_bundle;
 
 private:
     // Utils
     void Insert(std::string img_name, std::shared_ptr<ImageHolder> img);
     void Insert(std::string img_name, std::vector<std::shared_ptr<ImageHolder>>);
-    std::vector<std::shared_ptr<ImageHolder>> FindImageVector(std::string img_name);
 
     std::string working_dir_path;
 };
