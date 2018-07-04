@@ -11,15 +11,24 @@ ImageBundle::ImageBundle()
 // -----------------------------------------------------------------------------------
 void ImageBundle::LoadImg(std::string img_name){
     std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(working_dir_path, img_name);
-    Insert(img_name + "_grayscale", img_holder);
+    if(img_holder->GetIsLoaded()){
+      Insert(img_name + "_grayscale", img_holder);
+    }
 }
 void ImageBundle::LoadImgFolder(std::string folder_name){
     std::vector<std::shared_ptr<ImageHolder>> img_vect;
-    for (auto & p : boost::filesystem::directory_iterator(working_dir_path + folder_name)){
-        std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(p.path().parent_path().string() + "/", p.path().stem().string());
-        img_vect.push_back(img_holder);
+
+    // path creation
+    boost::filesystem::path working_dir(working_dir_path), folder(folder_name);
+    boost::filesystem::path folder_path = working_dir / folder;
+
+    if(boost::filesystem::is_directory(folder_path.string())){
+        for (auto & p : boost::filesystem::directory_iterator(folder_path.string())){
+            std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(p.path().parent_path().string() + "/", p.path().stem().string());
+            img_vect.push_back(img_holder);
+        }
+        Insert(folder_name, img_vect);
     }
-    Insert(folder_name, img_vect);
 }
 
 void ImageBundle::Insert(std::string img_name, std::shared_ptr<ImageHolder> img){

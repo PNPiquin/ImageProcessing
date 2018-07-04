@@ -14,15 +14,22 @@ ImageHolder::ImageHolder(std::string dir_path, std::string img_name) :
     img_name(img_name)
 {
     mat_img = Eigen::MatrixXi();
-    JpegManager jpeg_manager(dir_path + img_name);
-    jpeg_manager.GetGrayscaleMatrixImg(mat_img);
+
+    // path creation
+    boost::filesystem::path dir(dir_path), img(img_name);
+    boost::filesystem::path img_path = dir / img;
+
+    // img loading
+    JpegManager jpeg_manager(img_path.string());
+    is_loaded = jpeg_manager.GetGrayscaleMatrixImg(mat_img);
     img_type = ImageType::GRAYSCALE;
 }
 
 ImageHolder::ImageHolder(Eigen::MatrixXi mat_img, std::string img_name, ImageType image_type) :
     mat_img(mat_img),
     img_name(img_name),
-    img_type(image_type)
+    img_type(image_type),
+    is_loaded(true)
 {
 
 }
