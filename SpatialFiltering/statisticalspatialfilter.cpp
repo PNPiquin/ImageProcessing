@@ -18,7 +18,7 @@ void StatisticalSpatialFilter::ProcessStatisticalFilter(Eigen::MatrixXi &img, Ei
     int cols = img.cols();
     int padding = (filter_size - 1) / 2;
     img_out.resize(rows, cols);
-    printf("%s\n", "Starting StatisticalSpatialFilter processing");
+    // printf("%s\n", "Starting StatisticalSpatialFilter processing");
     for(int i = padding; i < rows - padding; ++i){
         for(int j = padding; j < cols - padding; ++j){
             std::vector<int> tmp_data;
@@ -29,7 +29,7 @@ void StatisticalSpatialFilter::ProcessStatisticalFilter(Eigen::MatrixXi &img, Ei
             progress_bar->setValue(std::floor(((i+1)*100)/(rows-padding)));
         }
     }
-    printf("%s\n", "End of StatisticalSpatialFilter processing");
+    // printf("%s\n", "End of StatisticalSpatialFilter processing");
 }
 
 void StatisticalSpatialFilter::subMatrixExtraction(int i, int j, Eigen::MatrixXi &img, std::vector<int> &out_vector){
