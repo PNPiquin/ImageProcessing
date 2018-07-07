@@ -54,6 +54,7 @@ private slots:
     void on_load_folder_img_button_clicked();
     void on_save_folder_push_button_clicked();
     void ui_auto_update();
+    void progress_update();
 
 private:
     Ui::MainWindow *ui;
@@ -64,9 +65,14 @@ private:
     QPixmap CreatePixmapFromImg(std::shared_ptr<ImageHolder> img_holder);
 
     int timerID;
-    QTimer *auto_update_timer;
 
+    // UI auto update timer --> allow to show multiple frames as a video
+    QTimer *auto_update_timer;
     int displayed_img_index;
+
+    // Progress timer --> update the progress bar value from a shared value with other threads
+    QTimer* progress_update_timer;
+    std::shared_ptr<int> current_progress_ptr;
 
 protected:
     void timerEvent(QTimerEvent *event);

@@ -20,10 +20,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timerID = startTimer(500);
 
+    // Building UI update timer
     displayed_img_index = 0;
     auto_update_timer = new QTimer(this);
     connect(auto_update_timer, SIGNAL(timeout()), this, SLOT(ui_auto_update()));
     auto_update_timer->start(40);
+
+    // Building progress update timer
+    current_progress_ptr = std::make_shared<int>(0);
+    progress_update_timer = new QTimer(this);
+    connect(progress_update_timer, SIGNAL(timeout()), this, SLOT(progress_update()));
+    progress_update_timer->start(100);
 }
 
 MainWindow::~MainWindow()
@@ -71,6 +78,20 @@ QPixmap MainWindow::CreatePixmapFromImg(std::shared_ptr<ImageHolder> img_holder)
     }
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------
+//                                                      Events
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+void MainWindow::timerEvent(QTimerEvent *event){
+    auto itr = bundle.image_bundle.begin();
+    for(;itr != bundle.image_bundle.end(); ++itr){
+        if(ui->current_image->findText(QString::fromStdString(itr->first)) == -1){
+            ui->current_image->addItem(QString::fromStdString(itr->first));
+            DisplayImg(itr->first);
+        }
+    }
+}
+
 void MainWindow::ui_auto_update(){
     try{
         std::string img_group = ui->current_image->currentText().toStdString();
@@ -103,17 +124,11 @@ void MainWindow::ui_auto_update(){
     }
 }
 
-//------------------------------------------------------------------------------------------------------------------------------------------
-//                                                      Events
-//------------------------------------------------------------------------------------------------------------------------------------------
+void MainWindow::progress_update(){
+    try{
 
-void MainWindow::timerEvent(QTimerEvent *event){
-    auto itr = bundle.image_bundle.begin();
-    for(;itr != bundle.image_bundle.end(); ++itr){
-        if(ui->current_image->findText(QString::fromStdString(itr->first)) == -1){
-            ui->current_image->addItem(QString::fromStdString(itr->first));
-            DisplayImg(itr->first);
-        }
+    } catch(...){
+        std::cout << "An error ocurred while updating the progress bar" << std::endl;
     }
 }
 
@@ -155,16 +170,16 @@ void MainWindow::on_pushButtonEdgeDetect_clicked()
         result_name = ui->edge_tab_output_name->text().toStdString();
     }
     if(use_vertical_sobel && use_horizontal_sobel){
-        bundle.ProcessBothSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
+        bundle.ProcessBothSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
     }
     else if(use_vertical_sobel){
-        bundle.ProcessVerticalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
+        bundle.ProcessVerticalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
     }
     else if(use_horizontal_sobel){
-        bundle.ProcessHorizontalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
+        bundle.ProcessHorizontalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
     }
     else{
-        bundle.ProcessEdgeDetection(img_name, result_name, filter_size, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
+        bundle.ProcessEdgeDetection(img_name, result_name, filter_size, use_gaussian_blur, gaussian_filter_size);
     }
 }
 
@@ -179,7 +194,7 @@ void MainWindow::on_histogram_tab_launch_normalization_clicked()
     } else{
         result_name = ui->histogram_tab_output_name->text().toStdString();
     }
-    bundle.ProcessHistogramNormalization(img_name, result_name, ui->progress_bar);
+    bundle.ProcessHistogramNormalization(img_name, result_name);
 }
 
 void MainWindow::on_intensity_tab_process_law_power_clicked()
@@ -193,7 +208,7 @@ void MainWindow::on_intensity_tab_process_law_power_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessPowerLawTransformation(img_name, result_name, gamma, ui->progress_bar);
+    bundle.ProcessPowerLawTransformation(img_name, result_name, gamma);
 }
 
 void MainWindow::on_intensity_tab_process_log_law_clicked()
@@ -207,7 +222,7 @@ void MainWindow::on_intensity_tab_process_log_law_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessLogLawTransformation(img_name, result_name, c, ui->progress_bar);
+    bundle.ProcessLogLawTransformation(img_name, result_name, c);
 }
 
 void MainWindow::on_gaussian_blur_push_button_clicked()
@@ -221,7 +236,7 @@ void MainWindow::on_gaussian_blur_push_button_clicked()
     } else{
         result_name = ui->edge_tab_blur_output_name->text().toStdString();
     }
-    bundle.ProcessGaussianBlur(img_name, result_name, gaussian_filter_size, ui->progress_bar);
+    bundle.ProcessGaussianBlur(img_name, result_name, gaussian_filter_size);
 }
 
 void MainWindow::on_intensity_tab_process_thresholding_clicked()
@@ -235,7 +250,7 @@ void MainWindow::on_intensity_tab_process_thresholding_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessThresholding(img_name, result_name, threshold, ui->progress_bar);
+    bundle.ProcessThresholding(img_name, result_name, threshold);
 }
 
 void MainWindow::on_median_filter_push_button_clicked()
@@ -249,7 +264,7 @@ void MainWindow::on_median_filter_push_button_clicked()
     } else{
         result_name = ui->median_output_name->text().toStdString();
     }
-    bundle.ProcessMedianFilter(img_name, result_name, filter_size, ui->progress_bar);
+    bundle.ProcessMedianFilter(img_name, result_name, filter_size);
 }
 
 void MainWindow::on_erosion_push_button_clicked()
@@ -263,7 +278,7 @@ void MainWindow::on_erosion_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    bundle.ProcessErosion(img_name, result_name, filter_size, ui->progress_bar);
+    bundle.ProcessErosion(img_name, result_name, filter_size);
 }
 
 void MainWindow::on_dilatation_push_button_clicked()
@@ -277,7 +292,7 @@ void MainWindow::on_dilatation_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    bundle.ProcessDilatation(img_name, result_name, filter_size, ui->progress_bar);
+    bundle.ProcessDilatation(img_name, result_name, filter_size);
 }
 
 void MainWindow::on_erosion_dilatation_push_button_clicked()
@@ -291,7 +306,7 @@ void MainWindow::on_erosion_dilatation_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    bundle.ProcessErosionDilatation(img_name, result_name, filter_size, ui->progress_bar);
+    bundle.ProcessErosionDilatation(img_name, result_name, filter_size);
 }
 
 void MainWindow::on_sharp_process_clicked()
@@ -307,7 +322,7 @@ void MainWindow::on_sharp_process_clicked()
     } else{
         result_name = ui->sharp_output_name->text().toStdString();
     }
-    bundle.ProcessUnsharpMask(img_name, result_name, alpha, save_mask, filter_size, ui->progress_bar);
+    bundle.ProcessUnsharpMask(img_name, result_name, alpha, save_mask, filter_size);
 }
 
 void MainWindow::on_change_working_dir_button_clicked()
@@ -344,7 +359,7 @@ void MainWindow::on_lmr_filter_push_button_clicked()
     } else{
         result_name = ui->lmr_output_name->text().toStdString();
     }
-    bundle.ProcessLMR(img_name, result_name, filter_size, ui->progress_bar);
+    bundle.ProcessLMR(img_name, result_name, filter_size);
 }
 
 void MainWindow::on_canny_push_button_clicked()
@@ -358,7 +373,7 @@ void MainWindow::on_canny_push_button_clicked()
     } else{
         result_name = ui->edge_tab_output_name->text().toStdString();
     }
-    bundle.ProcessCanny(img_name, result_name, save_tmp_imgs, ui->progress_bar);
+    bundle.ProcessCanny(img_name, result_name, save_tmp_imgs);
 }
 
 void MainWindow::on_otsu_push_button_clicked()
@@ -407,5 +422,5 @@ void MainWindow::on_negative_push_button_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessNegative(img_name, result_name, ui->progress_bar);
+    bundle.ProcessNegative(img_name, result_name);
 }
