@@ -8,6 +8,8 @@
 
 #include "Segmentation/kmeans.h"
 
+#include "ProgressLogger/progresslogger.h"
+
 class ImageHolder
 {
 public:
@@ -21,7 +23,7 @@ public:
     std::shared_ptr<ImageHolder> ProcessVerticalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size);
     std::shared_ptr<ImageHolder> ProcessHorizontalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size);
     std::shared_ptr<ImageHolder> ProcessGaussianBlur(std::string output_name, int filter_size);
-    std::shared_ptr<ImageHolder> ProcessHistogramNormalization(std::string output_name);
+    std::shared_ptr<ImageHolder> ProcessHistogramNormalization(std::string output_name, ProgressLogger progressLogger);
     std::shared_ptr<ImageHolder> ProcessPowerLawTransformation(std::string output_name, double gamma);
     std::shared_ptr<ImageHolder> ProcessLogLawTransformation(std::string output_name, double c);
     std::shared_ptr<ImageHolder> ProcessThresholding(std::string output_name, int threshold);

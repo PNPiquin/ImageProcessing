@@ -152,11 +152,11 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessGaussianBlur(std::string output
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessHistogramNormalization(std::string output_name){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessHistogramNormalization(std::string output_name, ProgressLogger progressLogger){
     Eigen::MatrixXi img_out;
 
     HistogramProcessor hp;
-    hp.ProcessEqualization(mat_img, img_out);
+    hp.ProcessEqualization(mat_img, img_out, progressLogger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }

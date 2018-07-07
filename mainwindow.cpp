@@ -27,7 +27,6 @@ MainWindow::MainWindow(QWidget *parent) :
     auto_update_timer->start(40);
 
     // Building progress update timer
-    current_progress_ptr = std::make_shared<int>(0);
     progress_update_timer = new QTimer(this);
     connect(progress_update_timer, SIGNAL(timeout()), this, SLOT(progress_update()));
     progress_update_timer->start(100);
@@ -105,7 +104,7 @@ void MainWindow::ui_auto_update(){
         }
 
         const int current_index = displayed_img_index;
-        if(displayed_img_index >= (image_vect.size() - 1)){
+        if(displayed_img_index >= (int)(image_vect.size() - 1)){
             displayed_img_index = 0;
         } else {
             displayed_img_index++;
@@ -126,7 +125,7 @@ void MainWindow::ui_auto_update(){
 
 void MainWindow::progress_update(){
     try{
-
+        ui->progress_bar->setValue(progress_logger.GetProgress());
     } catch(...){
         std::cout << "An error ocurred while updating the progress bar" << std::endl;
     }
@@ -194,7 +193,7 @@ void MainWindow::on_histogram_tab_launch_normalization_clicked()
     } else{
         result_name = ui->histogram_tab_output_name->text().toStdString();
     }
-    bundle.ProcessHistogramNormalization(img_name, result_name);
+    bundle.ProcessHistogramNormalization(img_name, result_name, progress_logger);
 }
 
 void MainWindow::on_intensity_tab_process_law_power_clicked()

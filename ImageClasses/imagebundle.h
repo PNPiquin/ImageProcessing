@@ -12,6 +12,8 @@
 #include "imageholder.h"
 #include "Segmentation/kmeans.h"
 
+#include "ProgressLogger/progresslogger.h"
+
 class ImageBundle
 {
 public:
@@ -29,7 +31,7 @@ public:
     void ProcessVerticalSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size);
     void ProcessHorizontalSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size);
     void ProcessGaussianBlur(std::string img_name, std::string output_name, int filter_size);
-    void ProcessHistogramNormalization(std::string img_name, std::string output_name);
+    void ProcessHistogramNormalization(std::string img_name, std::string output_name, ProgressLogger progressLogger);
     void ProcessPowerLawTransformation(std::string img_name, std::string output_name, double gamma);
     void ProcessLogLawTransformation(std::string img_name, std::string output_name, double c);
     void ProcessThresholding(std::string img_name, std::string output_name, int threshold);
