@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <algorithm>
+#include <thread>
 
 // Third parties library
 #include <QMainWindow>
@@ -59,6 +61,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;
+    std::vector<std::string> displayed_imgs;
 
     void DisplayImg(std::string img_name);
     QPixmap CreatePixmap(std::string img_name);

@@ -84,10 +84,16 @@ QPixmap MainWindow::CreatePixmapFromImg(std::shared_ptr<ImageHolder> img_holder)
 void MainWindow::timerEvent(QTimerEvent *event){
     auto itr = bundle.image_bundle.begin();
     for(;itr != bundle.image_bundle.end(); ++itr){
-        if(ui->current_image->findText(QString::fromStdString(itr->first)) == -1){
+        //if(ui->current_image->findText(QString::fromStdString(itr->first)) == -1){
+        //    ui->current_image->addItem(QString::fromStdString(itr->first));
+        //    DisplayImg(itr->first);
+        //}
+        if(std::find(displayed_imgs.begin(), displayed_imgs.end(), itr->first) == displayed_imgs.end()){
             ui->current_image->addItem(QString::fromStdString(itr->first));
             DisplayImg(itr->first);
+            displayed_imgs.push_back(itr->first);
         }
+        std::cout << itr->first << std::endl;
     }
 }
 
@@ -193,7 +199,9 @@ void MainWindow::on_histogram_tab_launch_normalization_clicked()
     } else{
         result_name = ui->histogram_tab_output_name->text().toStdString();
     }
-    bundle.ProcessHistogramNormalization(img_name, result_name);
+    // bundle.ProcessHistogramNormalization(img_name, result_name);
+    std::thread t(&ImageBundle::ProcessHistogramNormalization, &bundle, img_name, result_name);
+    t.detach();
 }
 
 void MainWindow::on_intensity_tab_process_law_power_clicked()
