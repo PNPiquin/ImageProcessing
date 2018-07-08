@@ -30,14 +30,27 @@ int ProgressLogger::GetProgress(){
 
 void ProgressLogger::SetProgress(int p){
     progress->store(p);
+
+    // DEBUG ONLY
+    double d_progress = (double) progress->load();
+    double d_task_number = (double) task_number->load();
+    double d_finished_tasks_cpt = (double) finished_tasks_cpt->load();
+    double current_progress = (100.0 * d_finished_tasks_cpt + d_progress) / (d_task_number);
+    std::cout << "Get progress: " << current_progress << std::endl;
 }
 
 void ProgressLogger::SetTaskNumber(int n){
     task_number->store(n);
 }
 
+
+void ProgressLogger::MultiplyTaskNumber(int m){
+    task_number->store(task_number->load() * m);
+}
+
 void ProgressLogger::IncrementFinishedTasksCpt(){
     finished_tasks_cpt->store(finished_tasks_cpt->load() + 1);
+    progress->store(0);
 }
 
 void ProgressLogger::ResetFinishTasksCpt(){
@@ -50,4 +63,11 @@ bool ProgressLogger::IsProcessing(){
 
 void ProgressLogger::SetIsProcessing(bool b){
     is_processing->store(b);
+}
+
+void ProgressLogger::ResetProgressLogger(){
+    progress->store(0);
+    task_number->store(1);
+    finished_tasks_cpt->store(0);
+    is_processing->store(false);
 }

@@ -3,17 +3,18 @@
 
 #include <Eigen/Dense>
 #include <QProgressBar>
+#include "ProgressLogger/progresslogger.h"
 
 class IntensityTransformation {
 public:
   IntensityTransformation();
 
-  static void ProcessPowerLaw(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, double gamma = 1.0, double c = 1.0, QProgressBar *progress_bar=NULL);
-  static void ProcessLogLaw(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, double c = 1.0, QProgressBar *progress_bar=NULL);
-  static void ProcessThresholding(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, int threshold = 128, QProgressBar *progress_bar=NULL);
-  static void ProcessNormalization(Eigen::MatrixXi &imgOut, int value_max = 255, QProgressBar *progress_bar=NULL);
-  static void ProcessTransformation(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, std::function<int(int)> transformation, QProgressBar *progress_bar=NULL);
-  static void ProcessNegative(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, QProgressBar *progress_bar=NULL);
+  static void ProcessPowerLaw(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, double gamma = 1.0, double c = 1.0, ProgressLogger *progress_logger=NULL);
+  static void ProcessLogLaw(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, double c = 1.0, ProgressLogger *progress_logger=NULL);
+  static void ProcessThresholding(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, int threshold = 128, ProgressLogger *progress_logger=NULL);
+  static void ProcessNormalization(Eigen::MatrixXi &imgOut, int value_max = 255, ProgressLogger *progress_logger=NULL);
+  static void ProcessTransformation(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, std::function<int(int)> transformation, ProgressLogger *progress_logger=NULL);
+  static void ProcessNegative(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, ProgressLogger *progress_logger=NULL);
 
 };
 

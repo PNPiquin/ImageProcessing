@@ -18,25 +18,25 @@ public:
     ImageHolder(std::string dir_path, std::string img_name);
     ImageHolder(Eigen::MatrixXi mat_img, std::string img_name, ImageType image_type);
 
-    std::shared_ptr<ImageHolder> ProcessEdgeDetection(std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size);
-    std::shared_ptr<ImageHolder> ProcessBothSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size);
-    std::shared_ptr<ImageHolder> ProcessVerticalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size);
-    std::shared_ptr<ImageHolder> ProcessHorizontalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size);
-    std::shared_ptr<ImageHolder> ProcessGaussianBlur(std::string output_name, int filter_size);
-    std::shared_ptr<ImageHolder> ProcessHistogramNormalization(std::string output_name, ProgressLogger progressLogger);
-    std::shared_ptr<ImageHolder> ProcessPowerLawTransformation(std::string output_name, double gamma);
-    std::shared_ptr<ImageHolder> ProcessLogLawTransformation(std::string output_name, double c);
-    std::shared_ptr<ImageHolder> ProcessThresholding(std::string output_name, int threshold);
-    std::shared_ptr<ImageHolder> ProcessMedianFilter(std::string output_name, int filter_size);
-    std::shared_ptr<ImageHolder> ProcessErosion(std::string output_name, int filter_size);
-    std::shared_ptr<ImageHolder> ProcessDilatation(std::string output_name, int filter_size);
-    std::shared_ptr<ImageHolder> ProcessErosionDilatation(std::string output_name, int filter_size);
-    std::shared_ptr<ImageHolder> ProcessUnsharpMask(std::string output_name, double alpha, bool save_mask, int filter_size);
-    std::shared_ptr<ImageHolder> ProcessLMR(std::string output_name, int filter_size);
-    std::shared_ptr<ImageHolder> ProcessCanny(std::string output_name, bool save_tmp_imgs);
+    std::shared_ptr<ImageHolder> ProcessEdgeDetection(std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessBothSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessVerticalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessHorizontalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessGaussianBlur(std::string output_name, int filter_size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessHistogramNormalization(std::string output_name, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessPowerLawTransformation(std::string output_name, double gamma, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessLogLawTransformation(std::string output_name, double c, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessThresholding(std::string output_name, int threshold, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessMedianFilter(std::string output_name, int filter_size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessErosion(std::string output_name, int filter_size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessDilatation(std::string output_name, int filter_size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessErosionDilatation(std::string output_name, int filter_size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessUnsharpMask(std::string output_name, double alpha, bool save_mask, int filter_size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessLMR(std::string output_name, int filter_size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessCanny(std::string output_name, bool save_tmp_imgs, ProgressLogger *progress_logger = NULL);
     std::shared_ptr<ImageHolder> ProcessOtsuSegmentation(std::string output_name);
     std::shared_ptr<ImageHolder> ProcessKMeans(std::string output_name, int k, KMeans::K_MEANS_DISTANCE distance_method);
-    std::shared_ptr<ImageHolder> ProcessNegative(std::string output_name);
+    std::shared_ptr<ImageHolder> ProcessNegative(std::string output_name, ProgressLogger *progress_logger = NULL);
 
 
     void SetImageName(std::string name);

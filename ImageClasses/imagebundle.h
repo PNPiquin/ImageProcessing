@@ -61,7 +61,7 @@ private:
     void Insert(std::string img_name, std::vector<std::shared_ptr<ImageHolder>>);
 
     std::string working_dir_path;
-    ProgressLogger progress_logger;
+    ProgressLogger *progress_logger;
 };
 
 #endif // IMAGEBUNDLE_H

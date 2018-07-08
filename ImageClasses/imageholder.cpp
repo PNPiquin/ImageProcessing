@@ -50,49 +50,92 @@ ImageHolder::ImageType ImageHolder::GetImageType(){
     return img_type;
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessEdgeDetection(std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessEdgeDetection(
+        std::string output_name,
+        int filter_size,
+        bool use_gaussian_blur,
+        int gaussian_filter_size,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
     if(use_gaussian_blur){
+        // logger init
+        if(progress_logger){
+            progress_logger->MultiplyTaskNumber(2);
+        }
+
         Eigen::MatrixXi gaussian_img;
         GaussianBlurFilter gaussian_filter(gaussian_filter_size);
         EdgeDetectionFilter edge_filter(filter_size);
-        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img);
-        edge_filter.ProcessMatrixImg(gaussian_img, img_out);
+        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_logger);
+
+        // Logging subtask end
+        if(progress_logger){
+            progress_logger->IncrementFinishedTasksCpt();
+        }
+
+        edge_filter.ProcessMatrixImg(gaussian_img, img_out, progress_logger);
     } else{
         EdgeDetectionFilter edge_filter(filter_size);
-        edge_filter.ProcessMatrixImg(mat_img, img_out);
+        edge_filter.ProcessMatrixImg(mat_img, img_out, progress_logger);
     }
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessBothSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessBothSobel(
+        std::string output_name,
+        bool use_gaussian_blur,
+        int gaussian_filter_size,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out1, img_out2, img_out;
 
     if(use_gaussian_blur){
+        // logger init
+        if(progress_logger){
+            progress_logger->MultiplyTaskNumber(3);
+        }
+
         Eigen::MatrixXi gaussian_img;
         GaussianBlurFilter gaussian_filter(gaussian_filter_size);
-        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img);
+        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_logger);
+
+        // Logging subtask end
+        if(progress_logger){
+            progress_logger->IncrementFinishedTasksCpt();
+        }
 
         SobelFilter sobel_filter;
-
         sobel_filter.PopulateHorizontalFilter();
-        sobel_filter.ProcessMatrixImg(gaussian_img, img_out1);
+        sobel_filter.ProcessMatrixImg(gaussian_img, img_out1, progress_logger);
+
+        // Logging subtask end
+        if(progress_logger){
+            progress_logger->IncrementFinishedTasksCpt();
+        }
 
         sobel_filter.PopulateVerticalFilter();
-        sobel_filter.ProcessMatrixImg(gaussian_img, img_out2);
+        sobel_filter.ProcessMatrixImg(gaussian_img, img_out2, progress_logger);
 
         img_out.resize(mat_img.rows(), mat_img.cols());
         img_out = (img_out1 + img_out2) / 2;
     } else{
-        SobelFilter sobel_filter;
+        // logger init
+        if(progress_logger){
+            progress_logger->MultiplyTaskNumber(2);
+        }
 
+        SobelFilter sobel_filter;
         sobel_filter.PopulateHorizontalFilter();
-        sobel_filter.ProcessMatrixImg(mat_img, img_out1);
+        sobel_filter.ProcessMatrixImg(mat_img, img_out1, progress_logger);
+
+        // Logging subtask end
+        if(progress_logger){
+            progress_logger->IncrementFinishedTasksCpt();
+        }
 
         sobel_filter.PopulateVerticalFilter();
-        sobel_filter.ProcessMatrixImg(mat_img, img_out2);
+        sobel_filter.ProcessMatrixImg(mat_img, img_out2, progress_logger);
 
         img_out.resize(mat_img.rows(), mat_img.cols());
         img_out = (img_out1 + img_out2) / 2;
@@ -101,157 +144,232 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessBothSobel(std::string output_na
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessVerticalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessVerticalSobel(
+        std::string output_name,
+        bool use_gaussian_blur,
+        int gaussian_filter_size,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
     if(use_gaussian_blur){
+        // logger init
+        if(progress_logger){
+            progress_logger->MultiplyTaskNumber(2);
+        }
+
         Eigen::MatrixXi gaussian_img;
         GaussianBlurFilter gaussian_filter(gaussian_filter_size);
-        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img);
+        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_logger);
+
+        // Logging subtask end
+        if(progress_logger){
+            progress_logger->IncrementFinishedTasksCpt();
+        }
 
         SobelFilter sobel_filter;
         sobel_filter.PopulateVerticalFilter();
-        sobel_filter.ProcessMatrixImg(gaussian_img, img_out);
+        sobel_filter.ProcessMatrixImg(gaussian_img, img_out, progress_logger);
 
     } else{
         SobelFilter sobel_filter;
         sobel_filter.PopulateVerticalFilter();
-        sobel_filter.ProcessMatrixImg(mat_img, img_out);
+        sobel_filter.ProcessMatrixImg(mat_img, img_out, progress_logger);
     }
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessHorizontalSobel(std::string output_name, bool use_gaussian_blur, int gaussian_filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessHorizontalSobel(
+        std::string output_name,
+        bool use_gaussian_blur,
+        int gaussian_filter_size,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
     if(use_gaussian_blur){
+        // logger init
+        if(progress_logger){
+            progress_logger->MultiplyTaskNumber(2);
+        }
+
         Eigen::MatrixXi gaussian_img;
         GaussianBlurFilter gaussian_filter(gaussian_filter_size);
-        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img);
+        gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_logger);
+
+        // Logging subtask end
+        if(progress_logger){
+            progress_logger->IncrementFinishedTasksCpt();
+        }
 
         SobelFilter sobel_filter;
         sobel_filter.PopulateHorizontalFilter();
-        sobel_filter.ProcessMatrixImg(gaussian_img, img_out);
+        sobel_filter.ProcessMatrixImg(gaussian_img, img_out, progress_logger);
 
     } else{
         SobelFilter sobel_filter;
         sobel_filter.PopulateHorizontalFilter();
-        sobel_filter.ProcessMatrixImg(mat_img, img_out);
+        sobel_filter.ProcessMatrixImg(mat_img, img_out, progress_logger);
     }
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessGaussianBlur(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessGaussianBlur(
+        std::string output_name,
+        int filter_size,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
     GaussianBlurFilter blur_filter(filter_size);
-    blur_filter.ProcessMatrixImg(mat_img, img_out);
+    blur_filter.ProcessMatrixImg(mat_img, img_out, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessHistogramNormalization(std::string output_name, ProgressLogger progressLogger){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessHistogramNormalization(
+        std::string output_name,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
     HistogramProcessor hp;
-    hp.ProcessEqualization(mat_img, img_out, progressLogger);
+    hp.ProcessEqualization(mat_img, img_out, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessPowerLawTransformation(std::string output_name, double gamma){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessPowerLawTransformation(
+        std::string output_name,
+        double gamma,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
-    IntensityTransformation::ProcessPowerLaw(mat_img, img_out, gamma, 1.0);
+    IntensityTransformation::ProcessPowerLaw(mat_img, img_out, gamma, 1.0, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessLogLawTransformation(std::string output_name, double c){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessLogLawTransformation(
+        std::string output_name,
+        double c,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
-    IntensityTransformation::ProcessLogLaw(mat_img, img_out, c);
+    IntensityTransformation::ProcessLogLaw(mat_img, img_out, c, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessThresholding(std::string output_name, int threshold){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessThresholding(
+        std::string output_name,
+        int threshold,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
-    IntensityTransformation::ProcessThresholding(mat_img, img_out, threshold);
+    IntensityTransformation::ProcessThresholding(mat_img, img_out, threshold, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessMedianFilter(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessMedianFilter(
+        std::string output_name,
+        int filter_size,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
     MedianFilter median_filter(filter_size);
-    median_filter.ProcessStatisticalFilter(mat_img, img_out);
+    median_filter.ProcessStatisticalFilter(mat_img, img_out, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessDilatation(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessDilatation(
+        std::string output_name,
+        int filter_size,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
     MinFilter min_filter(filter_size);
-    min_filter.ProcessStatisticalFilter(mat_img, img_out);
+    min_filter.ProcessStatisticalFilter(mat_img, img_out, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessErosion(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessErosion(
+        std::string output_name,
+        int filter_size,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
     MaxFilter max_filter(filter_size);
-    max_filter.ProcessStatisticalFilter(mat_img, img_out);
+    max_filter.ProcessStatisticalFilter(mat_img, img_out, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessErosionDilatation(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessErosionDilatation(
+        std::string output_name,
+        int filter_size,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out, img_tmp;
 
+    // logger init
+    if(progress_logger){
+        progress_logger->MultiplyTaskNumber(2);
+    }
+
     MaxFilter max_filter(filter_size);
-    max_filter.ProcessStatisticalFilter(mat_img, img_tmp);
+    max_filter.ProcessStatisticalFilter(mat_img, img_tmp, progress_logger);
+
+    // Logging subtask end
+    if(progress_logger){
+        progress_logger->IncrementFinishedTasksCpt();
+    }
 
     MinFilter min_filter(filter_size);
-    min_filter.ProcessStatisticalFilter(img_tmp, img_out);
+    min_filter.ProcessStatisticalFilter(img_tmp, img_out, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessUnsharpMask(std::string output_name, double alpha, bool save_mask, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessUnsharpMask(
+        std::string output_name,
+        double alpha,
+        bool save_mask,
+        int filter_size,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
-    UnsharpMaskProcessor::ProcessUnsharpMask(mat_img, img_out, alpha, save_mask, filter_size);
+    UnsharpMaskProcessor::ProcessUnsharpMask(mat_img, img_out, alpha, save_mask, filter_size, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessLMR(std::string output_name, int filter_size){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessLMR(
+        std::string output_name,
+        int filter_size,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
     SlowLMRProcessor lmrp(filter_size);
-    lmrp.ProcessStatisticalFilter(mat_img, img_out);
+    lmrp.ProcessStatisticalFilter(mat_img, img_out, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessCanny(std::string output_name, bool save_tmp_imgs){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessCanny(
+        std::string output_name,
+        bool save_tmp_imgs,
+        ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
     if(save_tmp_imgs){
         Eigen::MatrixXi mag;
         Eigen::MatrixXf dir;
-        CannyEdgeDetector::ProcessCannyEdgeDetector(mat_img, img_out, mag, dir);
+        CannyEdgeDetector::ProcessCannyEdgeDetector(mat_img, img_out, mag, dir, progress_logger);
         JpegManager::SaveGrayscaleMatrixImg(mag, "/home/pierre-nicolas/Pictures/ImageProcessing/Canny/" + output_name + "_mag");
     }
     else{
-        CannyEdgeDetector::ProcessCannyEdgeDetector(mat_img, img_out);
+        CannyEdgeDetector::ProcessCannyEdgeDetector(mat_img, img_out, progress_logger);
     }
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
@@ -265,7 +383,10 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessOtsuSegmentation(std::string ou
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessKMeans(std::string output_name, int k, KMeans::K_MEANS_DISTANCE distance_method){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessKMeans(
+        std::string output_name,
+        int k,
+        KMeans::K_MEANS_DISTANCE distance_method){
     Eigen::MatrixXi img_out;
 
     KMeans km(k, distance_method);
@@ -274,10 +395,10 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessKMeans(std::string output_name,
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
 
-std::shared_ptr<ImageHolder> ImageHolder::ProcessNegative(std::string output_name){
+std::shared_ptr<ImageHolder> ImageHolder::ProcessNegative(std::string output_name, ProgressLogger *progress_logger){
     Eigen::MatrixXi img_out;
 
-    IntensityTransformation::ProcessNegative(mat_img, img_out);
+    IntensityTransformation::ProcessNegative(mat_img, img_out, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }

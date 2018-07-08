@@ -21,12 +21,17 @@ public:
 
     int GetProgress();
     void SetProgress(int p);
+
     void SetTaskNumber(int n);
+    void MultiplyTaskNumber(int m);
+
     void IncrementFinishedTasksCpt();
     void ResetFinishTasksCpt();
 
     bool IsProcessing();
     void SetIsProcessing(bool b);
+
+    void ResetProgressLogger();
 
 private:
     // progress counters

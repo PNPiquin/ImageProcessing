@@ -8,8 +8,7 @@
 class HistogramProcessor{
 public:
   HistogramProcessor();
-  void ProcessEqualization(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut);
-  void ProcessEqualization(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, ProgressLogger progressLogger);
+  void ProcessEqualization(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, ProgressLogger *progress_logger = NULL);
   static std::map<int, double> GetHistogram(Eigen::MatrixXi &img);
 
 private:
