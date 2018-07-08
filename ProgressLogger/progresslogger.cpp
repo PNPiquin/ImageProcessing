@@ -30,13 +30,6 @@ int ProgressLogger::GetProgress(){
 
 void ProgressLogger::SetProgress(int p){
     progress->store(p);
-
-    // DEBUG ONLY
-    double d_progress = (double) progress->load();
-    double d_task_number = (double) task_number->load();
-    double d_finished_tasks_cpt = (double) finished_tasks_cpt->load();
-    double current_progress = (100.0 * d_finished_tasks_cpt + d_progress) / (d_task_number);
-    std::cout << "Get progress: " << current_progress << std::endl;
 }
 
 void ProgressLogger::SetTaskNumber(int n){
