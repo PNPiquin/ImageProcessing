@@ -31,7 +31,7 @@ public:
     void ProcessVerticalSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size);
     void ProcessHorizontalSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size);
     void ProcessGaussianBlur(std::string img_name, std::string output_name, int filter_size);
-    void ProcessHistogramNormalization(std::string img_name, std::string output_name, ProgressLogger progressLogger);
+    void ProcessHistogramNormalization(std::string img_name, std::string output_name);
     void ProcessPowerLawTransformation(std::string img_name, std::string output_name, double gamma);
     void ProcessLogLawTransformation(std::string img_name, std::string output_name, double c);
     void ProcessThresholding(std::string img_name, std::string output_name, int threshold);
@@ -53,12 +53,15 @@ public:
 
     std::map<std::string, std::vector<std::shared_ptr<ImageHolder>>> image_bundle;
 
+    int GetProgress();
+
 private:
     // Utils
     void Insert(std::string img_name, std::shared_ptr<ImageHolder> img);
     void Insert(std::string img_name, std::vector<std::shared_ptr<ImageHolder>>);
 
     std::string working_dir_path;
+    ProgressLogger progress_logger;
 };
 
 #endif // IMAGEBUNDLE_H

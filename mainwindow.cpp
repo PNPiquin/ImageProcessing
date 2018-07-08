@@ -125,7 +125,7 @@ void MainWindow::ui_auto_update(){
 
 void MainWindow::progress_update(){
     try{
-        ui->progress_bar->setValue(progress_logger.GetProgress());
+        ui->progress_bar->setValue(bundle.GetProgress());
     } catch(...){
         std::cout << "An error ocurred while updating the progress bar" << std::endl;
     }
@@ -193,7 +193,7 @@ void MainWindow::on_histogram_tab_launch_normalization_clicked()
     } else{
         result_name = ui->histogram_tab_output_name->text().toStdString();
     }
-    bundle.ProcessHistogramNormalization(img_name, result_name, progress_logger);
+    bundle.ProcessHistogramNormalization(img_name, result_name);
 }
 
 void MainWindow::on_intensity_tab_process_law_power_clicked()

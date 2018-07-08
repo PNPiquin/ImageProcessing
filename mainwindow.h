@@ -9,8 +9,6 @@
 #include <boost/gil/gil_all.hpp>
 #include <Eigen/Dense>
 
-#include <ProgressLogger/progresslogger.h>
-
 #include "IO/JpegManager.h"
 
 #include "ImageClasses/imagebundle.h"
@@ -74,7 +72,6 @@ private:
 
     // Progress timer --> update the progress bar value from a shared value with other threads
     QTimer* progress_update_timer;
-    ProgressLogger progress_logger;
 
 protected:
     void timerEvent(QTimerEvent *event);

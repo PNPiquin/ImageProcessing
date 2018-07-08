@@ -67,6 +67,10 @@ void ImageBundle::SaveImgGroup(std::string group_name){
     }
 }
 
+int ImageBundle::GetProgress(){
+    return progress_logger.GetProgress();
+}
+
 // -----------------------------------------------------------------------------------
 //                            Image processing
 // -----------------------------------------------------------------------------------
@@ -121,11 +125,11 @@ void ImageBundle::ProcessGaussianBlur(std::string img_name, std::string output_n
     Insert(output_name, out_img_vector);
 }
 
-void ImageBundle::ProcessHistogramNormalization(std::string img_name, std::string output_name, ProgressLogger progressLogger){
+void ImageBundle::ProcessHistogramNormalization(std::string img_name, std::string output_name){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> histogram_img = img->ProcessHistogramNormalization(img->GetImageName() + output_name, progressLogger);
+        std::shared_ptr<ImageHolder> histogram_img = img->ProcessHistogramNormalization(img->GetImageName() + output_name, progress_logger);
         out_img_vector.push_back(histogram_img);
     }
     Insert(output_name, out_img_vector);
