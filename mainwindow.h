@@ -1,22 +1,22 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QTimer>
+// Standard includes
 #include <iostream>
 #include <string>
 #include <map>
+
+// Third parties library
+#include <QMainWindow>
+#include <QTimer>
 #include <boost/gil/gil_all.hpp>
 #include <Eigen/Dense>
 
+// Input output class
 #include "IO/JpegManager.h"
 
+// Image management
 #include "ImageClasses/imagebundle.h"
-
-#include "SpatialFiltering/SpatialFilter.h"
-#include "SpatialFiltering/CommonSpatialFilters.h"
-#include "SpatialFiltering/HistogramProcessor.h"
-#include "SpatialFiltering/IntensityTransformation.h"
 
 namespace Ui {
 class MainWindow;
