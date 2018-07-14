@@ -4,7 +4,7 @@ JpegManager::JpegManager(std::string file_path) : path(file_path){
 
 }
 
-void JpegManager::GetImage(boost::gil::rgb8_image_t &img){
+bool JpegManager::GetImage(boost::gil::rgb8_image_t &img){
     if(boost::filesystem::exists(path)){
         // Here, the path exists but me must check the extension of the file
         // to use the right method
@@ -23,7 +23,7 @@ void JpegManager::GetImage(boost::gil::rgb8_image_t &img){
             boost::gil::jpeg_read_image(path, img);
         } else {
             // Here, we have an unrecognised extension --> return
-            return;
+            return false;
         }
     } else if (boost::filesystem::exists(path + ".jpeg")){
         boost::gil::jpeg_read_image(path + ".jpeg", img);
@@ -36,15 +36,19 @@ void JpegManager::GetImage(boost::gil::rgb8_image_t &img){
     } else if (boost::filesystem::exists(path + ".PNG")){
         boost::gil::png_read_image(path + ".PNG", img);
     } else {
-        return;
+        return false;
     }
 
-    printf("%s\n", "Reading image --> Success");
+    // printf("%s\n", "Reading image --> Success");
+    return true;
 }
 
-void JpegManager::GetGrayscaleMatrixImg(Eigen::MatrixXi &mat_img){
+bool JpegManager::GetGrayscaleMatrixImg(Eigen::MatrixXi &mat_img){
   boost::gil::rgb8_image_t img;
-  GetImage(img);
+  bool img_loaded = GetImage(img);
+  if(!img_loaded){
+      return false;
+  }
   int width = img.width();
   int height = img.height();
   mat_img.resize(width, height);
@@ -58,14 +62,15 @@ void JpegManager::GetGrayscaleMatrixImg(Eigen::MatrixXi &mat_img){
       mat_img(i, j) = gray_value;
     }
   }
-  printf("%s\n", "Img matrix created");
+  // printf("%s\n", "Img matrix created");
+  return true;
 }
 
 void JpegManager::SaveGrayscaleMatrixImg(Eigen::MatrixXi &mat_img, std::string save_path){
   boost::gil::gray8_image_t img = GrayscaleMatrixImgToGrayImg(mat_img);
   try{
       boost::gil::jpeg_write_view( save_path + ".jpeg", boost::gil::view(img));
-      printf("%s\n", "Img saved successfully");
+      // printf("%s\n", "Img saved successfully");
   }
   catch(std::ios_base::failure e){
       std::cout << "Error in SaveGrayscaleMatrixImg : " << e.what() << std::endl;

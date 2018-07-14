@@ -4,6 +4,8 @@
 ImageBundle::ImageBundle()
 {
     working_dir_path = "/home/pierre-nicolas/Pictures/ImageProcessing/";
+
+    progress_logger = new ProgressLogger();
 }
 
 // -----------------------------------------------------------------------------------
@@ -11,15 +13,33 @@ ImageBundle::ImageBundle()
 // -----------------------------------------------------------------------------------
 void ImageBundle::LoadImg(std::string img_name){
     std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(working_dir_path, img_name);
-    Insert(img_name + "_grayscale", img_holder);
+    if(img_holder->GetIsLoaded()){
+      Insert(img_name + "_grayscale", img_holder);
+    }
 }
 void ImageBundle::LoadImgFolder(std::string folder_name){
     std::vector<std::shared_ptr<ImageHolder>> img_vect;
-    for (auto & p : boost::filesystem::directory_iterator(working_dir_path + folder_name)){
-        std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(p.path().parent_path().string() + "/", p.path().stem().string());
-        img_vect.push_back(img_holder);
+
+    // path creation
+    boost::filesystem::path working_dir(working_dir_path), folder(folder_name);
+    boost::filesystem::path folder_path = working_dir / folder;
+
+    if(boost::filesystem::is_directory(folder_path.string())){
+        std::vector<boost::filesystem::path> paths;
+
+        for (auto & p : boost::filesystem::directory_iterator(folder_path.string())){
+            paths.push_back(p);
+        }
+
+        std::sort(paths.begin(), paths.end());
+
+        for(int path_index = 0; path_index < (int)paths.size(); ++path_index){
+            boost::filesystem::path p = paths[path_index];
+            std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(p.parent_path().string() + "/", p.stem().string());
+            img_vect.push_back(img_holder);
+        }
+        Insert(folder_name, img_vect);
     }
-    Insert(folder_name, img_vect);
 }
 
 void ImageBundle::Insert(std::string img_name, std::shared_ptr<ImageHolder> img){
@@ -49,168 +69,389 @@ void ImageBundle::SaveImgGroup(std::string group_name){
     }
 }
 
+int ImageBundle::GetProgress(){
+    return progress_logger->GetProgress();
+}
+
 // -----------------------------------------------------------------------------------
 //                            Image processing
 // -----------------------------------------------------------------------------------
-void ImageBundle::ProcessEdgeDetection(std::string img_name, std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
+void ImageBundle::ProcessEdgeDetection(
+        std::string img_name,
+        std::string output_name,
+        int filter_size,
+        bool use_gaussian_blur,
+        int gaussian_filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    // The number of tasks to be done per image depends on if we use a gaussian
+    // filter first or not
+    const int tasks_per_img = use_gaussian_blur ? 2 : 1;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> edge_img = img->ProcessEdgeDetection(img->GetImageName() + output_name,
-                                                                          filter_size, use_gaussian_blur, gaussian_filter_size, progress_bar);
+        std::shared_ptr<ImageHolder> edge_img = img->ProcessEdgeDetection(
+                    img->GetImageName() + output_name,
+                    filter_size,
+                    use_gaussian_blur,
+                    gaussian_filter_size,
+                    progress_logger);
         out_img_vector.push_back(edge_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessBothSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
+void ImageBundle::ProcessBothSobel(
+        std::string img_name,
+        std::string output_name,
+        bool use_gaussian_blur,
+        int gaussian_filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    // The number of tasks to be done per image depends on if we use a gaussian
+    // filter first or not
+    const int tasks_per_img = use_gaussian_blur ? 3 : 2;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> edge_img = img->ProcessBothSobel(img->GetImageName() + output_name, use_gaussian_blur, gaussian_filter_size, progress_bar);
+        std::shared_ptr<ImageHolder> edge_img = img->ProcessBothSobel(
+                    img->GetImageName() + output_name,
+                    use_gaussian_blur,
+                    gaussian_filter_size,
+                    progress_logger);
         out_img_vector.push_back(edge_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessVerticalSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
+void ImageBundle::ProcessVerticalSobel(
+        std::string img_name,
+        std::string output_name,
+        bool use_gaussian_blur,
+        int gaussian_filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    // The number of tasks to be done per image depends on if we use a gaussian
+    // filter first or not
+    const int tasks_per_img = use_gaussian_blur ? 2 : 1;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> edge_img = img->ProcessVerticalSobel(img->GetImageName() + output_name, use_gaussian_blur, gaussian_filter_size, progress_bar);
+        std::shared_ptr<ImageHolder> edge_img = img->ProcessVerticalSobel(
+                    img->GetImageName() + output_name,
+                    use_gaussian_blur,
+                    gaussian_filter_size,
+                    progress_logger);
         out_img_vector.push_back(edge_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessHorizontalSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size, QProgressBar *progress_bar){
+void ImageBundle::ProcessHorizontalSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    // The number of tasks to be done per image depends on if we use a gaussian
+    // filter first or not
+    const int tasks_per_img = use_gaussian_blur ? 2 : 1;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> edge_img = img->ProcessHorizontalSobel(img->GetImageName() + output_name, use_gaussian_blur, gaussian_filter_size, progress_bar);
+        std::shared_ptr<ImageHolder> edge_img = img->ProcessHorizontalSobel(
+                    img->GetImageName() + output_name,
+                    use_gaussian_blur,
+                    gaussian_filter_size,
+                    progress_logger);
         out_img_vector.push_back(edge_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessGaussianBlur(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar){
+void ImageBundle::ProcessGaussianBlur(std::string img_name, std::string output_name, int filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> edge_img = img->ProcessGaussianBlur(img->GetImageName() + output_name, filter_size, progress_bar);
+        std::shared_ptr<ImageHolder> edge_img = img->ProcessGaussianBlur(
+                    img->GetImageName() + output_name,
+                    filter_size,
+                    progress_logger);
         out_img_vector.push_back(edge_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessHistogramNormalization(std::string img_name, std::string output_name, QProgressBar *progress_bar){
+void ImageBundle::ProcessHistogramNormalization(std::string img_name, std::string output_name){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> histogram_img = img->ProcessHistogramNormalization(img->GetImageName() + output_name, progress_bar);
+        std::shared_ptr<ImageHolder> histogram_img = img->ProcessHistogramNormalization(
+                    img->GetImageName() + output_name,
+                    progress_logger);
         out_img_vector.push_back(histogram_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessPowerLawTransformation(std::string img_name, std::string output_name, double gamma, QProgressBar *progress_bar){
+void ImageBundle::ProcessPowerLawTransformation(std::string img_name, std::string output_name, double gamma){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> pow_img = img->ProcessPowerLawTransformation(img->GetImageName() + output_name, gamma, progress_bar);
+        std::shared_ptr<ImageHolder> pow_img = img->ProcessPowerLawTransformation(
+                    img->GetImageName() + output_name,
+                    gamma,
+                    progress_logger);
         out_img_vector.push_back(pow_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessLogLawTransformation(std::string img_name, std::string output_name, double c, QProgressBar *progress_bar){
+void ImageBundle::ProcessLogLawTransformation(std::string img_name, std::string output_name, double c){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> log_img = img->ProcessPowerLawTransformation(img->GetImageName() + output_name, c, progress_bar);
+        std::shared_ptr<ImageHolder> log_img = img->ProcessPowerLawTransformation(
+                    img->GetImageName() + output_name,
+                    c,
+                    progress_logger);
         out_img_vector.push_back(log_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessThresholding(std::string img_name, std::string output_name, int threshold, QProgressBar *progress_bar){
+void ImageBundle::ProcessThresholding(std::string img_name, std::string output_name, int threshold){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> log_img = img->ProcessThresholding(img->GetImageName() + output_name, threshold, progress_bar);
+        std::shared_ptr<ImageHolder> log_img = img->ProcessThresholding(
+                    img->GetImageName() + output_name,
+                    threshold,
+                    progress_logger);
         out_img_vector.push_back(log_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessMedianFilter(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar){
+void ImageBundle::ProcessMedianFilter(std::string img_name, std::string output_name, int filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> median_img = img->ProcessMedianFilter(img->GetImageName() + output_name, filter_size, progress_bar);
+        std::shared_ptr<ImageHolder> median_img = img->ProcessMedianFilter(
+                    img->GetImageName() + output_name,
+                    filter_size,
+                    progress_logger);
         out_img_vector.push_back(median_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessErosion(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar){
+void ImageBundle::ProcessErosion(std::string img_name, std::string output_name, int filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> erosion_img = img->ProcessErosion(img->GetImageName() + output_name, filter_size, progress_bar);
+        std::shared_ptr<ImageHolder> erosion_img = img->ProcessErosion(
+                    img->GetImageName() + output_name,
+                    filter_size,
+                    progress_logger);
         out_img_vector.push_back(erosion_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessDilatation(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar){
+void ImageBundle::ProcessDilatation(std::string img_name, std::string output_name, int filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> dilatation_img = img->ProcessDilatation(img->GetImageName() + output_name, filter_size, progress_bar);
+        std::shared_ptr<ImageHolder> dilatation_img = img->ProcessDilatation(
+                    img->GetImageName() + output_name,
+                    filter_size,
+                    progress_logger);
         out_img_vector.push_back(dilatation_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessErosionDilatation(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar){
+void ImageBundle::ProcessErosionDilatation(std::string img_name, std::string output_name, int filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> erosion_dilatation_img = img->ProcessErosionDilatation(img->GetImageName() + output_name, filter_size, progress_bar);
+        std::shared_ptr<ImageHolder> erosion_dilatation_img = img->ProcessErosionDilatation(
+                    img->GetImageName() + output_name,
+                    filter_size,
+                    progress_logger);
         out_img_vector.push_back(erosion_dilatation_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessUnsharpMask(std::string img_name, std::string output_name, double alpha, bool save_mask, int filter_size, QProgressBar *progress_bar){
+void ImageBundle::ProcessUnsharpMask(
+        std::string img_name,
+        std::string output_name,
+        double alpha,
+        bool save_mask,
+        int filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> sharp_img = img->ProcessUnsharpMask(img->GetImageName() + output_name, alpha, save_mask, filter_size, progress_bar);
+        std::shared_ptr<ImageHolder> sharp_img = img->ProcessUnsharpMask(
+                    img->GetImageName() + output_name,
+                    alpha,
+                    save_mask,
+                    filter_size,
+                    progress_logger);
         out_img_vector.push_back(sharp_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessLMR(std::string img_name, std::string output_name, int filter_size, QProgressBar *progress_bar){
+void ImageBundle::ProcessLMR(std::string img_name, std::string output_name, int filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> sharp_img = img->ProcessLMR(img->GetImageName() + output_name, filter_size, progress_bar);
+        std::shared_ptr<ImageHolder> sharp_img = img->ProcessLMR(
+                    img->GetImageName() + output_name,
+                    filter_size,
+                    progress_logger);
         out_img_vector.push_back(sharp_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessCanny(std::string img_name, std::string output_name, bool save_tmp_imgs, QProgressBar *progress_bar){
+void ImageBundle::ProcessCanny(std::string img_name, std::string output_name, bool save_tmp_imgs){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    const int tasks_per_img = 4;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> canny_img = img->ProcessCanny(img->GetImageName() + output_name, save_tmp_imgs, progress_bar);
+        std::shared_ptr<ImageHolder> canny_img = img->ProcessCanny(
+                    img->GetImageName() + output_name,
+                    save_tmp_imgs,
+                    progress_logger);
         out_img_vector.push_back(canny_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
 void ImageBundle::ProcessOtsuSegmentation(std::string img_name, std::string output_name){
@@ -233,12 +474,22 @@ void ImageBundle::ProcessKMeans(std::string img_name, std::string output_name, i
     Insert(output_name, out_img_vector);
 }
 
-void ImageBundle::ProcessNegative(std::string img_name, std::string output_name, QProgressBar *progress_bar){
+void ImageBundle::ProcessNegative(std::string img_name, std::string output_name){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
     for(auto img : img_vector){
-        std::shared_ptr<ImageHolder> neg_img = img->ProcessNegative(img->GetImageName() + output_name, progress_bar);
+        std::shared_ptr<ImageHolder> neg_img = img->ProcessNegative(
+                    img->GetImageName() + output_name,
+                    progress_logger);
         out_img_vector.push_back(neg_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }

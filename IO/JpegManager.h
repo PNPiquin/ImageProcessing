@@ -15,8 +15,8 @@ class JpegManager{
 public:
   JpegManager(std::string file_path);
 
-  void GetImage(boost::gil::rgb8_image_t &img);
-  void GetGrayscaleMatrixImg(Eigen::MatrixXi &mat_img);
+  bool GetImage(boost::gil::rgb8_image_t &img);
+  bool GetGrayscaleMatrixImg(Eigen::MatrixXi &mat_img);
 
   static void SaveGrayscaleMatrixImg(Eigen::MatrixXi &mat_img, std::string save_path);
 
