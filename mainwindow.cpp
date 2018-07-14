@@ -182,19 +182,20 @@ void MainWindow::on_current_image_currentTextChanged(const QString &arg1)
 //------------------------------------------------------------------------------------------------------------------------------------------
 void MainWindow::on_pushButtonEdgeDetect_clicked()
 {
+    // Get image name
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->edge_tab_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     bool use_vertical_sobel = ui->use_vertical_sobel->checkState() == Qt::Checked;
     bool use_horizontal_sobel = ui->use_horizontal_sobel->checkState() == Qt::Checked;
     bool use_gaussian_blur = ui->edge_tab_use_gaussian_blur->checkState() == Qt::Checked;
     int filter_size = ui->edge_tab_filter_size->currentText().toInt();
     int gaussian_filter_size = ui->gaussian_filter_size_spinbox->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->edge_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->edge_tab_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->edge_tab_output_name->text().toStdString();
+
+    // Edge detection method selection
     if(use_vertical_sobel && use_horizontal_sobel){
         std::thread t(&ImageBundle::ProcessBothSobel,
                       &bundle,
@@ -237,29 +238,29 @@ void MainWindow::on_pushButtonEdgeDetect_clicked()
 
 void MainWindow::on_histogram_tab_launch_normalization_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->histogram_tab_use_as_suffix->checkState() == Qt::Checked;
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->histogram_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->histogram_tab_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->histogram_tab_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessHistogramNormalization, &bundle, img_name, result_name);
     t.detach();
 }
 
 void MainWindow::on_intensity_tab_process_law_power_clicked()
 {
+    // Get Image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->intensity_tab_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     double gamma = ui->gamma_double_spinbox->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->intensity_tab_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessPowerLawTransformation,
                   &bundle,
                   img_name,
@@ -270,15 +271,16 @@ void MainWindow::on_intensity_tab_process_law_power_clicked()
 
 void MainWindow::on_intensity_tab_process_log_law_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->intensity_tab_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     double c = ui->c_double_spinbox->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->intensity_tab_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessLogLawTransformation,
                   &bundle,
                   img_name,
@@ -289,15 +291,16 @@ void MainWindow::on_intensity_tab_process_log_law_clicked()
 
 void MainWindow::on_gaussian_blur_push_button_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->edge_tab_blur_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     int gaussian_filter_size = ui->gaussian_filter_size_spinbox->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->edge_tab_blur_output_name->text().toStdString();
-    } else{
-        result_name = ui->edge_tab_blur_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->edge_tab_blur_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessGaussianBlur,
                   &bundle,
                   img_name,
@@ -308,15 +311,16 @@ void MainWindow::on_gaussian_blur_push_button_clicked()
 
 void MainWindow::on_intensity_tab_process_thresholding_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->intensity_tab_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     int threshold = ui->intensity_tab_threshold_spinbox->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->intensity_tab_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessThresholding,
                   &bundle,
                   img_name,
@@ -327,15 +331,16 @@ void MainWindow::on_intensity_tab_process_thresholding_clicked()
 
 void MainWindow::on_median_filter_push_button_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->median_use_as_suffix->checkState() == Qt::Checked;
+
+     // Get params
     int filter_size = ui->median_filter_size->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->median_output_name->text().toStdString();
-    } else{
-        result_name = ui->median_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->median_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessMedianFilter,
                   &bundle,
                   img_name,
@@ -346,15 +351,16 @@ void MainWindow::on_median_filter_push_button_clicked()
 
 void MainWindow::on_erosion_push_button_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->erosion_dilatation_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     int filter_size = ui->erosion_dilatation_filter_size->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
-    } else{
-        result_name = ui->erosion_dilatation_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessErosion,
                   &bundle,
                   img_name,
@@ -365,15 +371,16 @@ void MainWindow::on_erosion_push_button_clicked()
 
 void MainWindow::on_dilatation_push_button_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->erosion_dilatation_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     int filter_size = ui->erosion_dilatation_filter_size->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
-    } else{
-        result_name = ui->erosion_dilatation_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessDilatation,
                   &bundle,
                   img_name,
@@ -384,15 +391,16 @@ void MainWindow::on_dilatation_push_button_clicked()
 
 void MainWindow::on_erosion_dilatation_push_button_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->erosion_dilatation_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     int filter_size = ui->erosion_dilatation_filter_size->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
-    } else{
-        result_name = ui->erosion_dilatation_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessErosionDilatation,
                   &bundle,
                   img_name,
@@ -403,17 +411,18 @@ void MainWindow::on_erosion_dilatation_push_button_clicked()
 
 void MainWindow::on_sharp_process_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->sharp_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     bool save_mask = ui->sharp_save_mask->checkState() == Qt::Checked;
     double alpha = ui->sharp_alpha_double_spinbox->value();
     int filter_size = ui->sharp_filter_size->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->sharp_output_name->text().toStdString();
-    } else{
-        result_name = ui->sharp_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->sharp_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessUnsharpMask,
                   &bundle,
                   img_name,
@@ -426,15 +435,16 @@ void MainWindow::on_sharp_process_clicked()
 
 void MainWindow::on_lmr_filter_push_button_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->lmr_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     int filter_size = ui->lmr_filter_size->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->lmr_output_name->text().toStdString();
-    } else{
-        result_name = ui->lmr_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->lmr_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessLMR,
                   &bundle,
                   img_name,
@@ -445,15 +455,16 @@ void MainWindow::on_lmr_filter_push_button_clicked()
 
 void MainWindow::on_canny_push_button_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->edge_tab_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     bool save_tmp_imgs = ui->canny_tmp_imgs->checkState() == Qt::Checked;
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->edge_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->edge_tab_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->edge_tab_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessCanny,
                   &bundle,
                   img_name,
@@ -464,14 +475,13 @@ void MainWindow::on_canny_push_button_clicked()
 
 void MainWindow::on_otsu_push_button_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->segmentation_use_as_suffix->checkState() == Qt::Checked;
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->segmentation_output_name->text().toStdString();
-    } else{
-        result_name = ui->segmentation_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->segmentation_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessOtsuSegmentation,
                   &bundle,
                   img_name,
@@ -481,8 +491,10 @@ void MainWindow::on_otsu_push_button_clicked()
 
 void MainWindow::on_k_means_push_button_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->segmentation_use_as_suffix->checkState() == Qt::Checked;
+
+    // Get params
     int k = ui->k_means_spinbox->value();
     KMeans::K_MEANS_DISTANCE distance_method = KMeans::K_MEANS_DISTANCE::SVD;
     std::string distance_method_string = ui->K_means_combobox->currentText().toStdString();
@@ -493,12 +505,11 @@ void MainWindow::on_k_means_push_button_clicked()
     } else if(distance_method_string == "SVD"){
         distance_method = KMeans::K_MEANS_DISTANCE::SVD;
     }
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->segmentation_output_name->text().toStdString();
-    } else{
-        result_name = ui->segmentation_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->segmentation_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessKMeans,
                   &bundle,
                   img_name,
@@ -510,14 +521,13 @@ void MainWindow::on_k_means_push_button_clicked()
 
 void MainWindow::on_negative_push_button_clicked()
 {
+    // Get image to process
     std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->intensity_tab_use_as_suffix->checkState() == Qt::Checked;
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->intensity_tab_output_name->text().toStdString();
-    }
+
+    // Get output name
+    std::string result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
+
+    // Process
     std::thread t(&ImageBundle::ProcessNegative,
                   &bundle,
                   img_name,

@@ -55,7 +55,7 @@
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="input_tab">
        <attribute name="title">
@@ -288,7 +288,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget_2">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="edge">
            <attribute name="title">
@@ -408,7 +408,7 @@
               <item>
                <widget class="QLabel" name="label_12">
                 <property name="text">
-                 <string>Output name</string>
+                 <string>Output suffix</string>
                 </property>
                </widget>
               </item>
@@ -416,16 +416,6 @@
                <widget class="QLineEdit" name="edge_tab_blur_output_name">
                 <property name="text">
                  <string>_blur</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="edge_tab_blur_use_as_suffix">
-                <property name="text">
-                 <string>Use as suffix</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -485,7 +475,7 @@
               <item>
                <widget class="QLabel" name="label_4">
                 <property name="text">
-                 <string>Output name</string>
+                 <string>Output suffix</string>
                 </property>
                </widget>
               </item>
@@ -493,16 +483,6 @@
                <widget class="QLineEdit" name="edge_tab_output_name">
                 <property name="text">
                  <string>_edge</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="edge_tab_use_as_suffix">
-                <property name="text">
-                 <string>Use as suffix</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -640,7 +620,7 @@
               <item>
                <widget class="QLabel" name="label_15">
                 <property name="text">
-                 <string>Output name</string>
+                 <string>Output suffix</string>
                 </property>
                </widget>
               </item>
@@ -648,16 +628,6 @@
                <widget class="QLineEdit" name="erosion_dilatation_output_name">
                 <property name="text">
                  <string>_mm</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="erosion_dilatation_use_as_suffix">
-                <property name="text">
-                 <string>Use as suffix</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -773,7 +743,7 @@
               <item>
                <widget class="QLabel" name="label_17">
                 <property name="text">
-                 <string>Output name</string>
+                 <string>Output suffix</string>
                 </property>
                </widget>
               </item>
@@ -781,16 +751,6 @@
                <widget class="QLineEdit" name="median_output_name">
                 <property name="text">
                  <string>_median</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="median_use_as_suffix">
-                <property name="text">
-                 <string>Use as suffix</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -878,7 +838,7 @@
           <item>
            <widget class="QLabel" name="label_5">
             <property name="text">
-             <string>Output name</string>
+             <string>Output suffix</string>
             </property>
            </widget>
           </item>
@@ -886,16 +846,6 @@
            <widget class="QLineEdit" name="histogram_tab_output_name">
             <property name="text">
              <string>_histogram</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="histogram_tab_use_as_suffix">
-            <property name="text">
-             <string>Use as suffix</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -975,7 +925,7 @@
           <item>
            <widget class="QLabel" name="label_7">
             <property name="text">
-             <string>Output name</string>
+             <string>Output suffix</string>
             </property>
            </widget>
           </item>
@@ -983,16 +933,6 @@
            <widget class="QLineEdit" name="intensity_tab_output_name">
             <property name="text">
              <string>_intensity</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="intensity_tab_use_as_suffix">
-            <property name="text">
-             <string>Use as suffix</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -1299,7 +1239,7 @@
           <item>
            <widget class="QLabel" name="label_19">
             <property name="text">
-             <string>Output name</string>
+             <string>Output suffix</string>
             </property>
            </widget>
           </item>
@@ -1307,16 +1247,6 @@
            <widget class="QLineEdit" name="sharp_output_name">
             <property name="text">
              <string>_sharp</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="sharp_use_as_suffix">
-            <property name="text">
-             <string>Use as suffix</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -1468,7 +1398,7 @@
           <item>
            <widget class="QLabel" name="label_23">
             <property name="text">
-             <string>Output name</string>
+             <string>Output suffix</string>
             </property>
            </widget>
           </item>
@@ -1476,16 +1406,6 @@
            <widget class="QLineEdit" name="lmr_output_name">
             <property name="text">
              <string>_lmr</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="lmr_use_as_suffix">
-            <property name="text">
-             <string>Use as suffix</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -1582,7 +1502,7 @@
           <item>
            <widget class="QLabel" name="label_26">
             <property name="text">
-             <string>Output name</string>
+             <string>Output suffix</string>
             </property>
            </widget>
           </item>
@@ -1590,16 +1510,6 @@
            <widget class="QLineEdit" name="segmentation_output_name">
             <property name="text">
              <string>_segmentation</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="segmentation_use_as_suffix">
-            <property name="text">
-             <string>Use as suffix</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
