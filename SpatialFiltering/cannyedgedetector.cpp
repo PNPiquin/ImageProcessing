@@ -26,11 +26,6 @@ void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::Ma
     mag.resize(rows, cols);
     dir.resize(rows, cols);
 
-    // logger init
-    if(progress_logger){
-        progress_logger->MultiplyTaskNumber(4);
-    }
-
     // First, we need a blurred version of img
     Eigen::MatrixXi blurred_img(rows, cols);
     GaussianBlurFilter gbf(filter_size);

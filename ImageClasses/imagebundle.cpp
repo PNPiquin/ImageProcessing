@@ -85,9 +85,13 @@ void ImageBundle::ProcessEdgeDetection(
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
 
+    // The number of tasks to be done per image depends on if we use a gaussian
+    // filter first or not
+    const int tasks_per_img = use_gaussian_blur ? 2 : 1;
+
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> edge_img = img->ProcessEdgeDetection(
                     img->GetImageName() + output_name,
@@ -112,9 +116,13 @@ void ImageBundle::ProcessBothSobel(
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
 
+    // The number of tasks to be done per image depends on if we use a gaussian
+    // filter first or not
+    const int tasks_per_img = use_gaussian_blur ? 3 : 2;
+
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> edge_img = img->ProcessBothSobel(
                     img->GetImageName() + output_name,
@@ -138,9 +146,13 @@ void ImageBundle::ProcessVerticalSobel(
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
 
+    // The number of tasks to be done per image depends on if we use a gaussian
+    // filter first or not
+    const int tasks_per_img = use_gaussian_blur ? 2 : 1;
+
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> edge_img = img->ProcessVerticalSobel(
                     img->GetImageName() + output_name,
@@ -159,6 +171,14 @@ void ImageBundle::ProcessVerticalSobel(
 void ImageBundle::ProcessHorizontalSobel(std::string img_name, std::string output_name, bool use_gaussian_blur, int gaussian_filter_size){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    // The number of tasks to be done per image depends on if we use a gaussian
+    // filter first or not
+    const int tasks_per_img = use_gaussian_blur ? 2 : 1;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> edge_img = img->ProcessHorizontalSobel(
                     img->GetImageName() + output_name,
@@ -166,8 +186,12 @@ void ImageBundle::ProcessHorizontalSobel(std::string img_name, std::string outpu
                     gaussian_filter_size,
                     progress_logger);
         out_img_vector.push_back(edge_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
     }
     Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }
 
 void ImageBundle::ProcessGaussianBlur(std::string img_name, std::string output_name, int filter_size){
@@ -411,9 +435,11 @@ void ImageBundle::ProcessCanny(std::string img_name, std::string output_name, bo
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
 
+    const int tasks_per_img = 4;
+
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> canny_img = img->ProcessCanny(
                     img->GetImageName() + output_name,

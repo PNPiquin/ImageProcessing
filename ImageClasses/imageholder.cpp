@@ -59,11 +59,6 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessEdgeDetection(
     Eigen::MatrixXi img_out;
 
     if(use_gaussian_blur){
-        // logger init
-        if(progress_logger){
-            progress_logger->MultiplyTaskNumber(2);
-        }
-
         Eigen::MatrixXi gaussian_img;
         GaussianBlurFilter gaussian_filter(gaussian_filter_size);
         EdgeDetectionFilter edge_filter(filter_size);
@@ -91,11 +86,6 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessBothSobel(
     Eigen::MatrixXi img_out1, img_out2, img_out;
 
     if(use_gaussian_blur){
-        // logger init
-        if(progress_logger){
-            progress_logger->MultiplyTaskNumber(3);
-        }
-
         Eigen::MatrixXi gaussian_img;
         GaussianBlurFilter gaussian_filter(gaussian_filter_size);
         gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_logger);
@@ -120,11 +110,6 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessBothSobel(
         img_out.resize(mat_img.rows(), mat_img.cols());
         img_out = (img_out1 + img_out2) / 2;
     } else{
-        // logger init
-        if(progress_logger){
-            progress_logger->MultiplyTaskNumber(2);
-        }
-
         SobelFilter sobel_filter;
         sobel_filter.PopulateHorizontalFilter();
         sobel_filter.ProcessMatrixImg(mat_img, img_out1, progress_logger);
@@ -152,11 +137,6 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessVerticalSobel(
     Eigen::MatrixXi img_out;
 
     if(use_gaussian_blur){
-        // logger init
-        if(progress_logger){
-            progress_logger->MultiplyTaskNumber(2);
-        }
-
         Eigen::MatrixXi gaussian_img;
         GaussianBlurFilter gaussian_filter(gaussian_filter_size);
         gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_logger);
@@ -187,11 +167,6 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessHorizontalSobel(
     Eigen::MatrixXi img_out;
 
     if(use_gaussian_blur){
-        // logger init
-        if(progress_logger){
-            progress_logger->MultiplyTaskNumber(2);
-        }
-
         Eigen::MatrixXi gaussian_img;
         GaussianBlurFilter gaussian_filter(gaussian_filter_size);
         gaussian_filter.ProcessMatrixImg(mat_img, gaussian_img, progress_logger);
