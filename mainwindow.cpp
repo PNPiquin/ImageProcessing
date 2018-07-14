@@ -84,16 +84,11 @@ QPixmap MainWindow::CreatePixmapFromImg(std::shared_ptr<ImageHolder> img_holder)
 void MainWindow::timerEvent(QTimerEvent *event){
     auto itr = bundle.image_bundle.begin();
     for(;itr != bundle.image_bundle.end(); ++itr){
-        //if(ui->current_image->findText(QString::fromStdString(itr->first)) == -1){
-        //    ui->current_image->addItem(QString::fromStdString(itr->first));
-        //    DisplayImg(itr->first);
-        //}
         if(std::find(displayed_imgs.begin(), displayed_imgs.end(), itr->first) == displayed_imgs.end()){
             ui->current_image->addItem(QString::fromStdString(itr->first));
             DisplayImg(itr->first);
             displayed_imgs.push_back(itr->first);
         }
-        std::cout << itr->first << std::endl;
     }
 }
 
@@ -138,7 +133,7 @@ void MainWindow::progress_update(){
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------
-//                                                      On push button methods
+//                                                On push button utils methods
 //------------------------------------------------------------------------------------------------------------------------------------------
 void MainWindow::on_pushButtonLoadImage_clicked()
 {
@@ -159,6 +154,32 @@ void MainWindow::on_save_folder_push_button_clicked()
     bundle.SaveImgGroup(img_name);
 }
 
+void MainWindow::on_change_working_dir_button_clicked()
+{
+    std::string work_dir = ui->working_dir_line->text().toStdString();
+    bundle.SetWorkingDir(work_dir);
+}
+
+void MainWindow::on_save_push_button_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    std::string save_name = ui->save_name_line->text().toStdString();
+    JpegManager::SaveGrayscaleMatrixImg(bundle.FindImage(img_name)->mat_img, bundle.GetWorkingDir() + save_name);
+    try {
+
+    } catch (std::exception e){
+        std::cout << "Error in method on_save_push_button_clicked --> " << e.what() << std::endl;
+    }
+}
+
+void MainWindow::on_current_image_currentTextChanged(const QString &arg1)
+{
+    DisplayImg(arg1.toStdString());
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+//                                           On push button processing methods
+//------------------------------------------------------------------------------------------------------------------------------------------
 void MainWindow::on_pushButtonEdgeDetect_clicked()
 {
     std::string img_name = ui->current_image->currentText().toStdString();
@@ -175,16 +196,45 @@ void MainWindow::on_pushButtonEdgeDetect_clicked()
         result_name = ui->edge_tab_output_name->text().toStdString();
     }
     if(use_vertical_sobel && use_horizontal_sobel){
-        bundle.ProcessBothSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
+        std::thread t(&ImageBundle::ProcessBothSobel,
+                      &bundle,
+                      img_name,
+                      result_name,
+                      use_gaussian_blur,
+                      gaussian_filter_size);
+        t.detach();
+        // bundle.ProcessBothSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
     }
     else if(use_vertical_sobel){
-        bundle.ProcessVerticalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
+        // bundle.ProcessVerticalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
+        std::thread t(&ImageBundle::ProcessVerticalSobel,
+                      &bundle,
+                      img_name,
+                      result_name,
+                      use_gaussian_blur,
+                      gaussian_filter_size);
+        t.detach();
     }
     else if(use_horizontal_sobel){
-        bundle.ProcessHorizontalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
+        // bundle.ProcessHorizontalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
+        std::thread t(&ImageBundle::ProcessHorizontalSobel,
+                      &bundle,
+                      img_name,
+                      result_name,
+                      use_gaussian_blur,
+                      gaussian_filter_size);
+        t.detach();
     }
     else{
-        bundle.ProcessEdgeDetection(img_name, result_name, filter_size, use_gaussian_blur, gaussian_filter_size);
+        // bundle.ProcessEdgeDetection(img_name, result_name, filter_size, use_gaussian_blur, gaussian_filter_size);
+        std::thread t(&ImageBundle::ProcessEdgeDetection,
+                      &bundle,
+                      img_name,
+                      result_name,
+                      filter_size,
+                      use_gaussian_blur,
+                      gaussian_filter_size);
+        t.detach();
     }
 }
 
@@ -215,7 +265,13 @@ void MainWindow::on_intensity_tab_process_law_power_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessPowerLawTransformation(img_name, result_name, gamma);
+    // bundle.ProcessPowerLawTransformation(img_name, result_name, gamma);
+    std::thread t(&ImageBundle::ProcessPowerLawTransformation,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  gamma);
+    t.detach();
 }
 
 void MainWindow::on_intensity_tab_process_log_law_clicked()
@@ -229,7 +285,13 @@ void MainWindow::on_intensity_tab_process_log_law_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessLogLawTransformation(img_name, result_name, c);
+    // bundle.ProcessLogLawTransformation(img_name, result_name, c);
+    std::thread t(&ImageBundle::ProcessLogLawTransformation,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  c);
+    t.detach();
 }
 
 void MainWindow::on_gaussian_blur_push_button_clicked()
@@ -243,7 +305,13 @@ void MainWindow::on_gaussian_blur_push_button_clicked()
     } else{
         result_name = ui->edge_tab_blur_output_name->text().toStdString();
     }
-    bundle.ProcessGaussianBlur(img_name, result_name, gaussian_filter_size);
+    // bundle.ProcessGaussianBlur(img_name, result_name, gaussian_filter_size);
+    std::thread t(&ImageBundle::ProcessGaussianBlur,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  gaussian_filter_size);
+    t.detach();
 }
 
 void MainWindow::on_intensity_tab_process_thresholding_clicked()
@@ -257,7 +325,13 @@ void MainWindow::on_intensity_tab_process_thresholding_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessThresholding(img_name, result_name, threshold);
+    // bundle.ProcessThresholding(img_name, result_name, threshold);
+    std::thread t(&ImageBundle::ProcessThresholding,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  threshold);
+    t.detach();
 }
 
 void MainWindow::on_median_filter_push_button_clicked()
@@ -271,7 +345,13 @@ void MainWindow::on_median_filter_push_button_clicked()
     } else{
         result_name = ui->median_output_name->text().toStdString();
     }
-    bundle.ProcessMedianFilter(img_name, result_name, filter_size);
+    // bundle.ProcessMedianFilter(img_name, result_name, filter_size);
+    std::thread t(&ImageBundle::ProcessMedianFilter,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  filter_size);
+    t.detach();
 }
 
 void MainWindow::on_erosion_push_button_clicked()
@@ -285,7 +365,13 @@ void MainWindow::on_erosion_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    bundle.ProcessErosion(img_name, result_name, filter_size);
+    // bundle.ProcessErosion(img_name, result_name, filter_size);
+    std::thread t(&ImageBundle::ProcessErosion,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  filter_size);
+    t.detach();
 }
 
 void MainWindow::on_dilatation_push_button_clicked()
@@ -299,7 +385,13 @@ void MainWindow::on_dilatation_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    bundle.ProcessDilatation(img_name, result_name, filter_size);
+    // bundle.ProcessDilatation(img_name, result_name, filter_size);
+    std::thread t(&ImageBundle::ProcessDilatation,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  filter_size);
+    t.detach();
 }
 
 void MainWindow::on_erosion_dilatation_push_button_clicked()
@@ -313,7 +405,13 @@ void MainWindow::on_erosion_dilatation_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    bundle.ProcessErosionDilatation(img_name, result_name, filter_size);
+    // bundle.ProcessErosionDilatation(img_name, result_name, filter_size);
+    std::thread t(&ImageBundle::ProcessErosionDilatation,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  filter_size);
+    t.detach();
 }
 
 void MainWindow::on_sharp_process_clicked()
@@ -329,30 +427,15 @@ void MainWindow::on_sharp_process_clicked()
     } else{
         result_name = ui->sharp_output_name->text().toStdString();
     }
-    bundle.ProcessUnsharpMask(img_name, result_name, alpha, save_mask, filter_size);
-}
-
-void MainWindow::on_change_working_dir_button_clicked()
-{
-    std::string work_dir = ui->working_dir_line->text().toStdString();
-    bundle.SetWorkingDir(work_dir);
-}
-
-void MainWindow::on_save_push_button_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    std::string save_name = ui->save_name_line->text().toStdString();
-    JpegManager::SaveGrayscaleMatrixImg(bundle.FindImage(img_name)->mat_img, bundle.GetWorkingDir() + save_name);
-    try {
-
-    } catch (std::exception e){
-        std::cout << "Error in method on_save_push_button_clicked --> " << e.what() << std::endl;
-    }
-}
-
-void MainWindow::on_current_image_currentTextChanged(const QString &arg1)
-{
-    DisplayImg(arg1.toStdString());
+    // bundle.ProcessUnsharpMask(img_name, result_name, alpha, save_mask, filter_size);
+    std::thread t(&ImageBundle::ProcessUnsharpMask,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  alpha,
+                  save_mask,
+                  filter_size);
+    t.detach();
 }
 
 void MainWindow::on_lmr_filter_push_button_clicked()
@@ -366,7 +449,13 @@ void MainWindow::on_lmr_filter_push_button_clicked()
     } else{
         result_name = ui->lmr_output_name->text().toStdString();
     }
-    bundle.ProcessLMR(img_name, result_name, filter_size);
+    // bundle.ProcessLMR(img_name, result_name, filter_size);
+    std::thread t(&ImageBundle::ProcessLMR,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  filter_size);
+    t.detach();
 }
 
 void MainWindow::on_canny_push_button_clicked()
@@ -380,7 +469,13 @@ void MainWindow::on_canny_push_button_clicked()
     } else{
         result_name = ui->edge_tab_output_name->text().toStdString();
     }
-    bundle.ProcessCanny(img_name, result_name, save_tmp_imgs);
+    // bundle.ProcessCanny(img_name, result_name, save_tmp_imgs);
+    std::thread t(&ImageBundle::ProcessCanny,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  save_tmp_imgs);
+    t.detach();
 }
 
 void MainWindow::on_otsu_push_button_clicked()
@@ -393,7 +488,12 @@ void MainWindow::on_otsu_push_button_clicked()
     } else{
         result_name = ui->segmentation_output_name->text().toStdString();
     }
-    bundle.ProcessOtsuSegmentation(img_name, result_name);
+    // bundle.ProcessOtsuSegmentation(img_name, result_name);
+    std::thread t(&ImageBundle::ProcessOtsuSegmentation,
+                  &bundle,
+                  img_name,
+                  result_name);
+    t.detach();
 }
 
 void MainWindow::on_k_means_push_button_clicked()
@@ -416,7 +516,14 @@ void MainWindow::on_k_means_push_button_clicked()
     } else{
         result_name = ui->segmentation_output_name->text().toStdString();
     }
-    bundle.ProcessKMeans(img_name, result_name, k, distance_method);
+    // bundle.ProcessKMeans(img_name, result_name, k, distance_method);
+    std::thread t(&ImageBundle::ProcessKMeans,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  k,
+                  distance_method);
+    t.detach();
 }
 
 void MainWindow::on_negative_push_button_clicked()
@@ -429,5 +536,10 @@ void MainWindow::on_negative_push_button_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessNegative(img_name, result_name);
+    // bundle.ProcessNegative(img_name, result_name);
+    std::thread t(&ImageBundle::ProcessNegative,
+                  &bundle,
+                  img_name,
+                  result_name);
+    t.detach();
 }
