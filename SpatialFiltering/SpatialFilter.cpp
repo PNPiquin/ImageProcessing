@@ -14,7 +14,6 @@ void SpatialFilter::ProcessMatrixImg(Eigen::MatrixXi &img, Eigen::MatrixXi &imgO
   int cols = img.cols();
   int padding = (size - 1) / 2;
   imgOut.resize(rows, cols);
-  printf("%s\n", "Starting SpatialFilter processing");
   for(int i = padding; i < rows - padding; ++i){
     for(int j = padding; j < cols - padding; ++j){
       ProcessConvolution(i, j, img, imgOut);
@@ -23,7 +22,6 @@ void SpatialFilter::ProcessMatrixImg(Eigen::MatrixXi &img, Eigen::MatrixXi &imgO
         progress_logger->SetProgress(std::floor(((i+1)*100)/(rows-padding)));
     }
   }
-  printf("%s\n", "End of SpatialFilter processing");
 }
 
 void SpatialFilter::ProcessConvolution(int i, int j, Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut){
