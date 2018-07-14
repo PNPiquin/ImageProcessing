@@ -13,23 +13,23 @@ void StatisticalSpatialFilter::SetStatisticalFilter(std::function<int(std::vecto
     statistical_filter = func;
 }
 
-void StatisticalSpatialFilter::ProcessStatisticalFilter(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out, QProgressBar *progress_bar){
+void StatisticalSpatialFilter::ProcessStatisticalFilter(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out, ProgressLogger *progress_logger){
     int rows = img.rows();
     int cols = img.cols();
     int padding = (filter_size - 1) / 2;
     img_out.resize(rows, cols);
-    printf("%s\n", "Starting StatisticalSpatialFilter processing");
+    // printf("%s\n", "Starting StatisticalSpatialFilter processing");
     for(int i = padding; i < rows - padding; ++i){
         for(int j = padding; j < cols - padding; ++j){
             std::vector<int> tmp_data;
             subMatrixExtraction(i, j, img, tmp_data);
             img_out(i, j) = statistical_filter(tmp_data);
         }
-        if(progress_bar){
-            progress_bar->setValue(std::floor(((i+1)*100)/(rows-padding)));
+        if(progress_logger){
+            progress_logger->SetProgress(std::floor(((i+1)*100)/(rows-padding)));
         }
     }
-    printf("%s\n", "End of StatisticalSpatialFilter processing");
+    // printf("%s\n", "End of StatisticalSpatialFilter processing");
 }
 
 void StatisticalSpatialFilter::subMatrixExtraction(int i, int j, Eigen::MatrixXi &img, std::vector<int> &out_vector){

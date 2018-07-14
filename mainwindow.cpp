@@ -20,10 +20,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timerID = startTimer(500);
 
+    // Building UI update timer
     displayed_img_index = 0;
     auto_update_timer = new QTimer(this);
     connect(auto_update_timer, SIGNAL(timeout()), this, SLOT(ui_auto_update()));
     auto_update_timer->start(40);
+
+    // Building progress update timer
+    progress_update_timer = new QTimer(this);
+    connect(progress_update_timer, SIGNAL(timeout()), this, SLOT(progress_update()));
+    progress_update_timer->start(100);
 }
 
 MainWindow::~MainWindow()
@@ -71,6 +77,21 @@ QPixmap MainWindow::CreatePixmapFromImg(std::shared_ptr<ImageHolder> img_holder)
     }
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------
+//                                                      Events
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+void MainWindow::timerEvent(QTimerEvent *event){
+    auto itr = bundle.image_bundle.begin();
+    for(;itr != bundle.image_bundle.end(); ++itr){
+        if(std::find(displayed_imgs.begin(), displayed_imgs.end(), itr->first) == displayed_imgs.end()){
+            ui->current_image->addItem(QString::fromStdString(itr->first));
+            DisplayImg(itr->first);
+            displayed_imgs.push_back(itr->first);
+        }
+    }
+}
+
 void MainWindow::ui_auto_update(){
     try{
         std::string img_group = ui->current_image->currentText().toStdString();
@@ -84,7 +105,7 @@ void MainWindow::ui_auto_update(){
         }
 
         const int current_index = displayed_img_index;
-        if(displayed_img_index >= (image_vect.size() - 1)){
+        if(displayed_img_index >= (int)(image_vect.size() - 1)){
             displayed_img_index = 0;
         } else {
             displayed_img_index++;
@@ -103,22 +124,16 @@ void MainWindow::ui_auto_update(){
     }
 }
 
-//------------------------------------------------------------------------------------------------------------------------------------------
-//                                                      Events
-//------------------------------------------------------------------------------------------------------------------------------------------
-
-void MainWindow::timerEvent(QTimerEvent *event){
-    auto itr = bundle.image_bundle.begin();
-    for(;itr != bundle.image_bundle.end(); ++itr){
-        if(ui->current_image->findText(QString::fromStdString(itr->first)) == -1){
-            ui->current_image->addItem(QString::fromStdString(itr->first));
-            DisplayImg(itr->first);
-        }
+void MainWindow::progress_update(){
+    try{
+        ui->progress_bar->setValue(bundle.GetProgress());
+    } catch(...){
+        std::cout << "An error ocurred while updating the progress bar" << std::endl;
     }
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------
-//                                                      On push button methods
+//                                                On push button utils methods
 //------------------------------------------------------------------------------------------------------------------------------------------
 void MainWindow::on_pushButtonLoadImage_clicked()
 {
@@ -137,177 +152,6 @@ void MainWindow::on_save_folder_push_button_clicked()
     //QString save_path = ui->save_folder_name_line->text();
     std::string img_name = ui->current_image->currentText().toStdString();
     bundle.SaveImgGroup(img_name);
-}
-
-void MainWindow::on_pushButtonEdgeDetect_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->edge_tab_use_as_suffix->checkState() == Qt::Checked;
-    bool use_vertical_sobel = ui->use_vertical_sobel->checkState() == Qt::Checked;
-    bool use_horizontal_sobel = ui->use_horizontal_sobel->checkState() == Qt::Checked;
-    bool use_gaussian_blur = ui->edge_tab_use_gaussian_blur->checkState() == Qt::Checked;
-    int filter_size = ui->edge_tab_filter_size->currentText().toInt();
-    int gaussian_filter_size = ui->gaussian_filter_size_spinbox->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->edge_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->edge_tab_output_name->text().toStdString();
-    }
-    if(use_vertical_sobel && use_horizontal_sobel){
-        bundle.ProcessBothSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
-    }
-    else if(use_vertical_sobel){
-        bundle.ProcessVerticalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
-    }
-    else if(use_horizontal_sobel){
-        bundle.ProcessHorizontalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
-    }
-    else{
-        bundle.ProcessEdgeDetection(img_name, result_name, filter_size, use_gaussian_blur, gaussian_filter_size, ui->progress_bar);
-    }
-}
-
-
-void MainWindow::on_histogram_tab_launch_normalization_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->histogram_tab_use_as_suffix->checkState() == Qt::Checked;
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->histogram_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->histogram_tab_output_name->text().toStdString();
-    }
-    bundle.ProcessHistogramNormalization(img_name, result_name, ui->progress_bar);
-}
-
-void MainWindow::on_intensity_tab_process_law_power_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->intensity_tab_use_as_suffix->checkState() == Qt::Checked;
-    double gamma = ui->gamma_double_spinbox->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->intensity_tab_output_name->text().toStdString();
-    }
-    bundle.ProcessPowerLawTransformation(img_name, result_name, gamma, ui->progress_bar);
-}
-
-void MainWindow::on_intensity_tab_process_log_law_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->intensity_tab_use_as_suffix->checkState() == Qt::Checked;
-    double c = ui->c_double_spinbox->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->intensity_tab_output_name->text().toStdString();
-    }
-    bundle.ProcessLogLawTransformation(img_name, result_name, c, ui->progress_bar);
-}
-
-void MainWindow::on_gaussian_blur_push_button_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->edge_tab_blur_use_as_suffix->checkState() == Qt::Checked;
-    int gaussian_filter_size = ui->gaussian_filter_size_spinbox->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->edge_tab_blur_output_name->text().toStdString();
-    } else{
-        result_name = ui->edge_tab_blur_output_name->text().toStdString();
-    }
-    bundle.ProcessGaussianBlur(img_name, result_name, gaussian_filter_size, ui->progress_bar);
-}
-
-void MainWindow::on_intensity_tab_process_thresholding_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->intensity_tab_use_as_suffix->checkState() == Qt::Checked;
-    int threshold = ui->intensity_tab_threshold_spinbox->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
-    } else{
-        result_name = ui->intensity_tab_output_name->text().toStdString();
-    }
-    bundle.ProcessThresholding(img_name, result_name, threshold, ui->progress_bar);
-}
-
-void MainWindow::on_median_filter_push_button_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->median_use_as_suffix->checkState() == Qt::Checked;
-    int filter_size = ui->median_filter_size->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->median_output_name->text().toStdString();
-    } else{
-        result_name = ui->median_output_name->text().toStdString();
-    }
-    bundle.ProcessMedianFilter(img_name, result_name, filter_size, ui->progress_bar);
-}
-
-void MainWindow::on_erosion_push_button_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->erosion_dilatation_use_as_suffix->checkState() == Qt::Checked;
-    int filter_size = ui->erosion_dilatation_filter_size->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
-    } else{
-        result_name = ui->erosion_dilatation_output_name->text().toStdString();
-    }
-    bundle.ProcessErosion(img_name, result_name, filter_size, ui->progress_bar);
-}
-
-void MainWindow::on_dilatation_push_button_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->erosion_dilatation_use_as_suffix->checkState() == Qt::Checked;
-    int filter_size = ui->erosion_dilatation_filter_size->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
-    } else{
-        result_name = ui->erosion_dilatation_output_name->text().toStdString();
-    }
-    bundle.ProcessDilatation(img_name, result_name, filter_size, ui->progress_bar);
-}
-
-void MainWindow::on_erosion_dilatation_push_button_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->erosion_dilatation_use_as_suffix->checkState() == Qt::Checked;
-    int filter_size = ui->erosion_dilatation_filter_size->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
-    } else{
-        result_name = ui->erosion_dilatation_output_name->text().toStdString();
-    }
-    bundle.ProcessErosionDilatation(img_name, result_name, filter_size, ui->progress_bar);
-}
-
-void MainWindow::on_sharp_process_clicked()
-{
-    std::string img_name = ui->current_image->currentText().toStdString();
-    bool use_as_a_suffix = ui->sharp_use_as_suffix->checkState() == Qt::Checked;
-    bool save_mask = ui->sharp_save_mask->checkState() == Qt::Checked;
-    double alpha = ui->sharp_alpha_double_spinbox->value();
-    int filter_size = ui->sharp_filter_size->value();
-    std::string result_name;
-    if(use_as_a_suffix){
-        result_name = img_name + ui->sharp_output_name->text().toStdString();
-    } else{
-        result_name = ui->sharp_output_name->text().toStdString();
-    }
-    bundle.ProcessUnsharpMask(img_name, result_name, alpha, save_mask, filter_size, ui->progress_bar);
 }
 
 void MainWindow::on_change_working_dir_button_clicked()
@@ -333,6 +177,253 @@ void MainWindow::on_current_image_currentTextChanged(const QString &arg1)
     DisplayImg(arg1.toStdString());
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------
+//                                           On push button processing methods
+//------------------------------------------------------------------------------------------------------------------------------------------
+void MainWindow::on_pushButtonEdgeDetect_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->edge_tab_use_as_suffix->checkState() == Qt::Checked;
+    bool use_vertical_sobel = ui->use_vertical_sobel->checkState() == Qt::Checked;
+    bool use_horizontal_sobel = ui->use_horizontal_sobel->checkState() == Qt::Checked;
+    bool use_gaussian_blur = ui->edge_tab_use_gaussian_blur->checkState() == Qt::Checked;
+    int filter_size = ui->edge_tab_filter_size->currentText().toInt();
+    int gaussian_filter_size = ui->gaussian_filter_size_spinbox->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->edge_tab_output_name->text().toStdString();
+    } else{
+        result_name = ui->edge_tab_output_name->text().toStdString();
+    }
+    if(use_vertical_sobel && use_horizontal_sobel){
+        std::thread t(&ImageBundle::ProcessBothSobel,
+                      &bundle,
+                      img_name,
+                      result_name,
+                      use_gaussian_blur,
+                      gaussian_filter_size);
+        t.detach();
+    }
+    else if(use_vertical_sobel){
+        std::thread t(&ImageBundle::ProcessVerticalSobel,
+                      &bundle,
+                      img_name,
+                      result_name,
+                      use_gaussian_blur,
+                      gaussian_filter_size);
+        t.detach();
+    }
+    else if(use_horizontal_sobel){
+        std::thread t(&ImageBundle::ProcessHorizontalSobel,
+                      &bundle,
+                      img_name,
+                      result_name,
+                      use_gaussian_blur,
+                      gaussian_filter_size);
+        t.detach();
+    }
+    else{
+        std::thread t(&ImageBundle::ProcessEdgeDetection,
+                      &bundle,
+                      img_name,
+                      result_name,
+                      filter_size,
+                      use_gaussian_blur,
+                      gaussian_filter_size);
+        t.detach();
+    }
+}
+
+
+void MainWindow::on_histogram_tab_launch_normalization_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->histogram_tab_use_as_suffix->checkState() == Qt::Checked;
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->histogram_tab_output_name->text().toStdString();
+    } else{
+        result_name = ui->histogram_tab_output_name->text().toStdString();
+    }
+    std::thread t(&ImageBundle::ProcessHistogramNormalization, &bundle, img_name, result_name);
+    t.detach();
+}
+
+void MainWindow::on_intensity_tab_process_law_power_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->intensity_tab_use_as_suffix->checkState() == Qt::Checked;
+    double gamma = ui->gamma_double_spinbox->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
+    } else{
+        result_name = ui->intensity_tab_output_name->text().toStdString();
+    }
+    std::thread t(&ImageBundle::ProcessPowerLawTransformation,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  gamma);
+    t.detach();
+}
+
+void MainWindow::on_intensity_tab_process_log_law_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->intensity_tab_use_as_suffix->checkState() == Qt::Checked;
+    double c = ui->c_double_spinbox->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
+    } else{
+        result_name = ui->intensity_tab_output_name->text().toStdString();
+    }
+    std::thread t(&ImageBundle::ProcessLogLawTransformation,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  c);
+    t.detach();
+}
+
+void MainWindow::on_gaussian_blur_push_button_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->edge_tab_blur_use_as_suffix->checkState() == Qt::Checked;
+    int gaussian_filter_size = ui->gaussian_filter_size_spinbox->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->edge_tab_blur_output_name->text().toStdString();
+    } else{
+        result_name = ui->edge_tab_blur_output_name->text().toStdString();
+    }
+    std::thread t(&ImageBundle::ProcessGaussianBlur,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  gaussian_filter_size);
+    t.detach();
+}
+
+void MainWindow::on_intensity_tab_process_thresholding_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->intensity_tab_use_as_suffix->checkState() == Qt::Checked;
+    int threshold = ui->intensity_tab_threshold_spinbox->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->intensity_tab_output_name->text().toStdString();
+    } else{
+        result_name = ui->intensity_tab_output_name->text().toStdString();
+    }
+    std::thread t(&ImageBundle::ProcessThresholding,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  threshold);
+    t.detach();
+}
+
+void MainWindow::on_median_filter_push_button_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->median_use_as_suffix->checkState() == Qt::Checked;
+    int filter_size = ui->median_filter_size->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->median_output_name->text().toStdString();
+    } else{
+        result_name = ui->median_output_name->text().toStdString();
+    }
+    std::thread t(&ImageBundle::ProcessMedianFilter,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  filter_size);
+    t.detach();
+}
+
+void MainWindow::on_erosion_push_button_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->erosion_dilatation_use_as_suffix->checkState() == Qt::Checked;
+    int filter_size = ui->erosion_dilatation_filter_size->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
+    } else{
+        result_name = ui->erosion_dilatation_output_name->text().toStdString();
+    }
+    std::thread t(&ImageBundle::ProcessErosion,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  filter_size);
+    t.detach();
+}
+
+void MainWindow::on_dilatation_push_button_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->erosion_dilatation_use_as_suffix->checkState() == Qt::Checked;
+    int filter_size = ui->erosion_dilatation_filter_size->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
+    } else{
+        result_name = ui->erosion_dilatation_output_name->text().toStdString();
+    }
+    std::thread t(&ImageBundle::ProcessDilatation,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  filter_size);
+    t.detach();
+}
+
+void MainWindow::on_erosion_dilatation_push_button_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->erosion_dilatation_use_as_suffix->checkState() == Qt::Checked;
+    int filter_size = ui->erosion_dilatation_filter_size->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->erosion_dilatation_output_name->text().toStdString();
+    } else{
+        result_name = ui->erosion_dilatation_output_name->text().toStdString();
+    }
+    std::thread t(&ImageBundle::ProcessErosionDilatation,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  filter_size);
+    t.detach();
+}
+
+void MainWindow::on_sharp_process_clicked()
+{
+    std::string img_name = ui->current_image->currentText().toStdString();
+    bool use_as_a_suffix = ui->sharp_use_as_suffix->checkState() == Qt::Checked;
+    bool save_mask = ui->sharp_save_mask->checkState() == Qt::Checked;
+    double alpha = ui->sharp_alpha_double_spinbox->value();
+    int filter_size = ui->sharp_filter_size->value();
+    std::string result_name;
+    if(use_as_a_suffix){
+        result_name = img_name + ui->sharp_output_name->text().toStdString();
+    } else{
+        result_name = ui->sharp_output_name->text().toStdString();
+    }
+    std::thread t(&ImageBundle::ProcessUnsharpMask,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  alpha,
+                  save_mask,
+                  filter_size);
+    t.detach();
+}
+
 void MainWindow::on_lmr_filter_push_button_clicked()
 {
     std::string img_name = ui->current_image->currentText().toStdString();
@@ -344,7 +435,12 @@ void MainWindow::on_lmr_filter_push_button_clicked()
     } else{
         result_name = ui->lmr_output_name->text().toStdString();
     }
-    bundle.ProcessLMR(img_name, result_name, filter_size, ui->progress_bar);
+    std::thread t(&ImageBundle::ProcessLMR,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  filter_size);
+    t.detach();
 }
 
 void MainWindow::on_canny_push_button_clicked()
@@ -358,7 +454,12 @@ void MainWindow::on_canny_push_button_clicked()
     } else{
         result_name = ui->edge_tab_output_name->text().toStdString();
     }
-    bundle.ProcessCanny(img_name, result_name, save_tmp_imgs, ui->progress_bar);
+    std::thread t(&ImageBundle::ProcessCanny,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  save_tmp_imgs);
+    t.detach();
 }
 
 void MainWindow::on_otsu_push_button_clicked()
@@ -371,7 +472,11 @@ void MainWindow::on_otsu_push_button_clicked()
     } else{
         result_name = ui->segmentation_output_name->text().toStdString();
     }
-    bundle.ProcessOtsuSegmentation(img_name, result_name);
+    std::thread t(&ImageBundle::ProcessOtsuSegmentation,
+                  &bundle,
+                  img_name,
+                  result_name);
+    t.detach();
 }
 
 void MainWindow::on_k_means_push_button_clicked()
@@ -394,7 +499,13 @@ void MainWindow::on_k_means_push_button_clicked()
     } else{
         result_name = ui->segmentation_output_name->text().toStdString();
     }
-    bundle.ProcessKMeans(img_name, result_name, k, distance_method);
+    std::thread t(&ImageBundle::ProcessKMeans,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  k,
+                  distance_method);
+    t.detach();
 }
 
 void MainWindow::on_negative_push_button_clicked()
@@ -407,5 +518,9 @@ void MainWindow::on_negative_push_button_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    bundle.ProcessNegative(img_name, result_name, ui->progress_bar);
+    std::thread t(&ImageBundle::ProcessNegative,
+                  &bundle,
+                  img_name,
+                  result_name);
+    t.detach();
 }
