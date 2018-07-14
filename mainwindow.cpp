@@ -203,10 +203,8 @@ void MainWindow::on_pushButtonEdgeDetect_clicked()
                       use_gaussian_blur,
                       gaussian_filter_size);
         t.detach();
-        // bundle.ProcessBothSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
     }
     else if(use_vertical_sobel){
-        // bundle.ProcessVerticalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
         std::thread t(&ImageBundle::ProcessVerticalSobel,
                       &bundle,
                       img_name,
@@ -216,7 +214,6 @@ void MainWindow::on_pushButtonEdgeDetect_clicked()
         t.detach();
     }
     else if(use_horizontal_sobel){
-        // bundle.ProcessHorizontalSobel(img_name, result_name, use_gaussian_blur, gaussian_filter_size);
         std::thread t(&ImageBundle::ProcessHorizontalSobel,
                       &bundle,
                       img_name,
@@ -226,7 +223,6 @@ void MainWindow::on_pushButtonEdgeDetect_clicked()
         t.detach();
     }
     else{
-        // bundle.ProcessEdgeDetection(img_name, result_name, filter_size, use_gaussian_blur, gaussian_filter_size);
         std::thread t(&ImageBundle::ProcessEdgeDetection,
                       &bundle,
                       img_name,
@@ -249,7 +245,6 @@ void MainWindow::on_histogram_tab_launch_normalization_clicked()
     } else{
         result_name = ui->histogram_tab_output_name->text().toStdString();
     }
-    // bundle.ProcessHistogramNormalization(img_name, result_name);
     std::thread t(&ImageBundle::ProcessHistogramNormalization, &bundle, img_name, result_name);
     t.detach();
 }
@@ -265,7 +260,6 @@ void MainWindow::on_intensity_tab_process_law_power_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    // bundle.ProcessPowerLawTransformation(img_name, result_name, gamma);
     std::thread t(&ImageBundle::ProcessPowerLawTransformation,
                   &bundle,
                   img_name,
@@ -285,7 +279,6 @@ void MainWindow::on_intensity_tab_process_log_law_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    // bundle.ProcessLogLawTransformation(img_name, result_name, c);
     std::thread t(&ImageBundle::ProcessLogLawTransformation,
                   &bundle,
                   img_name,
@@ -305,7 +298,6 @@ void MainWindow::on_gaussian_blur_push_button_clicked()
     } else{
         result_name = ui->edge_tab_blur_output_name->text().toStdString();
     }
-    // bundle.ProcessGaussianBlur(img_name, result_name, gaussian_filter_size);
     std::thread t(&ImageBundle::ProcessGaussianBlur,
                   &bundle,
                   img_name,
@@ -325,7 +317,6 @@ void MainWindow::on_intensity_tab_process_thresholding_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    // bundle.ProcessThresholding(img_name, result_name, threshold);
     std::thread t(&ImageBundle::ProcessThresholding,
                   &bundle,
                   img_name,
@@ -345,7 +336,6 @@ void MainWindow::on_median_filter_push_button_clicked()
     } else{
         result_name = ui->median_output_name->text().toStdString();
     }
-    // bundle.ProcessMedianFilter(img_name, result_name, filter_size);
     std::thread t(&ImageBundle::ProcessMedianFilter,
                   &bundle,
                   img_name,
@@ -365,7 +355,6 @@ void MainWindow::on_erosion_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    // bundle.ProcessErosion(img_name, result_name, filter_size);
     std::thread t(&ImageBundle::ProcessErosion,
                   &bundle,
                   img_name,
@@ -385,7 +374,6 @@ void MainWindow::on_dilatation_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    // bundle.ProcessDilatation(img_name, result_name, filter_size);
     std::thread t(&ImageBundle::ProcessDilatation,
                   &bundle,
                   img_name,
@@ -405,7 +393,6 @@ void MainWindow::on_erosion_dilatation_push_button_clicked()
     } else{
         result_name = ui->erosion_dilatation_output_name->text().toStdString();
     }
-    // bundle.ProcessErosionDilatation(img_name, result_name, filter_size);
     std::thread t(&ImageBundle::ProcessErosionDilatation,
                   &bundle,
                   img_name,
@@ -427,7 +414,6 @@ void MainWindow::on_sharp_process_clicked()
     } else{
         result_name = ui->sharp_output_name->text().toStdString();
     }
-    // bundle.ProcessUnsharpMask(img_name, result_name, alpha, save_mask, filter_size);
     std::thread t(&ImageBundle::ProcessUnsharpMask,
                   &bundle,
                   img_name,
@@ -449,7 +435,6 @@ void MainWindow::on_lmr_filter_push_button_clicked()
     } else{
         result_name = ui->lmr_output_name->text().toStdString();
     }
-    // bundle.ProcessLMR(img_name, result_name, filter_size);
     std::thread t(&ImageBundle::ProcessLMR,
                   &bundle,
                   img_name,
@@ -469,7 +454,6 @@ void MainWindow::on_canny_push_button_clicked()
     } else{
         result_name = ui->edge_tab_output_name->text().toStdString();
     }
-    // bundle.ProcessCanny(img_name, result_name, save_tmp_imgs);
     std::thread t(&ImageBundle::ProcessCanny,
                   &bundle,
                   img_name,
@@ -488,7 +472,6 @@ void MainWindow::on_otsu_push_button_clicked()
     } else{
         result_name = ui->segmentation_output_name->text().toStdString();
     }
-    // bundle.ProcessOtsuSegmentation(img_name, result_name);
     std::thread t(&ImageBundle::ProcessOtsuSegmentation,
                   &bundle,
                   img_name,
@@ -516,7 +499,6 @@ void MainWindow::on_k_means_push_button_clicked()
     } else{
         result_name = ui->segmentation_output_name->text().toStdString();
     }
-    // bundle.ProcessKMeans(img_name, result_name, k, distance_method);
     std::thread t(&ImageBundle::ProcessKMeans,
                   &bundle,
                   img_name,
@@ -536,7 +518,6 @@ void MainWindow::on_negative_push_button_clicked()
     } else{
         result_name = ui->intensity_tab_output_name->text().toStdString();
     }
-    // bundle.ProcessNegative(img_name, result_name);
     std::thread t(&ImageBundle::ProcessNegative,
                   &bundle,
                   img_name,
