@@ -58,6 +58,8 @@ private slots:
     void ui_auto_update();
     void progress_update();
 
+    void on_delete_push_button_clicked();
+
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;

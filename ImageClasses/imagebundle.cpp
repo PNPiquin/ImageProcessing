@@ -73,6 +73,10 @@ int ImageBundle::GetProgress(){
     return progress_logger->GetProgress();
 }
 
+void ImageBundle::DeleteImageGroup(std::string name){
+    image_bundle.erase(name);
+}
+
 // -----------------------------------------------------------------------------------
 //                            Image processing
 // -----------------------------------------------------------------------------------

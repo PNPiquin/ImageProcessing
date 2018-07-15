@@ -49,6 +49,8 @@ public:
     void SetWorkingDir(std::string path) {working_dir_path = path; }
     std::string GetWorkingDir() {return working_dir_path;}
 
+    void DeleteImageGroup(std::string name);
+
     std::vector<std::shared_ptr<ImageHolder>> FindImageVector(std::string img_name);
 
     std::map<std::string, std::vector<std::shared_ptr<ImageHolder>>> image_bundle;

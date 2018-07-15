@@ -177,6 +177,16 @@ void MainWindow::on_current_image_currentTextChanged(const QString &arg1)
     DisplayImg(arg1.toStdString());
 }
 
+void MainWindow::on_delete_push_button_clicked()
+{
+    std::string name = ui->current_image->currentText().toStdString();
+    bundle.DeleteImageGroup(name);
+
+    // Remove old name
+    ui->current_image->removeItem(ui->current_image->currentIndex());
+    DisplayImg(ui->current_image->itemText(0).toStdString());
+}
+
 //------------------------------------------------------------------------------------------------------------------------------------------
 //                                           On push button processing methods
 //------------------------------------------------------------------------------------------------------------------------------------------
