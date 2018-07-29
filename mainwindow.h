@@ -62,6 +62,8 @@ private slots:
 
     void on_resize_pushButton_clicked();
 
+    void on_display_frequency_spinBox_valueChanged(int new_frequency);
+
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;

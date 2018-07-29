@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     displayed_img_index = 0;
     auto_update_timer = new QTimer(this);
     connect(auto_update_timer, SIGNAL(timeout()), this, SLOT(ui_auto_update()));
-    auto_update_timer->start(1000);
+    auto_update_timer->start(40);
 
     // Building progress update timer
     progress_update_timer = new QTimer(this);
@@ -130,6 +130,12 @@ void MainWindow::progress_update(){
     } catch(...){
         std::cout << "An error ocurred while updating the progress bar" << std::endl;
     }
+}
+
+void MainWindow::on_display_frequency_spinBox_valueChanged(int new_frequency)
+{
+    int new_interval = 1000 / new_frequency;
+    auto_update_timer->setInterval(new_interval);
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------
