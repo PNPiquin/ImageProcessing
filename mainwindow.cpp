@@ -573,3 +573,23 @@ void MainWindow::on_resize_pushButton_clicked()
                   x0, y0, x1, y1);
     t.detach();
 }
+
+void MainWindow::on_difference_pushButton_clicked()
+{
+    // Get image to process
+    std::string img_name = ui->current_image->currentText().toStdString();
+
+    // Params
+    const int step = ui->difference_spinBox->value();
+
+    // Get output name
+    std::string result_name = ui->difference_output_suffix->text().toStdString();
+
+    // Process
+    std::thread t(&ImageBundle::ProcessDifference,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  step);
+    t.detach();
+}
