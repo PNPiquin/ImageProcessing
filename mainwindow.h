@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <thread>
 
-// Third parties library
+// Third parties libraries
 #include <QMainWindow>
 #include <QTimer>
 #include <boost/gil/gil_all.hpp>
@@ -59,6 +59,8 @@ private slots:
     void progress_update();
 
     void on_delete_push_button_clicked();
+
+    void on_resize_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

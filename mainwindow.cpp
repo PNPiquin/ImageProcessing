@@ -544,3 +544,26 @@ void MainWindow::on_negative_push_button_clicked()
                   result_name);
     t.detach();
 }
+
+void MainWindow::on_resize_pushButton_clicked()
+{
+    // Get image to process
+    std::string img_name = ui->current_image->currentText().toStdString();
+
+    // Get params
+    int x0 = ui->x0_spinBox->value();
+    int y0 = ui->y0_spinBox->value();
+    int x1 = ui->x1_spinBox->value();
+    int y1 = ui->y1_spinBox->value();
+
+    // Get output name
+    std::string result_name = img_name + ui->resize_tab_output_name->text().toStdString();
+
+    // Process
+    std::thread t(&ImageBundle::ProcessImageResize,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  x0, y0, x1, y1);
+    t.detach();
+}

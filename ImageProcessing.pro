@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     SpatialFiltering/cannyedgedetector.cpp \
     Segmentation/otsusegmentation.cpp \
     Segmentation/kmeans.cpp \
-    ProgressLogger/progresslogger.cpp
+    ProgressLogger/progresslogger.cpp \
+    Misc/resizeprocessor.cpp
 
 HEADERS  += mainwindow.h \
     SpatialFiltering/CommonSpatialFilters.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     SpatialFiltering/cannyedgedetector.h \
     Segmentation/otsusegmentation.h \
     Segmentation/kmeans.h \
-    ProgressLogger/progresslogger.h
+    ProgressLogger/progresslogger.h \
+    Misc/resizeprocessor.h
 
 FORMS    += mainwindow.ui
 

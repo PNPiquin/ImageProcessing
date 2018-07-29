@@ -9,6 +9,7 @@
 #include "SpatialFiltering/unsharpmaskprocessor.h"
 #include "SpatialFiltering/cannyedgedetector.h"
 #include "Segmentation/otsusegmentation.h"
+#include "Misc/resizeprocessor.h"
 
 ImageHolder::ImageHolder(std::string dir_path, std::string img_name) :
     img_name(img_name)
@@ -374,6 +375,18 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessNegative(std::string output_nam
     Eigen::MatrixXi img_out;
 
     IntensityTransformation::ProcessNegative(mat_img, img_out, progress_logger);
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}
+
+std::shared_ptr<ImageHolder>  ImageHolder::ProcessImageResize(
+        std::string output_name,
+        int x0, int y0, int x1, int y1,
+        ProgressLogger *progress_logger){
+    Eigen::MatrixXi img_out;
+
+    ResizeProcessor rp(x0, y0, x1, y1);
+    rp.ProcessImageResize(mat_img, img_out, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }

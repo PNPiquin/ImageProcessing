@@ -37,6 +37,7 @@ public:
     std::shared_ptr<ImageHolder> ProcessOtsuSegmentation(std::string output_name);
     std::shared_ptr<ImageHolder> ProcessKMeans(std::string output_name, int k, KMeans::K_MEANS_DISTANCE distance_method);
     std::shared_ptr<ImageHolder> ProcessNegative(std::string output_name, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessImageResize(std::string output_name, int x0, int y0, int x1, int y1, ProgressLogger *progress_logger = NULL);
 
 
     void SetImageName(std::string name);

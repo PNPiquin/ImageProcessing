@@ -497,3 +497,24 @@ void ImageBundle::ProcessNegative(std::string img_name, std::string output_name)
 
     progress_logger->SetIsProcessing(false);
 }
+
+void ImageBundle::ProcessImageResize(std::string img_name, std::string output_name, int x0, int y0, int x1, int y1){
+    std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
+    std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(img_vector.size());
+    for(auto img : img_vector){
+        std::shared_ptr<ImageHolder> resized_img = img->ProcessImageResize(
+                    img->GetImageName() + output_name,
+                    x0, y0, x1, y1,
+                    progress_logger);
+        out_img_vector.push_back(resized_img);
+
+        progress_logger->IncrementFinishedTasksCpt();
+    }
+    Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
+}
