@@ -88,13 +88,13 @@ MinFilter::MinFilter(int filter_size) : StatisticalSpatialFilter() {
 
 SlowLMRProcessor::SlowLMRProcessor(int filter_size) : StatisticalSpatialFilter() {
     SetFilterSize(filter_size);
-    auto min_filter = [](std::vector<int> data){
+    auto min_filter = [&filter_size](std::vector<int> data){
         int lmr_value(0);
         for(auto value : data){
             lmr_value += value;
         }
         lmr_value /= data.size();
-        return lmr_value;
+        return std::max(lmr_value - data.at(std::floor(std::pow(filter_size, 2))), 0);
     };
     SetStatisticalFilter(min_filter);
 }
