@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     displayed_img_index = 0;
     auto_update_timer = new QTimer(this);
     connect(auto_update_timer, SIGNAL(timeout()), this, SLOT(ui_auto_update()));
-    auto_update_timer->start(40);
+    auto_update_timer->start(1000);
 
     // Building progress update timer
     progress_update_timer = new QTimer(this);
@@ -149,9 +149,9 @@ void MainWindow::on_load_folder_img_button_clicked()
 
 void MainWindow::on_save_folder_push_button_clicked()
 {
-    //QString save_path = ui->save_folder_name_line->text();
+    std::string save_folder = ui->save_folder_name_line->text().toStdString();
     std::string img_name = ui->current_image->currentText().toStdString();
-    bundle.SaveImgGroup(img_name);
+    bundle.SaveImgGroup(img_name, save_folder);
 }
 
 void MainWindow::on_change_working_dir_button_clicked()
@@ -557,7 +557,7 @@ void MainWindow::on_resize_pushButton_clicked()
     int y1 = ui->y1_spinBox->value();
 
     // Get output name
-    std::string result_name = img_name + ui->resize_tab_output_name->text().toStdString();
+    std::string result_name = ui->resize_tab_output_name->text().toStdString();
 
     // Process
     std::thread t(&ImageBundle::ProcessImageResize,

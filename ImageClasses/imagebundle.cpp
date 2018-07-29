@@ -61,11 +61,12 @@ std::vector<std::shared_ptr<ImageHolder>> ImageBundle::FindImageVector(std::stri
     return image_bundle.at(img_name);
 }
 
-void ImageBundle::SaveImgGroup(std::string group_name){
+void ImageBundle::SaveImgGroup(std::string group_name, std::string save_folder){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(group_name);
     boost::filesystem::create_directory(boost::filesystem::path(working_dir_path + group_name));
     for(auto img : img_vector){
-        JpegManager::SaveGrayscaleMatrixImg(img->mat_img, working_dir_path + group_name + "/" + img->GetImageName());
+        std::cout << img->GetImageName() << std::endl;
+        JpegManager::SaveGrayscaleMatrixImg(img->mat_img, working_dir_path + save_folder + "/" + img->GetImageName());
     }
 }
 
@@ -514,6 +515,7 @@ void ImageBundle::ProcessImageResize(std::string img_name, std::string output_na
 
         progress_logger->IncrementFinishedTasksCpt();
     }
+    std::cout << output_name << std::endl;
     Insert(output_name, out_img_vector);
 
     progress_logger->SetIsProcessing(false);

@@ -23,7 +23,7 @@ public:
     void LoadImg(std::string img_name);
     void LoadImgFolder(std::string folder_name);
     std::shared_ptr<ImageHolder> FindImage(std::string img_name);
-    void SaveImgGroup(std::string group_name);
+    void SaveImgGroup(std::string group_name, std::string save_folder);
 
     // Image processing pipelines
     void ProcessEdgeDetection(std::string img_name, std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size);
