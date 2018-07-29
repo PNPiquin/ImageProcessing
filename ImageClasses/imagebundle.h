@@ -23,7 +23,7 @@ public:
     void LoadImg(std::string img_name);
     void LoadImgFolder(std::string folder_name);
     std::shared_ptr<ImageHolder> FindImage(std::string img_name);
-    void SaveImgGroup(std::string group_name);
+    void SaveImgGroup(std::string group_name, std::string save_folder);
 
     // Image processing pipelines
     void ProcessEdgeDetection(std::string img_name, std::string output_name, int filter_size, bool use_gaussian_blur, int gaussian_filter_size);
@@ -45,6 +45,7 @@ public:
     void ProcessOtsuSegmentation(std::string img_name, std::string output_name);
     void ProcessKMeans(std::string img_name, std::string output_name, int k, KMeans::K_MEANS_DISTANCE distance_method);
     void ProcessNegative(std::string img_name, std::string output_name);
+    void ProcessImageResize(std::string img_name, std::string output_name, int x0, int y0, int x1, int y1);
 
     void SetWorkingDir(std::string path) {working_dir_path = path; }
     std::string GetWorkingDir() {return working_dir_path;}
