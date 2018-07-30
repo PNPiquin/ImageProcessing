@@ -25,7 +25,7 @@ void UnsharpMaskProcessor::ProcessUnsharpMask(Eigen::MatrixXi &img, Eigen::Matri
     }
 
     if(save_unsharp_mask){
-        JpegManager::SaveGrayscaleMatrixImg(unsharp_mask, "/home/pierre-nicolas/Pictures/ImageProcessing/unsharp_mask");
+        ImageIOManager::SaveGrayscaleMatrixImg(unsharp_mask, "/home/pierre-nicolas/Pictures/ImageProcessing/unsharp_mask");
     }
 
     // img_out = img + unsharp_coeff * unsharp_mask;

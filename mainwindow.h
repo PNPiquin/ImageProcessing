@@ -15,7 +15,7 @@
 #include <Eigen/Dense>
 
 // Input output class
-#include "IO/JpegManager.h"
+#include "IO/ImageIOManager.h"
 
 // Image management
 #include "ImageClasses/imagebundle.h"

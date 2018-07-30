@@ -6,7 +6,7 @@
 
 #include "SpatialFiltering/CommonSpatialFilters.h"
 #include "SpatialFiltering/IntensityTransformation.h"
-#include "IO/JpegManager.h"
+#include "IO/ImageIOManager.h"
 #include "ProgressLogger/progresslogger.h"
 
 class UnsharpMaskProcessor

@@ -1,6 +1,6 @@
 #include "imageholder.h"
 
-#include "IO/JpegManager.h"
+#include "IO/ImageIOManager.h"
 #include "SpatialFiltering/SpatialFilter.h"
 #include "SpatialFiltering/CommonSpatialFilters.h"
 #include "SpatialFiltering/HistogramProcessor.h"
@@ -21,7 +21,7 @@ ImageHolder::ImageHolder(std::string dir_path, std::string img_name) :
     boost::filesystem::path img_path = dir / img;
 
     // img loading
-    JpegManager jpeg_manager(img_path.string());
+    ImageIOManager jpeg_manager(img_path.string());
     is_loaded = jpeg_manager.GetGrayscaleMatrixImg(mat_img);
     img_type = ImageType::GRAYSCALE;
 }
@@ -342,7 +342,7 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessCanny(
         Eigen::MatrixXi mag;
         Eigen::MatrixXf dir;
         CannyEdgeDetector::ProcessCannyEdgeDetector(mat_img, img_out, mag, dir, progress_logger);
-        JpegManager::SaveGrayscaleMatrixImg(mag, "/home/pierre-nicolas/Pictures/ImageProcessing/Canny/" + output_name + "_mag");
+        ImageIOManager::SaveGrayscaleMatrixImg(mag, "/home/pierre-nicolas/Pictures/ImageProcessing/Canny/" + output_name + "_mag");
     }
     else{
         CannyEdgeDetector::ProcessCannyEdgeDetector(mat_img, img_out, progress_logger);
