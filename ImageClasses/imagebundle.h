@@ -11,6 +11,7 @@
 
 #include "imageholder.h"
 #include "Segmentation/kmeans.h"
+#include "Misc/differenceprocessor.h"
 
 #include "ProgressLogger/progresslogger.h"
 
@@ -46,6 +47,7 @@ public:
     void ProcessKMeans(std::string img_name, std::string output_name, int k, KMeans::K_MEANS_DISTANCE distance_method);
     void ProcessNegative(std::string img_name, std::string output_name);
     void ProcessImageResize(std::string img_name, std::string output_name, int x0, int y0, int x1, int y1);
+    void ProcessDifference(std::string img_name, std::string output_suffix, int step, DifferenceProcessor::DifferenceType diff_type);
 
     void SetWorkingDir(std::string path) {working_dir_path = path; }
     std::string GetWorkingDir() {return working_dir_path;}

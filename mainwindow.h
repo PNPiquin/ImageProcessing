@@ -64,6 +64,8 @@ private slots:
 
     void on_display_frequency_spinBox_valueChanged(int new_frequency);
 
+    void on_difference_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;
