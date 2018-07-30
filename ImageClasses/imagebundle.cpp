@@ -1,6 +1,5 @@
 #include "imagebundle.h"
 #include "IO/JpegManager.h"
-#include "Misc/differenceprocessor.h"
 
 ImageBundle::ImageBundle()
 {
@@ -521,13 +520,17 @@ void ImageBundle::ProcessImageResize(std::string img_name, std::string output_na
     progress_logger->SetIsProcessing(false);
 }
 
-void ImageBundle::ProcessDifference(std::string img_name, std::string output_suffix, int step){
+void ImageBundle::ProcessDifference(
+        std::string img_name,
+        std::string output_suffix,
+        int step,
+        DifferenceProcessor::DifferenceType diff_type){
     std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
     std::vector<std::shared_ptr<ImageHolder>> out_vect;
 
     progress_logger->ResetProgressLogger();
 
-    DifferenceProcessor dp(step);
+    DifferenceProcessor dp(step, diff_type);
     dp.ProcessDifference(img_vector, &out_vect, output_suffix, progress_logger);
 
     Insert(img_name + output_suffix, out_vect);

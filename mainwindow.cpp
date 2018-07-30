@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "Segmentation/kmeans.h"
+#include "Misc/differenceprocessor.h"
 
 // Constructor
 MainWindow::MainWindow(QWidget *parent) :
@@ -10,13 +11,20 @@ MainWindow::MainWindow(QWidget *parent) :
     bundle = ImageBundle();
     ui->setupUi(this);
 
+    // Progress bar init
     ui->progress_bar->setMinimum(0);
     ui->progress_bar->setMaximum(100);
     ui->progress_bar->setValue(0);
 
+    // K means combobox init
     ui->K_means_combobox->addItem("SVD");
     ui->K_means_combobox->addItem("Euclidian distance");
     ui->K_means_combobox->addItem("ED + SVD");
+
+    // Difference type combobox init
+    ui->diff_type_combobox->addItem("ABSOLUTE");
+    ui->diff_type_combobox->addItem("POSITIVE");
+    ui->diff_type_combobox->addItem("NEGATIVE");
 
     timerID = startTimer(500);
 
@@ -581,6 +589,13 @@ void MainWindow::on_difference_pushButton_clicked()
 
     // Params
     const int step = ui->difference_spinBox->value();
+    DifferenceProcessor::DifferenceType diff_type = DifferenceProcessor::DifferenceType::ABSOLUTE;
+    std::string diff_type_string = ui->diff_type_combobox->currentText().toStdString();
+    if(diff_type_string == "POSITIVE"){
+        diff_type = DifferenceProcessor::DifferenceType::POSITIVE;
+    } else if (diff_type_string == "NEGATIVE"){
+        diff_type = DifferenceProcessor::DifferenceType::NEGATIVE;
+    }
 
     // Get output name
     std::string result_name = ui->difference_output_suffix->text().toStdString();
@@ -590,6 +605,7 @@ void MainWindow::on_difference_pushButton_clicked()
                   &bundle,
                   img_name,
                   result_name,
-                  step);
+                  step,
+                  diff_type);
     t.detach();
 }

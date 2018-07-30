@@ -54,10 +54,28 @@ std::shared_ptr<ImageHolder> DifferenceProcessor::ProcessImageDifference(
     img_out.resize(rows, cols);
 
     // Difference processing
-    for(int i = 0; i < rows; ++i){
-        for(int j = 0; j < cols; ++j){
-            img_out(i, j) = std::max(0, img_in->mat_img(i, j) - back_img->mat_img(i, j));
-        }
+    switch(diff_type){
+        case DifferenceType::POSITIVE:
+            for(int i = 0; i < rows; ++i){
+                for(int j = 0; j < cols; ++j){
+                    img_out(i, j) = std::max(0, img_in->mat_img(i, j) - back_img->mat_img(i, j));
+                }
+            }
+            break;
+        case DifferenceType::NEGATIVE:
+            for(int i = 0; i < rows; ++i){
+                for(int j = 0; j < cols; ++j){
+                    img_out(i, j) = std::max(0, back_img->mat_img(i, j) - img_in->mat_img(i, j));
+                }
+            }
+            break;
+        case DifferenceType::ABSOLUTE:
+            for(int i = 0; i < rows; ++i){
+                for(int j = 0; j < cols; ++j){
+                    img_out(i, j) = std::abs(img_in->mat_img(i, j) - back_img->mat_img(i, j));
+                }
+            }
+            break;
     }
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageHolder::ImageType::GRAYSCALE);
