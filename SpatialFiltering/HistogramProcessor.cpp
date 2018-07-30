@@ -27,7 +27,7 @@ void HistogramProcessor::HistogramInit(Eigen::MatrixXi &img){
     }
 }
 
-void HistogramProcessor::ProcessEqualization(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, QProgressBar *progress_bar){
+void HistogramProcessor::ProcessEqualization(Eigen::MatrixXi &img, Eigen::MatrixXi &imgOut, ProgressLogger *progress_logger){
     HistogramInit(img);
     int rows = img.rows();
     int cols = img.cols();
@@ -37,8 +37,8 @@ void HistogramProcessor::ProcessEqualization(Eigen::MatrixXi &img, Eigen::Matrix
             int value = std::floor(inverse_histogram.at(img(i, j)) + 0.5);
             imgOut(i, j) = std::min(255, value);
         }
-        if(progress_bar){
-            progress_bar->setValue(std::floor(((i+1)*100)/rows));
+        if(progress_logger){
+            progress_logger->SetProgress(std::floor(((i+1)*100)/rows));
         }
     }
 }

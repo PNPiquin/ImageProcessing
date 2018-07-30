@@ -25,7 +25,10 @@ SOURCES += main.cpp\
     IO/JpegManager.cpp \
     SpatialFiltering/cannyedgedetector.cpp \
     Segmentation/otsusegmentation.cpp \
-    Segmentation/kmeans.cpp
+    Segmentation/kmeans.cpp \
+    ProgressLogger/progresslogger.cpp \
+    Misc/resizeprocessor.cpp \
+    Misc/differenceprocessor.cpp
 
 HEADERS  += mainwindow.h \
     SpatialFiltering/CommonSpatialFilters.h \
@@ -39,7 +42,10 @@ HEADERS  += mainwindow.h \
     IO/JpegManager.h \
     SpatialFiltering/cannyedgedetector.h \
     Segmentation/otsusegmentation.h \
-    Segmentation/kmeans.h
+    Segmentation/kmeans.h \
+    ProgressLogger/progresslogger.h \
+    Misc/resizeprocessor.h \
+    Misc/differenceprocessor.h
 
 FORMS    += mainwindow.ui
 
