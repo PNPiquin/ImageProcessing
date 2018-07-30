@@ -11,9 +11,9 @@
 #include <boost/filesystem.hpp>
 
 
-class JpegManager{
+class ImageIOManager{
 public:
-  JpegManager(std::string file_path);
+  ImageIOManager(std::string file_path);
 
   bool GetImage(boost::gil::rgb8_image_t &img);
   bool GetGrayscaleMatrixImg(Eigen::MatrixXi &mat_img);

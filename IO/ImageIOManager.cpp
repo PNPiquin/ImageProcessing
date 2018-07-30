@@ -1,10 +1,10 @@
-#include "JpegManager.h"
+#include "ImageIOManager.h"
 
-JpegManager::JpegManager(std::string file_path) : path(file_path){
+ImageIOManager::ImageIOManager(std::string file_path) : path(file_path){
 
 }
 
-bool JpegManager::GetImage(boost::gil::rgb8_image_t &img){
+bool ImageIOManager::GetImage(boost::gil::rgb8_image_t &img){
     if(boost::filesystem::exists(path)){
         // Here, the path exists but me must check the extension of the file
         // to use the right method
@@ -43,7 +43,7 @@ bool JpegManager::GetImage(boost::gil::rgb8_image_t &img){
     return true;
 }
 
-bool JpegManager::GetGrayscaleMatrixImg(Eigen::MatrixXi &mat_img){
+bool ImageIOManager::GetGrayscaleMatrixImg(Eigen::MatrixXi &mat_img){
   boost::gil::rgb8_image_t img;
   bool img_loaded = GetImage(img);
   if(!img_loaded){
@@ -66,7 +66,7 @@ bool JpegManager::GetGrayscaleMatrixImg(Eigen::MatrixXi &mat_img){
   return true;
 }
 
-void JpegManager::SaveGrayscaleMatrixImg(Eigen::MatrixXi &mat_img, std::string save_path){
+void ImageIOManager::SaveGrayscaleMatrixImg(Eigen::MatrixXi &mat_img, std::string save_path){
   boost::gil::gray8_image_t img = GrayscaleMatrixImgToGrayImg(mat_img);
   try{
       boost::gil::jpeg_write_view( save_path + ".jpeg", boost::gil::view(img));
@@ -80,7 +80,7 @@ void JpegManager::SaveGrayscaleMatrixImg(Eigen::MatrixXi &mat_img, std::string s
   }
 }
 
-boost::gil::gray8_image_t JpegManager::GrayscaleMatrixImgToGrayImg(Eigen::MatrixXi &mat_img){
+boost::gil::gray8_image_t ImageIOManager::GrayscaleMatrixImgToGrayImg(Eigen::MatrixXi &mat_img){
   int width = mat_img.rows();
   int height = mat_img.cols();
   boost::gil::gray8_image_t result_img(width, height);

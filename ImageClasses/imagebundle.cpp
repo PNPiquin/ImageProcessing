@@ -1,5 +1,5 @@
 #include "imagebundle.h"
-#include "IO/JpegManager.h"
+#include "IO/ImageIOManager.h"
 
 ImageBundle::ImageBundle()
 {
@@ -66,7 +66,7 @@ void ImageBundle::SaveImgGroup(std::string group_name, std::string save_folder){
     boost::filesystem::create_directory(boost::filesystem::path(working_dir_path + group_name));
     for(auto img : img_vector){
         std::cout << img->GetImageName() << std::endl;
-        JpegManager::SaveGrayscaleMatrixImg(img->mat_img, working_dir_path + save_folder + "/" + img->GetImageName());
+        ImageIOManager::SaveGrayscaleMatrixImg(img->mat_img, working_dir_path + save_folder + "/" + img->GetImageName());
     }
 }
 

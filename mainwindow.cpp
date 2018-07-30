@@ -178,7 +178,7 @@ void MainWindow::on_save_push_button_clicked()
 {
     std::string img_name = ui->current_image->currentText().toStdString();
     std::string save_name = ui->save_name_line->text().toStdString();
-    JpegManager::SaveGrayscaleMatrixImg(bundle.FindImage(img_name)->mat_img, bundle.GetWorkingDir() + save_name);
+    ImageIOManager::SaveGrayscaleMatrixImg(bundle.FindImage(img_name)->mat_img, bundle.GetWorkingDir() + save_name);
     try {
 
     } catch (std::exception e){
