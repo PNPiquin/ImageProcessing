@@ -1,7 +1,7 @@
 #include "cannyedgedetector.h"
 #include "CommonSpatialFilters.h"
 #include "IntensityTransformation.h"
-#include "../IO/JpegManager.h"
+#include "../IO/ImageIOManager.h"
 
 CannyEdgeDetector::CannyEdgeDetector()
 {

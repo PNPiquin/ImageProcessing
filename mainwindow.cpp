@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "Segmentation/kmeans.h"
+#include "Misc/differenceprocessor.h"
 
 // Constructor
 MainWindow::MainWindow(QWidget *parent) :
@@ -10,13 +11,20 @@ MainWindow::MainWindow(QWidget *parent) :
     bundle = ImageBundle();
     ui->setupUi(this);
 
+    // Progress bar init
     ui->progress_bar->setMinimum(0);
     ui->progress_bar->setMaximum(100);
     ui->progress_bar->setValue(0);
 
+    // K means combobox init
     ui->K_means_combobox->addItem("SVD");
     ui->K_means_combobox->addItem("Euclidian distance");
     ui->K_means_combobox->addItem("ED + SVD");
+
+    // Difference type combobox init
+    ui->diff_type_combobox->addItem("ABSOLUTE");
+    ui->diff_type_combobox->addItem("POSITIVE");
+    ui->diff_type_combobox->addItem("NEGATIVE");
 
     timerID = startTimer(500);
 
@@ -132,6 +140,12 @@ void MainWindow::progress_update(){
     }
 }
 
+void MainWindow::on_display_frequency_spinBox_valueChanged(int new_frequency)
+{
+    int new_interval = 1000 / new_frequency;
+    auto_update_timer->setInterval(new_interval);
+}
+
 //------------------------------------------------------------------------------------------------------------------------------------------
 //                                                On push button utils methods
 //------------------------------------------------------------------------------------------------------------------------------------------
@@ -149,9 +163,9 @@ void MainWindow::on_load_folder_img_button_clicked()
 
 void MainWindow::on_save_folder_push_button_clicked()
 {
-    //QString save_path = ui->save_folder_name_line->text();
+    std::string save_folder = ui->save_folder_name_line->text().toStdString();
     std::string img_name = ui->current_image->currentText().toStdString();
-    bundle.SaveImgGroup(img_name);
+    bundle.SaveImgGroup(img_name, save_folder);
 }
 
 void MainWindow::on_change_working_dir_button_clicked()
@@ -164,7 +178,7 @@ void MainWindow::on_save_push_button_clicked()
 {
     std::string img_name = ui->current_image->currentText().toStdString();
     std::string save_name = ui->save_name_line->text().toStdString();
-    JpegManager::SaveGrayscaleMatrixImg(bundle.FindImage(img_name)->mat_img, bundle.GetWorkingDir() + save_name);
+    ImageIOManager::SaveGrayscaleMatrixImg(bundle.FindImage(img_name)->mat_img, bundle.GetWorkingDir() + save_name);
     try {
 
     } catch (std::exception e){
@@ -175,6 +189,16 @@ void MainWindow::on_save_push_button_clicked()
 void MainWindow::on_current_image_currentTextChanged(const QString &arg1)
 {
     DisplayImg(arg1.toStdString());
+}
+
+void MainWindow::on_delete_push_button_clicked()
+{
+    std::string name = ui->current_image->currentText().toStdString();
+    bundle.DeleteImageGroup(name);
+
+    // Remove old name
+    ui->current_image->removeItem(ui->current_image->currentIndex());
+    DisplayImg(ui->current_image->itemText(0).toStdString());
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------
@@ -532,5 +556,56 @@ void MainWindow::on_negative_push_button_clicked()
                   &bundle,
                   img_name,
                   result_name);
+    t.detach();
+}
+
+void MainWindow::on_resize_pushButton_clicked()
+{
+    // Get image to process
+    std::string img_name = ui->current_image->currentText().toStdString();
+
+    // Get params
+    int x0 = ui->x0_spinBox->value();
+    int y0 = ui->y0_spinBox->value();
+    int x1 = ui->x1_spinBox->value();
+    int y1 = ui->y1_spinBox->value();
+
+    // Get output name
+    std::string result_name = ui->resize_tab_output_name->text().toStdString();
+
+    // Process
+    std::thread t(&ImageBundle::ProcessImageResize,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  x0, y0, x1, y1);
+    t.detach();
+}
+
+void MainWindow::on_difference_pushButton_clicked()
+{
+    // Get image to process
+    std::string img_name = ui->current_image->currentText().toStdString();
+
+    // Params
+    const int step = ui->difference_spinBox->value();
+    DifferenceProcessor::DifferenceType diff_type = DifferenceProcessor::DifferenceType::ABSOLUTE;
+    std::string diff_type_string = ui->diff_type_combobox->currentText().toStdString();
+    if(diff_type_string == "POSITIVE"){
+        diff_type = DifferenceProcessor::DifferenceType::POSITIVE;
+    } else if (diff_type_string == "NEGATIVE"){
+        diff_type = DifferenceProcessor::DifferenceType::NEGATIVE;
+    }
+
+    // Get output name
+    std::string result_name = ui->difference_output_suffix->text().toStdString();
+
+    // Process
+    std::thread t(&ImageBundle::ProcessDifference,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  step,
+                  diff_type);
     t.detach();
 }

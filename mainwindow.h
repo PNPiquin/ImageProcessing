@@ -8,14 +8,14 @@
 #include <algorithm>
 #include <thread>
 
-// Third parties library
+// Third parties libraries
 #include <QMainWindow>
 #include <QTimer>
 #include <boost/gil/gil_all.hpp>
 #include <Eigen/Dense>
 
 // Input output class
-#include "IO/JpegManager.h"
+#include "IO/ImageIOManager.h"
 
 // Image management
 #include "ImageClasses/imagebundle.h"
@@ -57,6 +57,14 @@ private slots:
     void on_save_folder_push_button_clicked();
     void ui_auto_update();
     void progress_update();
+
+    void on_delete_push_button_clicked();
+
+    void on_resize_pushButton_clicked();
+
+    void on_display_frequency_spinBox_valueChanged(int new_frequency);
+
+    void on_difference_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

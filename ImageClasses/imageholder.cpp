@@ -1,6 +1,6 @@
 #include "imageholder.h"
 
-#include "IO/JpegManager.h"
+#include "IO/ImageIOManager.h"
 #include "SpatialFiltering/SpatialFilter.h"
 #include "SpatialFiltering/CommonSpatialFilters.h"
 #include "SpatialFiltering/HistogramProcessor.h"
@@ -9,6 +9,7 @@
 #include "SpatialFiltering/unsharpmaskprocessor.h"
 #include "SpatialFiltering/cannyedgedetector.h"
 #include "Segmentation/otsusegmentation.h"
+#include "Misc/resizeprocessor.h"
 
 ImageHolder::ImageHolder(std::string dir_path, std::string img_name) :
     img_name(img_name)
@@ -20,7 +21,7 @@ ImageHolder::ImageHolder(std::string dir_path, std::string img_name) :
     boost::filesystem::path img_path = dir / img;
 
     // img loading
-    JpegManager jpeg_manager(img_path.string());
+    ImageIOManager jpeg_manager(img_path.string());
     is_loaded = jpeg_manager.GetGrayscaleMatrixImg(mat_img);
     img_type = ImageType::GRAYSCALE;
 }
@@ -341,7 +342,7 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessCanny(
         Eigen::MatrixXi mag;
         Eigen::MatrixXf dir;
         CannyEdgeDetector::ProcessCannyEdgeDetector(mat_img, img_out, mag, dir, progress_logger);
-        JpegManager::SaveGrayscaleMatrixImg(mag, "/home/pierre-nicolas/Pictures/ImageProcessing/Canny/" + output_name + "_mag");
+        ImageIOManager::SaveGrayscaleMatrixImg(mag, "/home/pierre-nicolas/Pictures/ImageProcessing/Canny/" + output_name + "_mag");
     }
     else{
         CannyEdgeDetector::ProcessCannyEdgeDetector(mat_img, img_out, progress_logger);
@@ -374,6 +375,18 @@ std::shared_ptr<ImageHolder> ImageHolder::ProcessNegative(std::string output_nam
     Eigen::MatrixXi img_out;
 
     IntensityTransformation::ProcessNegative(mat_img, img_out, progress_logger);
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}
+
+std::shared_ptr<ImageHolder>  ImageHolder::ProcessImageResize(
+        std::string output_name,
+        int x0, int y0, int x1, int y1,
+        ProgressLogger *progress_logger){
+    Eigen::MatrixXi img_out;
+
+    ResizeProcessor rp(x0, y0, x1, y1);
+    rp.ProcessImageResize(mat_img, img_out, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
