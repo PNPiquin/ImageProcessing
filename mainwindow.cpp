@@ -589,7 +589,7 @@ void MainWindow::on_difference_pushButton_clicked()
 
     // Params
     const int step = ui->difference_spinBox->value();
-    DifferenceProcessor::DifferenceType diff_type = DifferenceProcessor::DifferenceType::ABSOLUTE;
+    DifferenceProcessor::DifferenceType diff_type = DifferenceProcessor::DifferenceType::ABS;
     std::string diff_type_string = ui->diff_type_combobox->currentText().toStdString();
     if(diff_type_string == "POSITIVE"){
         diff_type = DifferenceProcessor::DifferenceType::POSITIVE;

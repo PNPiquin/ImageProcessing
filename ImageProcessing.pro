@@ -49,16 +49,20 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
+INCLUDEPATH += C:/Boost/boost_1-58/include/boost-1_58
+INCLUDEPATH += C:/Eigen
+INCLUDEPATH += "C:\Program Files (x86)\GnuWin32\include"
+
+LIBS += -L"C:\Program Files (x86)\GnuWin32\lib" -ljpeg
+LIBS += -L"C:\Program Files (x86)\GnuWin32\lib" -lpng
+LIBS += -L"C:\Boost\boost_1-58\lib" -lboost_system-mgw53-mt-d-1_58
+LIBS += -L"C:\Boost\boost_1-58\lib" -lboost_filesystem-mgw53-mt-d-1_58
+
 QMAKE_CXXFLAGS += -Wall \
                  -lboost_system \
                  -std=gnu++11 \
                  -O2 \
                 -lboost_filesystem
-
-LIBS += -L/usr/lib -ljpeg
-LIBS += -L/usr/lib -lpng
-LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_system
-LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_filesystem
 
 DISTFILES += \
     LICENSE
