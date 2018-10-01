@@ -3,7 +3,11 @@
 
 ImageBundle::ImageBundle()
 {
+#ifdef __MINGW32__
+    working_dir_path = "D:\\Images\\ImageProcessing";
+#else
     working_dir_path = "/home/pierre-nicolas/Pictures/ImageProcessing/";
+#endif
 
     progress_logger = new ProgressLogger();
 }

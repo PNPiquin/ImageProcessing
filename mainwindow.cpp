@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent) :
     bundle = ImageBundle();
     ui->setupUi(this);
 
+    // Default path init
+    ui->working_dir_line->setText(QString::fromStdString(bundle.GetWorkingDir()));
+
     // Progress bar init
     ui->progress_bar->setMinimum(0);
     ui->progress_bar->setMaximum(100);
