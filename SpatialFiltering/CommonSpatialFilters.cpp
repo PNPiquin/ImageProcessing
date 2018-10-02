@@ -97,18 +97,20 @@ void GaussianBlurFilter::CreateNXNFilter(int n){
 SobelFilter::SobelFilter() : SpatialFilter(){
 }
 
-void SobelFilter::PopulateHorizontalFilter(){
+void SobelFilter::PopulateVerticalFilter(){
     Eigen::MatrixXf filter(3, 3);
     filter << -1, -2, -1,
                     0, 0, 0,
                     1, 2, 1;
+    filter *= (0.125);
     SetFilter(filter);
 }
 
-void SobelFilter::PopulateVerticalFilter(){
+void SobelFilter::PopulateHorizontalFilter(){
     Eigen::MatrixXf filter(3, 3);
     filter << -1, 0, 1,
                     -2, 0, 2,
                     -1, 0, 1;
+    filter *= (0.125);
     SetFilter(filter);
 }
