@@ -11,9 +11,9 @@
 class DifferenceProcessor
 {
 public:
-    enum DifferenceType { ABSOLUTE, POSITIVE, NEGATIVE };
+    enum DifferenceType { ABS = 0, POSITIVE = 1, NEGATIVE = 2 };
 
-    DifferenceProcessor(int step = 1, DifferenceType diff_type = DifferenceType::ABSOLUTE);
+    DifferenceProcessor(int step = 1, DifferenceType diff_type = DifferenceType::ABS);
     void ProcessDifference(
             std::vector<std::shared_ptr<ImageHolder>> img_vect,
             std::vector<std::shared_ptr<ImageHolder>> *out_vect,
