@@ -69,7 +69,7 @@ std::shared_ptr<ImageHolder> DifferenceProcessor::ProcessImageDifference(
                 }
             }
             break;
-        case DifferenceType::ABSOLUTE:
+        case DifferenceType::ABS:
             for(int i = 0; i < rows; ++i){
                 for(int j = 0; j < cols; ++j){
                     img_out(i, j) = std::abs(img_in->mat_img(i, j) - back_img->mat_img(i, j));
