@@ -31,7 +31,7 @@ void UnsharpMaskProcessor::ProcessUnsharpMask(Eigen::MatrixXi &img, Eigen::Matri
     // img_out = img + unsharp_coeff * unsharp_mask;
     for(int i = 0; i < img_out.rows(); ++i){
       for(int j = 0; j < img_out.cols(); ++j){
-        img_out(i, j) = std::min((int)(img(i, j) + unsharp_coeff * unsharp_mask(i, j)), 255);
+        img_out(i, j) = std::min(int(img(i, j) + unsharp_coeff * unsharp_mask(i, j)), 255);
       }
       if(progress_logger){
           progress_logger->SetProgress(std::floor(50 + ((i+1)*50)/rows));

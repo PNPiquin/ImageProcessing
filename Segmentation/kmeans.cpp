@@ -48,7 +48,7 @@ void KMeans::ProcessKMeans(Eigen::MatrixXi &img, Eigen::MatrixXi &img_out){
 
     // printf("iter : %d || delta : %f \n", iter, std::abs(total_value - prev_value));
 
-    int color_inc = (int)(255 / (number_of_clusters - 1));
+    int color_inc = int(255 / (number_of_clusters - 1));
     for(int index = 0; index < number_of_clusters; ++index){
         int color = index * color_inc;
         for(const auto &px : clusters.at(index).pixels){

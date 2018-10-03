@@ -50,8 +50,8 @@ MedianFilter::MedianFilter(int filter_size) : StatisticalSpatialFilter() {
     SetFilterSize(filter_size);
     auto median_filter = [](std::vector<int> data){
         std::sort(data.begin(), data.end());
-        int n = data.size();
-        return data[(int) ((n+1)/2)];
+        unsigned n = data.size();
+        return data[unsigned((n+1)/2)];
     };
     SetStatisticalFilter(median_filter);
 }

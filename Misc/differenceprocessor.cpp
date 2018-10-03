@@ -17,17 +17,17 @@ void DifferenceProcessor::ProcessDifference(std::vector<std::shared_ptr<ImageHol
 
     // progress logger init
     if(progress_logger){
-        progress_logger->SetTaskNumber(img_vect_size - step);
+        progress_logger->SetTaskNumber(int(img_vect_size) - step);
         progress_logger->SetIsProcessing(true);
     }
 
     // Make sure that the out vector is empty before processing
     out_vect->clear();
 
-    for(unsigned int i = step; i < img_vect_size; ++i){
+    for(unsigned int i = unsigned(step); i < img_vect_size; ++i){
         out_vect->push_back(ProcessImageDifference(
                                 img_vect.at(i),
-                                img_vect.at(i - step),
+                                img_vect.at(i - unsigned(step)),
                                 img_vect.at(i)->GetImageName() + output_suffix));
 
         if(progress_logger){

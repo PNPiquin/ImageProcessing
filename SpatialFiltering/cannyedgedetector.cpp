@@ -46,7 +46,7 @@ void CannyEdgeDetector::ProcessCannyEdgeDetector(Eigen::MatrixXi &img, Eigen::Ma
     double PI(3.141592653589793238462);
     for(int i = padding; i < rows - padding; ++i){
         for(int j = padding; j < cols - padding; ++j){
-            double alpha = dir(i, j);
+            double alpha = double(dir(i, j));
             if((alpha < (PI / 8.0)) && (alpha > (-PI/8.0))){
                 if( (mag(i, j) < mag(i, j-1)) || (mag(i, j) < mag(i, j+1)) ){
                     img_out(i, j) = 0;
@@ -126,8 +126,8 @@ void CannyEdgeDetector::ComputeMagAndDirEdgeImg(Eigen::MatrixXi &img, Eigen::Mat
         double convolution_result_x(0.0), convolution_result_y(0.0);
         for(int l = i - padding; l <= i + padding; ++l){
           for(int k = j - padding; k <= j + padding; ++k){
-              convolution_result_x += filter_x(l - (i - padding), k - (j - padding)) * img(l, k);
-              convolution_result_y += filter_y(l - (i - padding), k - (j - padding)) * img(l, k);
+              convolution_result_x += double(filter_x(l - (i - padding), k - (j - padding)) * img(l, k));
+              convolution_result_y += double(filter_y(l - (i - padding), k - (j - padding)) * img(l, k));
           }
         }
         gx = convolution_result_x;

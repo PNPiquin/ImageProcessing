@@ -57,7 +57,7 @@ void GaussianBlurFilter::Create3X3Filter(){
   filter << 1, 1, 1,
             1, 1, 1,
             1, 1, 1;
-  filter *= (1.0 / 9.0);
+  filter *= float(1.0 / 9.0);
   SetFilter(filter);
 }
 
@@ -68,7 +68,7 @@ void GaussianBlurFilter::Create5X5Filter(){
             5, 12, 15, 12, 5,
             4, 9, 12, 9, 4,
             2, 4, 5, 4, 2;
-  filter *= (1.0 / 159.0);
+  filter *= float(1.0 / 159.0);
   SetFilter(filter);
 }
 
@@ -80,12 +80,12 @@ void GaussianBlurFilter::CreateNXNFilter(int n){
         for(int i = 0; i < n; ++i){
             for(int j = 0; j < n; ++j){
                 int pow = 2 * filter_width - std::abs(i - filter_width) - std::abs(j - filter_width);
-                int val = std::pow(2, pow);
+                int val = int(std::pow(2, pow));
                 filter(i, j) = val;
                 coeff += val;
             }
         }
-        filter *= (1.0/coeff);
+        filter *= float(1.0/coeff);
         SetFilter(filter);
     } else {
         printf("Warning : %i is not an odd integer.", n);

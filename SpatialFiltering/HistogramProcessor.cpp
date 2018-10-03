@@ -23,7 +23,7 @@ void HistogramProcessor::HistogramInit(Eigen::MatrixXi &img){
         for(int j = 0; j <= i; ++j){
             s_i += histogram.at(j);
         }
-        inverse_histogram.at(i) = (s_i * (double)value_range);
+        inverse_histogram.at(i) = (s_i * double(value_range));
     }
 }
 

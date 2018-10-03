@@ -21,11 +21,11 @@ ProgressLogger::~ProgressLogger(){
 //           Methods
 // -----------------------------------------------------------------------
 int ProgressLogger::GetProgress(){
-    double d_progress = (double) progress->load();
-    double d_task_number = (double) task_number->load();
-    double d_finished_tasks_cpt = (double) finished_tasks_cpt->load();
+    double d_progress = double(progress->load());
+    double d_task_number = double(task_number->load());
+    double d_finished_tasks_cpt = double(finished_tasks_cpt->load());
     double current_progress = (100.0 * d_finished_tasks_cpt + d_progress) / (d_task_number);
-    return ((int) current_progress);
+    return int(current_progress);
 }
 
 void ProgressLogger::SetProgress(int p){
