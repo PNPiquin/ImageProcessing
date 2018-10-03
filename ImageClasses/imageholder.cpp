@@ -8,6 +8,7 @@
 #include "SpatialFiltering/statisticalspatialfilter.h"
 #include "SpatialFiltering/unsharpmaskprocessor.h"
 #include "SpatialFiltering/cannyedgedetector.h"
+#include "SpatialFiltering/morphgradient.h"
 #include "Segmentation/otsusegmentation.h"
 #include "Misc/resizeprocessor.h"
 
@@ -387,6 +388,30 @@ std::shared_ptr<ImageHolder>  ImageHolder::ProcessImageResize(
 
     ResizeProcessor rp(x0, y0, x1, y1);
     rp.ProcessImageResize(mat_img, img_out, progress_logger);
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}
+
+std::shared_ptr<ImageHolder>  ImageHolder::ProcessMorphVGradient(
+        std::string output_name,
+        int size,
+        ProgressLogger *progress_logger){
+    Eigen::MatrixXi img_out;
+
+    MorphGradient mp(size);
+    mp.ProcessVGradient(mat_img, img_out, progress_logger);
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}
+
+std::shared_ptr<ImageHolder>  ImageHolder::ProcessMorphHGradient(
+        std::string output_name,
+        int size,
+        ProgressLogger *progress_logger){
+    Eigen::MatrixXi img_out;
+
+    MorphGradient mp(size);
+    mp.ProcessHGradient(mat_img, img_out, progress_logger);
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }

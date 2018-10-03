@@ -612,3 +612,43 @@ void MainWindow::on_difference_pushButton_clicked()
                   diff_type);
     t.detach();
 }
+
+void MainWindow::on_v_grad_push_button_clicked()
+{
+    // Get image to process
+    std::string img_name = ui->current_image->currentText().toStdString();
+
+    // Get params
+    int size = ui->morph_filter_size->value();
+
+    // Get output name
+    std::string result_name = img_name + ui->morph_output_name->text().toStdString();
+
+    // Process
+    std::thread t(&ImageBundle::ProcessMorphVGradient,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  size);
+    t.detach();
+}
+
+void MainWindow::on_h_grad_push_button_clicked()
+{
+    // Get image to process
+    std::string img_name = ui->current_image->currentText().toStdString();
+
+    // Get params
+    int size = ui->morph_filter_size->value();
+
+    // Get output name
+    std::string result_name = img_name + ui->morph_output_name->text().toStdString();
+
+    // Process
+    std::thread t(&ImageBundle::ProcessMorphHGradient,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  size);
+    t.detach();
+}

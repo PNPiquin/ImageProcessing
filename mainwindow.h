@@ -66,6 +66,10 @@ private slots:
 
     void on_difference_pushButton_clicked();
 
+    void on_v_grad_push_button_clicked();
+
+    void on_h_grad_push_button_clicked();
+
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;

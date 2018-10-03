@@ -48,6 +48,8 @@ public:
     void ProcessNegative(std::string img_name, std::string output_name);
     void ProcessImageResize(std::string img_name, std::string output_name, int x0, int y0, int x1, int y1);
     void ProcessDifference(std::string img_name, std::string output_suffix, int step, DifferenceProcessor::DifferenceType diff_type);
+    void ProcessMorphVGradient(std::string img_name, std::string output_name, int size);
+    void ProcessMorphHGradient(std::string img_name, std::string output_name, int size);
 
     void SetWorkingDir(std::string path) {working_dir_path = path; }
     std::string GetWorkingDir() {return working_dir_path;}

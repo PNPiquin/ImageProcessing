@@ -37,8 +37,8 @@ void ImageBundle::LoadImgFolder(std::string folder_name){
 
         std::sort(paths.begin(), paths.end());
 
-        for(int path_index = 0; path_index < (int)paths.size(); ++path_index){
-            boost::filesystem::path p = paths[path_index];
+        for(int path_index = 0; path_index < int(paths.size()); ++path_index){
+            boost::filesystem::path p = paths[unsigned(path_index)];
             std::shared_ptr<ImageHolder> img_holder = std::make_shared<ImageHolder>(p.parent_path().string() + "/", p.stem().string());
             img_vect.push_back(img_holder);
         }
@@ -100,7 +100,7 @@ void ImageBundle::ProcessEdgeDetection(
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
+    progress_logger->SetTaskNumber(tasks_per_img * int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> edge_img = img->ProcessEdgeDetection(
                     img->GetImageName() + output_name,
@@ -131,7 +131,7 @@ void ImageBundle::ProcessBothSobel(
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
+    progress_logger->SetTaskNumber(tasks_per_img * int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> edge_img = img->ProcessBothSobel(
                     img->GetImageName() + output_name,
@@ -161,7 +161,7 @@ void ImageBundle::ProcessVerticalSobel(
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
+    progress_logger->SetTaskNumber(tasks_per_img * int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> edge_img = img->ProcessVerticalSobel(
                     img->GetImageName() + output_name,
@@ -187,7 +187,7 @@ void ImageBundle::ProcessHorizontalSobel(std::string img_name, std::string outpu
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
+    progress_logger->SetTaskNumber(tasks_per_img * int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> edge_img = img->ProcessHorizontalSobel(
                     img->GetImageName() + output_name,
@@ -209,7 +209,7 @@ void ImageBundle::ProcessGaussianBlur(std::string img_name, std::string output_n
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> edge_img = img->ProcessGaussianBlur(
                     img->GetImageName() + output_name,
@@ -230,7 +230,7 @@ void ImageBundle::ProcessHistogramNormalization(std::string img_name, std::strin
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> histogram_img = img->ProcessHistogramNormalization(
                     img->GetImageName() + output_name,
@@ -250,7 +250,7 @@ void ImageBundle::ProcessPowerLawTransformation(std::string img_name, std::strin
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> pow_img = img->ProcessPowerLawTransformation(
                     img->GetImageName() + output_name,
@@ -271,7 +271,7 @@ void ImageBundle::ProcessLogLawTransformation(std::string img_name, std::string 
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> log_img = img->ProcessPowerLawTransformation(
                     img->GetImageName() + output_name,
@@ -292,7 +292,7 @@ void ImageBundle::ProcessThresholding(std::string img_name, std::string output_n
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> log_img = img->ProcessThresholding(
                     img->GetImageName() + output_name,
@@ -313,7 +313,7 @@ void ImageBundle::ProcessMedianFilter(std::string img_name, std::string output_n
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> median_img = img->ProcessMedianFilter(
                     img->GetImageName() + output_name,
@@ -334,7 +334,7 @@ void ImageBundle::ProcessErosion(std::string img_name, std::string output_name, 
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> erosion_img = img->ProcessErosion(
                     img->GetImageName() + output_name,
@@ -355,7 +355,7 @@ void ImageBundle::ProcessDilatation(std::string img_name, std::string output_nam
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> dilatation_img = img->ProcessDilatation(
                     img->GetImageName() + output_name,
@@ -376,7 +376,7 @@ void ImageBundle::ProcessErosionDilatation(std::string img_name, std::string out
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> erosion_dilatation_img = img->ProcessErosionDilatation(
                     img->GetImageName() + output_name,
@@ -402,7 +402,7 @@ void ImageBundle::ProcessUnsharpMask(
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> sharp_img = img->ProcessUnsharpMask(
                     img->GetImageName() + output_name,
@@ -425,7 +425,7 @@ void ImageBundle::ProcessLMR(std::string img_name, std::string output_name, int 
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> sharp_img = img->ProcessLMR(
                     img->GetImageName() + output_name,
@@ -489,7 +489,7 @@ void ImageBundle::ProcessNegative(std::string img_name, std::string output_name)
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> neg_img = img->ProcessNegative(
                     img->GetImageName() + output_name,
@@ -509,7 +509,7 @@ void ImageBundle::ProcessImageResize(std::string img_name, std::string output_na
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(img_vector.size());
+    progress_logger->SetTaskNumber(int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> resized_img = img->ProcessImageResize(
                     img->GetImageName() + output_name,
@@ -538,4 +538,52 @@ void ImageBundle::ProcessDifference(
     dp.ProcessDifference(img_vector, &out_vect, output_suffix, progress_logger);
 
     Insert(img_name + output_suffix, out_vect);
+}
+
+void ImageBundle::ProcessMorphVGradient(
+        std::string img_name,
+        std::string output_name,
+        int size){
+    std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
+    std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(int(img_vector.size()));
+    for(auto img : img_vector){
+        std::shared_ptr<ImageHolder> img_out = img->ProcessMorphVGradient(
+                    img->GetImageName() + output_name,
+                    size,
+                    progress_logger);
+        out_img_vector.push_back(img_out);
+
+        progress_logger->IncrementFinishedTasksCpt();
+    }
+    Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
+}
+
+void ImageBundle::ProcessMorphHGradient(
+        std::string img_name,
+        std::string output_name,
+        int size){
+    std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
+    std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(int(img_vector.size()));
+    for(auto img : img_vector){
+        std::shared_ptr<ImageHolder> img_out = img->ProcessMorphHGradient(
+                    img->GetImageName() + output_name,
+                    size,
+                    progress_logger);
+        out_img_vector.push_back(img_out);
+
+        progress_logger->IncrementFinishedTasksCpt();
+    }
+    Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
 }

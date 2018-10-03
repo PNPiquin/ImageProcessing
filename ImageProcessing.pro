@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     ProgressLogger/progresslogger.cpp \
     Misc/resizeprocessor.cpp \
     Misc/differenceprocessor.cpp \
-    IO/ImageIOManager.cpp
+    IO/ImageIOManager.cpp \
+    SpatialFiltering/morphgradient.cpp
 
 HEADERS  += mainwindow.h \
     SpatialFiltering/CommonSpatialFilters.h \
@@ -45,7 +46,8 @@ HEADERS  += mainwindow.h \
     ProgressLogger/progresslogger.h \
     Misc/resizeprocessor.h \
     Misc/differenceprocessor.h \
-    IO/ImageIOManager.h
+    IO/ImageIOManager.h \
+    SpatialFiltering/morphgradient.h
 
 FORMS    += mainwindow.ui
 
