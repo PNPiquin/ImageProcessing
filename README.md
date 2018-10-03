@@ -13,3 +13,9 @@ To build the project, you will need to install the needed libraries:
    
 Then, using Qt creator, you need to link these libraries to the project by setting the link paths inside the ImageProcessing.pro file.
 The compiler flags used are set inside this same ImageProcessing.pro file.
+
+# How to use it
+
+Once it's built and launched, load a picture from the input/output tab (path = working dir + image name)
+Then, when the image is loaded, go through the other tabs to find the algorithm you want to apply on this image.
+Each algorithm will create a new image as a result. To go through the images, use the select on the upper right corner.
