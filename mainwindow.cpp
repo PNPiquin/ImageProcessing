@@ -116,7 +116,7 @@ void MainWindow::ui_auto_update(){
         }
 
         const int current_index = displayed_img_index;
-        if(displayed_img_index >= (int)(image_vect.size() - 1)){
+        if(displayed_img_index >= int(image_vect.size() - 1)){
             displayed_img_index = 0;
         } else {
             displayed_img_index++;
@@ -127,7 +127,7 @@ void MainWindow::ui_auto_update(){
             return;
         }
 
-        std::shared_ptr<ImageHolder> img_holder = image_vect[displayed_img_index];
+        std::shared_ptr<ImageHolder> img_holder = image_vect[unsigned(displayed_img_index)];
         ui->image->setPixmap(CreatePixmapFromImg(img_holder).scaled(ui->image->size(), Qt::KeepAspectRatio));
         ui->image->show();
     } catch(...) {
