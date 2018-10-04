@@ -40,6 +40,7 @@ public:
     std::shared_ptr<ImageHolder> ProcessImageResize(std::string output_name, int x0, int y0, int x1, int y1, ProgressLogger *progress_logger = NULL);
     std::shared_ptr<ImageHolder> ProcessMorphVGradient(std::string output_name, int size, ProgressLogger *progress_logger = NULL);
     std::shared_ptr<ImageHolder> ProcessMorphHGradient(std::string output_name, int size, ProgressLogger *progress_logger = NULL);
+    std::shared_ptr<ImageHolder> ProcessMorphEdgeDetection(std::string output_name, int filter_size, ProgressLogger *progress_logger = NULL);
 
     void SetImageName(std::string name);
     void SetImageType(ImageType type);

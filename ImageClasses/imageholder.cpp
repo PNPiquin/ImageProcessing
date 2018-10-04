@@ -415,3 +415,15 @@ std::shared_ptr<ImageHolder>  ImageHolder::ProcessMorphHGradient(
 
     return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
 }
+
+std::shared_ptr<ImageHolder> ImageHolder::ProcessMorphEdgeDetection(
+        std::string output_name,
+        int filter_size,
+        ProgressLogger *progress_logger){
+    Eigen::MatrixXi img_out;
+
+    MorphEdgeDetector edge_filter(filter_size);
+    edge_filter.ProcessStatisticalFilter(mat_img, img_out, progress_logger);
+
+    return std::make_shared<ImageHolder>(img_out, output_name, ImageType::GRAYSCALE);
+}

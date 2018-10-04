@@ -68,9 +68,9 @@ win32 {
 }
 
 QMAKE_CXXFLAGS += -Wall \
-                 -lboost_system \
-                 -std=gnu++11 \
-                 -O2 \
+                -lboost_system \
+                -std=gnu++11 \
+                -O2 \
                 -lboost_filesystem
 
 DISTFILES += \

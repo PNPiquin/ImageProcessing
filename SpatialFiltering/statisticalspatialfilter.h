@@ -41,4 +41,9 @@ public:
     SlowLMRProcessor(int filter_size);
 };
 
+class MorphEdgeDetector : public StatisticalSpatialFilter {
+public:
+    MorphEdgeDetector(int filter_size);
+};
+
 #endif // STATISTICALSPATIALFILTER_H

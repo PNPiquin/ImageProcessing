@@ -652,3 +652,23 @@ void MainWindow::on_h_grad_push_button_clicked()
                   size);
     t.detach();
 }
+
+void MainWindow::on_morph_edge_detect_button_clicked()
+{
+    // Get image to process
+    std::string img_name = ui->current_image->currentText().toStdString();
+
+     // Get params
+    int filter_size = ui->median_filter_size->value();
+
+    // Get output name
+    std::string result_name = img_name + ui->median_output_name->text().toStdString();
+
+    // Process
+    std::thread t(&ImageBundle::ProcessMorphEdgeDetection,
+                  &bundle,
+                  img_name,
+                  result_name,
+                  filter_size);
+    t.detach();
+}

@@ -70,6 +70,8 @@ private slots:
 
     void on_h_grad_push_button_clicked();
 
+    void on_morph_edge_detect_button_clicked();
+
 private:
     Ui::MainWindow *ui;
     ImageBundle bundle;

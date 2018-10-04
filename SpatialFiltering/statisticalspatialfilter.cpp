@@ -98,3 +98,16 @@ SlowLMRProcessor::SlowLMRProcessor(int filter_size) : StatisticalSpatialFilter()
     };
     SetStatisticalFilter(min_filter);
 }
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+//                                       Edge detection by a morphological method
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+MorphEdgeDetector::MorphEdgeDetector(int filter_size) : StatisticalSpatialFilter () {
+    SetFilterSize(filter_size);
+    auto edge_filter = [](std::vector<int> data){
+      std::sort(data.begin(), data.end());
+      return data.back() - data.front();
+    };
+    SetStatisticalFilter(edge_filter);
+}

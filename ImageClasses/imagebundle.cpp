@@ -587,3 +587,27 @@ void ImageBundle::ProcessMorphHGradient(
 
     progress_logger->SetIsProcessing(false);
 }
+
+void ImageBundle::ProcessMorphEdgeDetection(
+        std::string img_name,
+        std::string output_name,
+        int filter_size){
+    std::vector<std::shared_ptr<ImageHolder>> img_vector = FindImageVector(img_name);
+    std::vector<std::shared_ptr<ImageHolder>> out_img_vector;
+
+    progress_logger->ResetProgressLogger();
+    progress_logger->SetIsProcessing(true);
+    progress_logger->SetTaskNumber(int(img_vector.size()));
+    for(auto img : img_vector){
+        std::shared_ptr<ImageHolder> img_out = img->ProcessMorphEdgeDetection(
+                    img->GetImageName() + output_name,
+                    filter_size,
+                    progress_logger);
+        out_img_vector.push_back(img_out);
+
+        progress_logger->IncrementFinishedTasksCpt();
+    }
+    Insert(output_name, out_img_vector);
+
+    progress_logger->SetIsProcessing(false);
+}

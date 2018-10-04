@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1076</width>
-    <height>1082</height>
+    <height>1100</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -505,7 +505,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget_2">
           <property name="currentIndex">
-           <number>2</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="edge">
            <attribute name="title">
@@ -967,7 +967,7 @@
               <item>
                <widget class="QLineEdit" name="median_output_name">
                 <property name="text">
-                 <string>_median</string>
+                 <string>_stat</string>
                 </property>
                </widget>
               </item>
@@ -1033,6 +1033,19 @@
                  </size>
                 </property>
                </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="morph_edge_detect_button">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Edge detection</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -2097,7 +2110,7 @@
      <x>0</x>
      <y>0</y>
      <width>1076</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
