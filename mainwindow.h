@@ -57,19 +57,12 @@ private slots:
     void on_save_folder_push_button_clicked();
     void ui_auto_update();
     void progress_update();
-
     void on_delete_push_button_clicked();
-
     void on_resize_pushButton_clicked();
-
     void on_display_frequency_spinBox_valueChanged(int new_frequency);
-
     void on_difference_pushButton_clicked();
-
     void on_v_grad_push_button_clicked();
-
     void on_h_grad_push_button_clicked();
-
     void on_morph_edge_detect_button_clicked();
 
 private:

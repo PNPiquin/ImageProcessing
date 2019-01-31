@@ -4,7 +4,7 @@
 ImageBundle::ImageBundle()
 {
 #ifdef __MINGW32__
-    working_dir_path = "D:\\Images\\ImageProcessing";
+    working_dir_path = "D:\\Images\\ImageProcessing\\";
 #else
     working_dir_path = "/home/pierre-nicolas/Pictures/ImageProcessing/";
 #endif
@@ -448,7 +448,7 @@ void ImageBundle::ProcessCanny(std::string img_name, std::string output_name, bo
 
     progress_logger->ResetProgressLogger();
     progress_logger->SetIsProcessing(true);
-    progress_logger->SetTaskNumber(tasks_per_img * img_vector.size());
+    progress_logger->SetTaskNumber(tasks_per_img * int(img_vector.size()));
     for(auto img : img_vector){
         std::shared_ptr<ImageHolder> canny_img = img->ProcessCanny(
                     img->GetImageName() + output_name,
