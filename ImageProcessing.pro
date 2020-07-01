@@ -61,6 +61,9 @@ win32 {
     LIBS += -L"C:\Boost\boost_1-58\lib" -lboost_system-mgw53-mt-d-1_58
     LIBS += -L"C:\Boost\boost_1-58\lib" -lboost_filesystem-mgw53-mt-d-1_58
 } unix {
+    INCLUDEPATH += /usr/local/include
+    INCLUDEPATH += /usr/local/include/eigen3
+
     LIBS += -L/usr/lib -ljpeg
     LIBS += -L/usr/lib -lpng
     LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_system

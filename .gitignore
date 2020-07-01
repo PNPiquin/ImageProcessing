@@ -1,1 +1,4 @@
 ImageProcessing.pro.user
+
+# build folder
+build/**

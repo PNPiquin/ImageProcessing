@@ -1,6 +1,7 @@
 #ifndef KMEANS_H
 #define KMEANS_H
 
+#include <vector>
 #include <set>
 #include <map>
 #include <functional>
@@ -49,8 +50,8 @@ private:
 
     struct Cluster{
         double total_dist;
-        std::vector<Pixel> pixels;
         Pixel cluster_center;
+        std::vector<Pixel> pixels;
         Cluster(){
             total_dist = 0;
         }

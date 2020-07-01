@@ -11,6 +11,10 @@
 // Third parties libraries
 #include <QMainWindow>
 #include <QTimer>
+
+#define png_infopp_NULL (png_infopp)NULL
+#define int_p_NULL (int*)NULL
+
 #include <boost/gil/gil_all.hpp>
 #include <Eigen/Dense>
 
